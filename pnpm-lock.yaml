@@ -120,6 +120,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@nexa/types':
+        specifier: workspace:*
+        version: link:../types
       '@tailwindcss/forms':
         specifier: ^0.5.9
         version: 0.5.11(tailwindcss@3.4.19(tsx@4.23.0))
