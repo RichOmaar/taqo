@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estás en la fila - Nexa</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "surface-variant": "#e9e1dd",
+                    "primary": "#a43c27",
+                    "on-surface": "#1e1b19",
+                    "surface-tint": "#a43c27",
+                    "surface-dim": "#e1d8d5",
+                    "outline-variant": "#dec0ba",
+                    "on-surface-variant": "#57423d",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "tertiary-container": "#a29893",
+                    "surface-container-highest": "#e9e1dd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#fbf2ee",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#efe6e3",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "on-tertiary-fixed": "#201a17",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#ffdad3",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#3e0400",
+                    "on-primary-container": "#670f02",
+                    "on-primary-fixed-variant": "#842413",
+                    "inverse-on-surface": "#f8efeb",
+                    "surface-bright": "#fff8f5",
+                    "error-container": "#ffdad6",
+                    "outline": "#8a716c",
+                    "secondary-fixed": "#94f3e7",
+                    "primary-container": "#f2755c",
+                    "tertiary-fixed": "#ece0da",
+                    "on-secondary-fixed": "#00201d",
+                    "inverse-surface": "#34302d",
+                    "inverse-primary": "#ffb4a5",
+                    "tertiary": "#655d58",
+                    "secondary-container": "#91f0e4",
+                    "background": "#fff8f5",
+                    "surface-container": "#f5ece9",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1e1b19",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "on-tertiary-container": "#37312d",
+                    "surface": "#fff8f5",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#006a62",
+                    "on-secondary-container": "#006f66",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#77d7cb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "gutter": "20px",
+                    "xs": "4px",
+                    "md": "24px",
+                    "margin-desktop": "64px",
+                    "xl": "80px",
+                    "lg": "48px",
+                    "margin-mobile": "20px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Quicksand"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-md": ["Quicksand"],
+                    "headline-lg": ["Quicksand"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Quicksand"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        body {
+            background-color: #FBF7F2;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bento-card {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+        .progress-bar-fill {
+            transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .pulse-animation {
+            animation: pulse-ring 3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.4; }
+            100% { transform: scale(.95); opacity: 0.8; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface min-h-screen flex flex-col pb-24">
+<!-- TopAppBar (JSON Instruction) -->
+<nav class="bg-surface fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">restaurant</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Nexa</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</nav>
+<!-- Content Canvas -->
+<main class="flex-1 mt-16 px-margin-mobile py-8 flex flex-col items-center">
+<!-- Screen Title -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface text-center mb-10">Estás en la fila</h1>
+<!-- Hero: Circular Indicator -->
+<div class="relative w-64 h-64 flex flex-col items-center justify-center mb-8">
+<!-- Pulsing background decoration -->
+<div class="absolute inset-0 bg-primary-container/10 rounded-full pulse-animation"></div>
+<div class="relative z-10 w-48 h-48 bg-white rounded-full flex flex-col items-center justify-center bento-card border-8 border-surface-container">
+<span class="text-6xl font-bold font-headline-xl text-[#2E2A28]">3</span>
+<span class="font-label-md text-label-md text-on-surface-variant mt-2">Tu lugar en la fila</span>
+</div>
+</div>
+<!-- Reassurance Section -->
+<div class="text-center mb-8">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Tiempo estimado</p>
+<p class="font-headline-xl text-headline-xl text-primary-container">~15 min</p>
+</div>
+<!-- Progress Bar -->
+<div class="w-full max-w-sm mb-10">
+<div class="h-3 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="progress-bar-fill h-full bg-secondary-fixed-dim" style="width: 70%"></div>
+</div>
+<div class="flex justify-between mt-2">
+<span class="text-xs font-medium text-on-surface-variant">Registro</span>
+<span class="text-xs font-medium text-secondary">¡Casi listo!</span>
+</div>
+</div>
+<!-- Status Message -->
+<div class="bg-primary-fixed/30 p-6 rounded-[20px] text-center mb-8 max-w-sm">
+<p class="font-body-md text-body-md text-on-primary-fixed-variant leading-relaxed">
+                Te avisaremos por aquí cuando tu mesa esté lista. <span class="font-semibold">¡Ya falta poco!</span>
+</p>
+</div>
+<!-- Information Card -->
+<div class="w-full max-w-sm bg-white p-6 rounded-[24px] bento-card mb-12 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A warm, inviting photo of a traditional rustic Mexican kitchen with warm lighting, ceramic pots, and sun streaming through a window. The aesthetic is cozy-modern, matching the hospitality brand's terracotta and beige color palette. High quality food photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQwZqaI7nWZgtteVcssiZkjITp34hacQhdm-jm_relIz2UUSOjhcWOfJpuNGS4AJe9CXLarJFQ-TCpBBbm1jmOrcrIXjVQUBbVb-8w7LnJ-m6oKZQcNfFL4wjO2CGIh7qvscABZ-CYPkcSerQ2dVGiZci81Tc7_iNYySPgQKo8HWsXcMVEeUnDc-TUnsgpHHEMvoxVBPcSOT8xTtWNREDcd-PYJFIUJI53pe8cWcomGxi0cqMXkqAsE9tTqD0pgI5z2hfaz3OAg4E"/>
+</div>
+<div>
+<h3 class="font-headline-md text-label-md font-bold text-on-surface">El Sazón de la Abuela</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Mesa para 2 • Fila General</p>
+</div>
+</div>
+<!-- Secondary Actions -->
+<div class="flex flex-col items-center gap-6 mb-8">
+<button class="flex items-center gap-2 text-primary font-label-md text-label-md hover:underline transition-all active:scale-95" onclick="window.location.reload()">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                Actualizar
+            </button>
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-error transition-colors active:scale-95 opacity-60">
+                Cancelar mi lugar
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (JSON Instruction) -->
+<!-- Active State Logic: Mapping "Estás en la fila" to "Mi Lugar" (item index 1) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface dark:bg-surface-container-lowest rounded-t-3xl shadow-[0px_-10px_30px_rgba(46,42,40,0.04)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">¡Bienvenidos!</span>
+</div>
+<!-- Active Tab: Mi Lugar -->
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 duration-150">
+<span class="material-symbols-outlined">hourglass_top</span>
+<span class="font-label-md text-label-md">Mi Lugar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Ajustes</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for the progress bar on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const bar = document.querySelector('.progress-bar-fill');
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = '75%';
+            }, 300);
+        });
+
+        // Add haptic-like scale effect on all buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.transform = 'scale(0.96)';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

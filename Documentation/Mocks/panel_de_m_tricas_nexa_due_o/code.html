@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Anfitrión Pro - Panel de Control</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;family=Be+Vietnam+Pro:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006a62",
+                    "outline": "#8a716c",
+                    "on-surface": "#1e1b19",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#fff8f5",
+                    "surface-container": "#f5ece9",
+                    "primary-container": "#f2755c",
+                    "on-secondary-container": "#006f66",
+                    "tertiary-container": "#a29893",
+                    "secondary-fixed": "#94f3e7",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#842413",
+                    "surface-container-highest": "#e9e1dd",
+                    "on-background": "#1e1b19",
+                    "surface": "#fff8f5",
+                    "outline-variant": "#dec0ba",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed-dim": "#77d7cb",
+                    "surface-dim": "#e1d8d5",
+                    "on-secondary-fixed": "#00201d",
+                    "tertiary-fixed": "#ece0da",
+                    "on-primary-fixed": "#3e0400",
+                    "background": "#fff8f5",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#201a17",
+                    "primary-fixed": "#ffdad3",
+                    "surface-tint": "#a43c27",
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "surface-variant": "#e9e1dd",
+                    "inverse-primary": "#ffb4a5",
+                    "surface-container-high": "#efe6e3",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "surface-container-low": "#fbf2ee",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "inverse-surface": "#34302d",
+                    "primary": "#a43c27",
+                    "on-primary-container": "#670f02",
+                    "on-surface-variant": "#57423d",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#37312d",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#91f0e4",
+                    "tertiary": "#655d58",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#f8efeb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "20px",
+                    "3xl": "32px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "lg": "48px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "xl": "80px",
+                    "margin-mobile": "20px",
+                    "gutter": "20px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Quicksand"],
+                    "headline-xl": ["Quicksand"],
+                    "headline-md": ["Quicksand"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "label-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FBF7F2;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: #1e1b19;
+        }
+        .font-quicksand { font-family: 'Quicksand', sans-serif; }
+        .card-shadow { box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04); }
+        .sidebar-active { background-color: #f2755c; color: white; border-radius: 12px; }
+        .heat-cell { transition: all 0.3s ease; }
+        .heat-cell:hover { transform: scale(1.1); z-index: 10; }
+        
+        /* Bar Chart Animation */
+        @keyframes growUp {
+            from { height: 0; }
+            to { height: var(--final-height); }
+        }
+        .bar-animate {
+            animation: growUp 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low shadow-md flex flex-col py-md px-base z-50">
+<div class="px-4 mb-xl">
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Bistro Moderno</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">Panel de Control</p>
+</div>
+<nav class="flex-grow space-y-2">
+<!-- Panel (Active) -->
+<a class="bg-primary-container text-white rounded-xl flex items-center gap-3 px-4 py-3 transition-transform active:scale-95 duration-150 group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Panel</span>
+</a>
+<!-- Colas -->
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">hourglass_empty</span>
+<span class="font-label-md text-label-md">Colas</span>
+</a>
+<!-- Formulario -->
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-label-md text-label-md">Formulario</span>
+</a>
+<!-- Plan -->
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span class="font-label-md text-label-md">Plan</span>
+</a>
+<!-- Configuración -->
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Configuración</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-surface-container-highest flex flex-col gap-2">
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md text-label-md">Ayuda</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Salir</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-grow px-margin-desktop py-lg">
+<!-- Header Section -->
+<header class="flex justify-between items-center mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg font-quicksand text-on-surface">Panel</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">¡Bienvenido de nuevo, Rodrigo! Aquí tienes el resumen de hoy.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-container shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A warm, professional portrait of a Mexican restaurant owner in his late 40s, smiling gently with soft ambient lighting from a bistro window behind him. He is wearing a clean linen apron over a button-down shirt. The aesthetic is bright, high-key, and minimalist, emphasizing a welcoming hospitality expert in a modern environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnAJ3RiJ91jcla5ydjkXwcV0GMFW6mnqtWKb_ilcI5axv1MMpwJ7SNAURo2pG5LpPeL4fdEpFRbLv9it2O2uDd25THvrai-SlludrKXa4kQ_RL1lmMbsLECWfiuV4UVFEtvADp12Onj_ahaHO7syGfrDOAoOXPEuTskbvV5BDptCLlXpMYdECPH2YBgWkMZzCUBpu28AXYFnkpAZVdeyprlsWo-EQuWa_ibW5g4ohYW57zXwrSCw_G7nQn_H9dvXMHDS95UisXTec"/>
+</div>
+</div>
+</header>
+<!-- Top Row: Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg">
+<!-- Stat 1 -->
+<div class="bg-white p-6 rounded-2xl card-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="text-on-surface-variant font-label-md">Espera promedio</span>
+<span class="material-symbols-outlined text-primary">schedule</span>
+</div>
+<div>
+<span class="font-headline-md text-headline-md font-quicksand text-on-background">18 <small class="text-sm font-normal">min</small></span>
+<p class="text-secondary font-label-sm flex items-center mt-2">
+<span class="material-symbols-outlined text-xs">trending_down</span>
+<span class="ml-1">-2 min vs ayer</span>
+</p>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="bg-white p-6 rounded-2xl card-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="text-on-surface-variant font-label-md">Personas hoy</span>
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div>
+<span class="font-headline-md text-headline-md font-quicksand text-on-background">142</span>
+<p class="text-secondary font-label-sm flex items-center mt-2">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+<span class="ml-1">+12% vs sem. pasada</span>
+</p>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="bg-white p-6 rounded-2xl card-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="text-on-surface-variant font-label-md">Tasa de no-show</span>
+<span class="material-symbols-outlined text-primary">person_off</span>
+</div>
+<div>
+<span class="font-headline-md text-headline-md font-quicksand text-on-background">4%</span>
+<p class="text-secondary font-label-sm flex items-center mt-2">
+<span class="material-symbols-outlined text-xs">check_circle</span>
+<span class="ml-1">Bajo control</span>
+</p>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="bg-white p-6 rounded-2xl card-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="text-on-surface-variant font-label-md">Conversión</span>
+<span class="material-symbols-outlined text-primary">insights</span>
+</div>
+<div>
+<span class="font-headline-md text-headline-md font-quicksand text-on-background">92%</span>
+<p class="text-secondary font-label-sm flex items-center mt-2">
+<span class="material-symbols-outlined text-xs">auto_awesome</span>
+<span class="ml-1">Excelente retención</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Middle Section: Chart -->
+<section class="bg-white p-lg rounded-2xl card-shadow mb-lg">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="font-headline-md text-headline-md font-quicksand text-on-surface mb-1">Volumen de fila por hora</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Flujo de clientes durante la jornada actual.</p>
+</div>
+<div class="flex gap-4 items-center">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary-container"></div>
+<span class="font-label-sm text-on-surface-variant">Hoy</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+<span class="font-label-sm text-on-surface-variant">Promedio</span>
+</div>
+</div>
+</div>
+<!-- Simple Bar Chart Visualization -->
+<div class="flex items-end justify-between h-64 w-full gap-4 px-4 relative">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8 border-b border-surface-container-highest">
+<div class="border-t border-surface-container-highest w-full opacity-50"></div>
+<div class="border-t border-surface-container-highest w-full opacity-50"></div>
+<div class="border-t border-surface-container-highest w-full opacity-50"></div>
+</div>
+<!-- Chart Bars -->
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 20%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 15%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">12:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 45%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 35%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">13:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 85%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 70%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">14:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 100%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 80%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">15:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 60%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 55%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">16:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 30%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 25%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">17:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 50%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 40%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">18:00</span>
+</div>
+<div class="flex flex-col items-center flex-1 z-10">
+<div class="flex gap-1 items-end h-48 w-full justify-center">
+<div class="bar-animate bg-primary-container w-3 rounded-t-full" style="--final-height: 90%;"></div>
+<div class="bar-animate bg-secondary-container w-3 rounded-t-full" style="--final-height: 75%;"></div>
+</div>
+<span class="mt-4 font-label-sm text-on-surface-variant">19:00</span>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Two Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Left Column: Horas Pico -->
+<section class="bg-white p-lg rounded-2xl card-shadow">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">hot_tub</span>
+<h3 class="font-headline-md text-headline-md font-quicksand text-on-surface">Horas pico</h3>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-7 gap-2">
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Lun</div>
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Mar</div>
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Mie</div>
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Jue</div>
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Vie</div>
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Sab</div>
+<div class="h-8 rounded-md bg-surface-container-lowest border border-surface-container flex items-center justify-center text-[10px] text-outline">Dom</div>
+</div>
+<!-- Simplified Heatmap visualization -->
+<div class="grid grid-cols-7 gap-2">
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-20"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-40"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-30"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-60"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary opacity-70"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-container"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary opacity-80"></div>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-10"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-20"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-40"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-fixed opacity-50"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary opacity-80"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary-container border-2 border-on-primary-container shadow-inner"></div>
+<div class="heat-cell h-12 rounded-lg bg-primary opacity-90"></div>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-center text-on-surface-variant font-label-sm">
+<span>Menos tráfico</span>
+<div class="flex gap-1">
+<div class="w-3 h-3 rounded-sm bg-primary-fixed opacity-20"></div>
+<div class="w-3 h-3 rounded-sm bg-primary-fixed opacity-50"></div>
+<div class="w-3 h-3 rounded-sm bg-primary opacity-80"></div>
+<div class="w-3 h-3 rounded-sm bg-primary-container"></div>
+</div>
+<span>Más tráfico</span>
+</div>
+</section>
+<!-- Right Column: Recent Reviews -->
+<section class="bg-white p-lg rounded-2xl card-shadow">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">reviews</span>
+<h3 class="font-headline-md text-headline-md font-quicksand text-on-surface">Reseñas recientes</h3>
+</div>
+<a class="text-primary font-label-md hover:underline" href="#">Ver todas</a>
+</div>
+<div class="space-y-4">
+<!-- Review Item 1 -->
+<div class="flex gap-4 p-4 rounded-xl border border-surface-container hover:bg-surface-container-lowest transition-colors group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex-shrink-0 flex items-center justify-center font-bold text-primary">M</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-on-surface">Mariana R.</span>
+<span class="text-xs text-on-surface-variant opacity-60">Hace 10 min</span>
+</div>
+<div class="flex text-primary mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 italic">"El proceso de espera fue súper fluido. Me encantó que me avisaran por WhatsApp."</p>
+</div>
+</div>
+<!-- Review Item 2 -->
+<div class="flex gap-4 p-4 rounded-xl border border-surface-container hover:bg-surface-container-lowest transition-colors group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex-shrink-0 flex items-center justify-center font-bold text-primary">J</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-on-surface">Jorge L.</span>
+<span class="text-xs text-on-surface-variant opacity-60">Hace 1 hora</span>
+</div>
+<div class="flex text-primary mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 italic">"La comida valió la espera, aunque tardaron un poquito más de lo estimado."</p>
+</div>
+</div>
+<!-- Review Item 3 -->
+<div class="flex gap-4 p-4 rounded-xl border border-surface-container hover:bg-surface-container-lowest transition-colors group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex-shrink-0 flex items-center justify-center font-bold text-primary">S</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-on-surface">Sofía M.</span>
+<span class="text-xs text-on-surface-variant opacity-60">Hace 3 horas</span>
+</div>
+<div class="flex text-primary mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 italic">"¡Excelente sistema! Pude caminar por los alrededores mientras esperaba mi mesa."</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button (Contextual for Dashboard) -->
+<button class="fixed bottom-8 right-8 bg-primary-container text-white p-4 rounded-full shadow-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all group z-50">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md pr-2">Nueva Fila</span>
+</button>
+<script>
+        // Simple micro-interaction for sidebar items
+        const navItems = document.querySelectorAll('aside nav a');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!item.classList.contains('bg-primary-container')) {
+                    navItems.forEach(i => {
+                        i.classList.remove('bg-primary-container', 'text-white');
+                        i.classList.add('text-on-surface-variant');
+                        // Reset fill on icons
+                        const icon = i.querySelector('.material-symbols-outlined');
+                        if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+                    });
+                    item.classList.add('bg-primary-container', 'text-white');
+                    item.classList.remove('text-on-surface-variant');
+                    const activeIcon = item.querySelector('.material-symbols-outlined');
+                    if (activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+                }
+            });
+        });
+
+        // Greeting Logic
+        const hour = new Date().getHours();
+        const greetingEl = document.querySelector('header h2');
+        const subGreetingEl = document.querySelector('header p');
+        
+        if (hour < 12) {
+            greetingEl.textContent = 'Buenos días';
+        } else if (hour < 19) {
+            greetingEl.textContent = 'Buenas tardes';
+        } else {
+            greetingEl.textContent = 'Buenas noches';
+        }
+    </script>
+</body></html>

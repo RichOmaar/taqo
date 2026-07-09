@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Agregar a la fila - Anfitrión Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Quicksand:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006a62",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#efe6e3",
+                        "on-secondary-fixed": "#00201d",
+                        "on-secondary-container": "#006f66",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#4c4541",
+                        "surface": "#fff8f5",
+                        "on-background": "#1e1b19",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#e1d8d5",
+                        "surface-container": "#f5ece9",
+                        "surface-container-low": "#fbf2ee",
+                        "on-tertiary": "#ffffff",
+                        "background": "#fff8f5",
+                        "tertiary": "#655d58",
+                        "surface-tint": "#a43c27",
+                        "surface-container-highest": "#e9e1dd",
+                        "outline": "#8a716c",
+                        "inverse-surface": "#34302d",
+                        "secondary-fixed": "#94f3e7",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "on-primary-fixed-variant": "#842413",
+                        "on-primary-fixed": "#3e0400",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#670f02",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#a43c27",
+                        "on-surface-variant": "#57423d",
+                        "surface-variant": "#e9e1dd",
+                        "secondary-fixed-dim": "#77d7cb",
+                        "primary-fixed": "#ffdad3",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "error": "#ba1a1a",
+                        "primary-container": "#f2755c",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#cfc4bf",
+                        "secondary-container": "#91f0e4",
+                        "inverse-primary": "#ffb4a5",
+                        "tertiary-fixed": "#ece0da",
+                        "on-tertiary-container": "#37312d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.25rem",
+                        "3xl": "2rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "lg": "48px",
+                        "xl": "80px",
+                        "margin-desktop": "64px",
+                        "md": "24px",
+                        "gutter": "20px",
+                        "sm": "12px",
+                        "margin-mobile": "20px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Quicksand"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Quicksand"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-xl": ["Quicksand"],
+                        "body-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fff8f5;
+            color: #1e1b19;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            overflow: hidden;
+        }
+        .modal-blur {
+            backdrop-filter: blur(12px);
+            background-color: rgba(30, 27, 25, 0.15);
+        }
+        .soft-card-shadow {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4FB0A5 !important;
+            box-shadow: 0 0 0 4px rgba(79, 176, 165, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-md">
+<!-- Mock Background for Context -->
+<div class="fixed inset-0 z-0 grid grid-cols-12 gap-gutter px-margin-desktop py-md opacity-20 pointer-events-none">
+<div class="col-span-3 h-full bg-surface-container rounded-3xl"></div>
+<div class="col-span-9 flex flex-col gap-md">
+<div class="h-1/4 bg-surface-container rounded-3xl"></div>
+<div class="h-3/4 bg-surface-container rounded-3xl"></div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 modal-blur flex items-center justify-center p-md">
+<!-- Modal Content -->
+<div class="bg-surface-container-lowest w-full max-w-[560px] rounded-3xl soft-card-shadow overflow-hidden transform transition-all duration-300 scale-100 flex flex-col" id="add-to-queue-modal">
+<!-- Header -->
+<div class="flex items-center justify-between px-lg pt-lg pb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Agregar a la fila</h2>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Form Content -->
+<div class="px-lg pb-lg space-y-md overflow-y-auto max-h-[768px]">
+<!-- Welcome Hint -->
+<div class="bg-primary-fixed/30 p-md rounded-2xl flex items-start gap-md">
+<span class="material-symbols-outlined text-primary mt-1">favorite</span>
+<div>
+<p class="font-label-md text-on-surface">¡Bienvenidos!</p>
+<p class="font-label-sm text-on-surface-variant">Ingresa los detalles del grupo para asignarles un lugar.</p>
+</div>
+</div>
+<!-- Name Field -->
+<div class="space-y-base">
+<label class="font-label-md text-on-surface-variant ml-2">Nombre del cliente</label>
+<input class="w-full bg-surface-container-low border-2 border-transparent px-md py-4 rounded-2xl font-body-md text-on-surface placeholder:text-outline-variant transition-all" placeholder="Ej. Mariana López" type="text"/>
+</div>
+<!-- Party Size & Phone Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Party Size Stepper -->
+<div class="space-y-base">
+<label class="font-label-md text-on-surface-variant ml-2">Tamaño del grupo</label>
+<div class="flex items-center justify-between bg-surface-container-low p-base rounded-2xl border-2 border-transparent h-[60px]">
+<button class="w-11 h-11 flex items-center justify-center rounded-xl bg-surface-container-lowest hover:bg-white text-primary transition-all active:scale-95 shadow-sm" id="dec-party">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="font-headline-md text-on-surface" id="party-count">2</span>
+<button class="w-11 h-11 flex items-center justify-center rounded-xl bg-surface-container-lowest hover:bg-white text-primary transition-all active:scale-95 shadow-sm" id="inc-party">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<!-- Phone number -->
+<div class="space-y-base">
+<label class="font-label-md text-on-surface-variant ml-2">Teléfono (opcional)</label>
+<input class="w-full h-[60px] bg-surface-container-low border-2 border-transparent px-md py-4 rounded-2xl font-body-md text-on-surface placeholder:text-outline-variant transition-all" placeholder="+52 55..." type="tel"/>
+</div>
+</div>
+<!-- Queue Selector -->
+<div class="space-y-base">
+<label class="font-label-md text-on-surface-variant ml-2">Seleccionar fila</label>
+<div class="flex gap-sm">
+<button class="flex-1 py-3 px-md rounded-full font-label-md transition-all border-2 border-primary-container bg-primary-container text-on-primary">General</button>
+<button class="flex-1 py-3 px-md rounded-full font-label-md transition-all border-2 border-outline-variant text-on-surface-variant hover:bg-surface-container-high">VIP</button>
+<button class="flex-1 py-3 px-md rounded-full font-label-md transition-all border-2 border-outline-variant text-on-surface-variant hover:bg-surface-container-high">Visitante</button>
+</div>
+</div>
+<!-- Notes Field -->
+<div class="space-y-base">
+<label class="font-label-md text-on-surface-variant ml-2">Notas adicionales (alergias, ocasión especial)</label>
+<textarea class="w-full bg-surface-container-low border-2 border-transparent px-md py-4 rounded-2xl font-body-md text-on-surface placeholder:text-outline-variant transition-all resize-none" placeholder="Ej. Alergia a nueces, cumpleaños..." rows="3"></textarea>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="px-lg py-md bg-surface-container-low/50 flex flex-col md:flex-row-reverse items-center gap-md">
+<button class="w-full md:w-auto px-xl py-4 bg-primary-container text-on-primary font-label-md rounded-full shadow-lg hover:shadow-xl hover:brightness-105 transition-all active:scale-95">
+                    Agregar
+                </button>
+<button class="w-full md:w-auto px-md py-4 text-on-surface-variant font-label-md hover:text-on-surface transition-colors">
+                    Cancelar
+                </button>
+</div>
+</div>
+</div>
+<!-- Background Decoration -->
+<div class="fixed bottom-0 right-0 w-64 h-64 opacity-5 pointer-events-none">
+<div class="w-full h-full bg-cover" data-alt="A warm, atmospheric restaurant interior with soft lighting, wooden furniture, and green plants, captured in a minimalist and clean aesthetic. The lighting is golden hour, creating a welcoming and premium feel with soft focus on the background textures." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-it-zil0ExwJypVeIRe7nWKU9guJWATt2H_BplrpL0omqXJ16CrdynQhs9JAiEhar8OQC0u8MBChkGBxv5fsNhNv2VADSNapSN7HorOWl4ltcForyppJ2fwZlT4u5Nn-FocPjIIMA-32-nBj1MKg8IFPUNdhdj62v6ddaREFqB43U0jiX0GtmGEXxNB4shF7WSmeau8bEHRgdj5v73GCtKBw9g6ZcRnws_zQrNT2yOp50ZWVvydwD-WNVXRGzI9aclqHlxuZVS_4')"></div>
+</div>
+<script>
+        // Simple Micro-interactions
+        const decBtn = document.getElementById('dec-party');
+        const incBtn = document.getElementById('inc-party');
+        const countSpan = document.getElementById('party-count');
+        
+        let count = 2;
+
+        decBtn.addEventListener('click', () => {
+            if (count > 1) {
+                count--;
+                countSpan.innerText = count;
+                countSpan.classList.add('scale-110');
+                setTimeout(() => countSpan.classList.remove('scale-110'), 100);
+            }
+        });
+
+        incBtn.addEventListener('click', () => {
+            count++;
+            countSpan.innerText = count;
+            countSpan.classList.add('scale-110');
+            setTimeout(() => countSpan.classList.remove('scale-110'), 100);
+        });
+
+        // Toggle Active Pills
+        const pills = document.querySelectorAll('button.rounded-full.border-2');
+        pills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                pills.forEach(p => {
+                    p.classList.remove('bg-primary-container', 'text-on-primary', 'border-primary-container');
+                    p.classList.add('border-outline-variant', 'text-on-surface-variant');
+                });
+                pill.classList.add('bg-primary-container', 'text-on-primary', 'border-primary-container');
+                pill.classList.remove('border-outline-variant', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

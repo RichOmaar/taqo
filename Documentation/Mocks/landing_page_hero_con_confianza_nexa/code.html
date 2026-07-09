@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexa | Digitaliza la fila de tu restaurante</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Quicksand:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Shared Style Guidance Mapping -->
+<style>
+        body {
+            background-color: #FBF7F2;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: #1e1b19;
+            overflow-x: hidden;
+        }
+        .font-headline { font-family: 'Quicksand', sans-serif; }
+        .soft-shadow { box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04); }
+        .pill-shape { border-radius: 9999px; }
+        .card-radius { border-radius: 24px; }
+        .glass-effect { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.8); }
+        
+        /* Material Symbols Utility */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1e1b19",
+                        "primary-fixed": "#ffdad3",
+                        "on-secondary-fixed": "#00201d",
+                        "on-background": "#1e1b19",
+                        "surface-variant": "#e9e1dd",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "on-primary-container": "#670f02",
+                        "surface-container-high": "#efe6e3",
+                        "primary-container": "#f2755c",
+                        "on-tertiary-fixed": "#201a17",
+                        "on-primary-fixed-variant": "#842413",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#34302d",
+                        "secondary-container": "#91f0e4",
+                        "outline-variant": "#dec0ba",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#fbf2ee",
+                        "surface": "#fff8f5",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#a43c27",
+                        "secondary": "#006a62",
+                        "on-primary-fixed": "#3e0400",
+                        "tertiary-container": "#a29893",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "tertiary-fixed-dim": "#cfc4bf",
+                        "on-secondary-container": "#006f66",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f5",
+                        "surface-container-highest": "#e9e1dd",
+                        "on-tertiary-container": "#37312d",
+                        "surface-bright": "#fff8f5",
+                        "secondary-fixed": "#94f3e7",
+                        "surface-container": "#f5ece9",
+                        "primary": "#a43c27",
+                        "outline": "#8a716c",
+                        "tertiary-fixed": "#ece0da",
+                        "inverse-on-surface": "#f8efeb",
+                        "surface-dim": "#e1d8d5",
+                        "on-surface-variant": "#57423d",
+                        "on-tertiary-fixed-variant": "#4c4541",
+                        "inverse-primary": "#ffb4a5",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#77d7cb",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#655d58",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "xl": "80px",
+                        "gutter": "20px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Quicksand"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Quicksand"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface selection:bg-primary-fixed">
+<!-- Top Navigation Anchor (Manual Implementation based on JSON styles) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md px-margin-desktop py-4 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-bold text-primary">Anfitrión Pro</span>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Inicio</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Características</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Precios</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-low pill-shape transition-all">search</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-2.5 pill-shape shadow-sm hover:scale-95 transition-transform">Entrar</button>
+</div>
+</header>
+<!-- Hero Section -->
+<main class="relative min-h-screen pt-32 pb-16 px-margin-mobile md:px-margin-desktop max-w-[1400px] mx-auto overflow-visible">
+<!-- Background Atmospheric Element -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-fixed/20 blur-[100px] rounded-full -z-10"></div>
+<div class="absolute top-1/2 -left-24 w-64 h-64 bg-secondary-fixed/20 blur-[80px] rounded-full -z-10"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-16 items-center">
+<!-- Content Left -->
+<div class="lg:col-span-6 space-y-md text-center lg:text-left">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 bg-surface-container-high rounded-full border border-outline-variant/30">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Solución moderna para restaurantes</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl md:text-[56px] md:leading-[64px] text-on-surface text-balance">
+                    Digitaliza la fila de tu restaurante
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0 text-balance">
+                    Tus comensales se anotan con un QR, reciben avisos cuando su mesa está lista, y tú lo gestionas todo en tiempo real.
+                </p>
+<div class="pt-base flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-md">
+<button class="w-full sm:w-auto bg-primary-container text-white px-xl py-4 pill-shape font-headline-md text-label-md shadow-lg hover:shadow-xl active:scale-95 transition-all">
+                        Empieza gratis
+                    </button>
+<a class="flex items-center gap-2 text-primary font-label-md text-label-md hover:translate-x-1 transition-transform group" href="#">
+                        Ver cómo funciona
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="pt-xs flex items-center justify-center lg:justify-start gap-2 text-on-surface-variant/70">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="text-[14px] font-medium tracking-tight">Sin instalar nada · Listo en minutos</span>
+</div>
+<!-- Trust Badges -->
+<div class="pt-lg flex flex-wrap justify-center lg:justify-start gap-md opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">stars</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-widest">Bistro Pro</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">workspace_premium</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-widest">Gourmet Hub</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-widest">SafeWait</span>
+</div>
+</div>
+</div>
+<!-- Visual Right -->
+<div class="lg:col-span-6 relative mt-16 lg:mt-0">
+<!-- Decorative Shapes -->
+<div class="absolute inset-0 bg-gradient-to-tr from-primary-fixed/30 to-secondary-fixed/20 rounded-full blur-3xl opacity-50"></div>
+<div class="relative mx-auto w-full max-w-[420px]">
+<!-- Phone Mockup Container -->
+<div class="relative z-10 p-4 bg-on-surface rounded-[48px] shadow-2xl border-[12px] border-on-surface aspect-[9/19.5]">
+<!-- Screen Content -->
+<div class="w-full h-full bg-surface-container-lowest rounded-[32px] overflow-hidden flex flex-col">
+<!-- In-App Header -->
+<div class="bg-primary p-6 text-white pb-8">
+<div class="flex justify-between items-center mb-6">
+<span class="material-symbols-outlined">menu</span>
+<div class="w-8 h-8 rounded-full bg-white/20"></div>
+</div>
+<h3 class="font-headline-md text-headline-md">Hola, David</h3>
+<p class="text-sm opacity-90">Tu mesa estará lista pronto</p>
+</div>
+<!-- Waitlist Status Card -->
+<div class="px-4 -mt-4 flex-1">
+<div class="bg-white card-radius soft-shadow p-6 space-y-md">
+<div class="text-center">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Tiempo de espera</p>
+<h2 class="font-headline-xl text-headline-xl text-primary mt-1">15 min</h2>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-sm items-center pb-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Posición en fila</span>
+<span class="font-bold">#3</span>
+</div>
+<div class="flex justify-between text-sm items-center">
+<span class="text-on-surface-variant">Invitados</span>
+<span class="font-bold">4 personas</span>
+</div>
+</div>
+<div class="bg-secondary-container/20 p-4 card-radius border border-secondary-fixed flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</div>
+<p class="text-[13px] text-on-secondary-container leading-tight font-medium">Te enviaremos un SMS cuando la mesa 12 esté lista.</p>
+</div>
+</div>
+<!-- Upsell in app -->
+<div class="mt-4 p-4 border border-dashed border-outline-variant/50 card-radius">
+<p class="text-[12px] text-on-surface-variant text-center">¿Quieres ver el menú mientras esperas?</p>
+<button class="w-full mt-2 py-2 bg-surface-container-high rounded-xl text-primary font-label-md text-label-sm">Ver Menú Digital</button>
+</div>
+</div>
+<!-- Tab Bar Mockup -->
+<div class="h-16 border-t border-surface-container flex items-center justify-around px-6">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="material-symbols-outlined text-on-surface-variant">restaurant_menu</span>
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</div>
+<!-- Floating Interaction Elements -->
+<div class="absolute -right-8 top-1/4 glass-effect p-4 card-radius shadow-xl z-20 border border-white/50 animate-bounce transition-all duration-[3000ms] hidden md:block">
+<div class="flex items-center gap-3">
+<div class="bg-green-100 text-green-700 p-2 rounded-full">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Mesa 5 lista</p>
+<p class="text-[10px] text-on-surface-variant">Aviso enviado hace 10s</p>
+</div>
+</div>
+</div>
+<div class="absolute -left-12 bottom-1/4 glass-effect p-4 card-radius shadow-xl z-20 border border-white/50 hidden md:block">
+<div class="flex items-center gap-3">
+<div class="bg-primary-fixed text-primary p-2 rounded-full">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Scan QR</p>
+<p class="text-[10px] text-on-surface-variant">Fila digital activada</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple Bottom Section Decoration -->
+<section class="mt-xl py-lg bg-surface-container-low border-t border-outline-variant/20 overflow-hidden">
+<div class="px-margin-desktop max-w-[1200px] mx-auto text-center space-y-md">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Más de 500 restaurantes ya no usan papel y pluma</h2>
+<div class="flex flex-wrap justify-center gap-lg">
+<div class="w-full max-w-sm">
+<img class="w-full h-48 object-cover card-radius shadow-sm mb-4" data-alt="A cinematic, warm wide-angle photograph of a bustling boutique restaurant interior during the golden hour. Soft amber light filters through large windows, illuminating a sleek wooden host stand where a smiling receptionist uses a tablet. The atmosphere is sophisticated and cozy, with modern minimalist decor, potted plants, and elegantly dressed patrons in the background enjoying their evening. High-end lifestyle photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7vZHv8NIjMCdDNh4U7dHx_mDRx3CVu8aVe7sHGeMNztRLSaLNXgCqUsqvhkA8XzZRAWHJHrcPgjqwK52U5mjQsEwJ7fgm-5zM344RmcY7Ke_63YNIiiFifWmHQ7rUKUm2aBCeKcfvUFlICpR79OBF6A-2TfaBDihr3Fd7k_2QVfAebSD6jYoiXfwqepCCkA3frZ5voLoUGN1hXcU8RBM0sLl3t7-pEb84-2iANI-1R5JW8QoRt4hOl71pQ8gFs3ruvoyEzWhlTuE"/>
+<p class="font-body-md text-on-surface-variant italic">"Nexa cambió la forma en que recibimos a nuestros clientes. Menos estrés, mejor servicio."</p>
+<p class="mt-2 font-label-md text-primary">— Chef Alejandro, Bistro Moderno</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroButton = document.querySelector('button');
+            
+            // Subtle parallax for floating elements
+            document.addEventListener('mousemove', (e) => {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+                
+                document.querySelectorAll('.glass-effect').forEach((el, index) => {
+                    const factor = (index + 1) * 2;
+                    el.style.transform = `translate(${moveX * factor}px, ${moveY * factor}px)`;
+                });
+            });
+
+            // Smooth reveal animation
+            const elements = document.querySelectorAll('h1, p, button, .lg\\:col-span-6');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * i);
+            });
+        });
+    </script>
+</body></html>

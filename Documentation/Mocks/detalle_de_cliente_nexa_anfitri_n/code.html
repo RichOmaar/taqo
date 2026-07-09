@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#a29893",
+                        "surface-container": "#f5ece9",
+                        "primary-container": "#f2755c",
+                        "on-tertiary-container": "#37312d",
+                        "surface-dim": "#e1d8d5",
+                        "tertiary-fixed": "#ece0da",
+                        "surface": "#fff8f5",
+                        "primary-fixed": "#ffdad3",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#91f0e4",
+                        "on-tertiary-fixed-variant": "#4c4541",
+                        "surface-container-low": "#fbf2ee",
+                        "outline": "#8a716c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#3e0400",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#006f66",
+                        "inverse-primary": "#ffb4a5",
+                        "on-secondary-fixed": "#00201d",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f8efeb",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f5",
+                        "outline-variant": "#dec0ba",
+                        "tertiary-fixed-dim": "#cfc4bf",
+                        "on-surface": "#1e1b19",
+                        "surface-tint": "#a43c27",
+                        "on-surface-variant": "#57423d",
+                        "tertiary": "#655d58",
+                        "surface-bright": "#fff8f5",
+                        "secondary": "#006a62",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "surface-container-highest": "#e9e1dd",
+                        "secondary-fixed": "#94f3e7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#77d7cb",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#201a17",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e9e1dd",
+                        "on-background": "#1e1b19",
+                        "inverse-surface": "#34302d",
+                        "on-primary-fixed-variant": "#842413",
+                        "on-primary-container": "#670f02",
+                        "primary": "#a43c27",
+                        "surface-container-high": "#efe6e3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "20px",
+                        "3xl": "32px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "sm": "12px",
+                        "gutter": "20px",
+                        "margin-desktop": "64px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "xl": "80px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Quicksand"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Quicksand"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Quicksand"],
+                        "label-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FBF7F2;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active {
+            color: #a43c27;
+        }
+        .step-line {
+            height: 2px;
+            background-color: #dec0ba;
+            flex-grow: 1;
+            margin: 0 8px;
+        }
+        .custom-shadow {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+        .glass-overlay {
+            backdrop-filter: blur(12px);
+            background: rgba(30, 27, 25, 0.1);
+        }
+        .side-panel-transition {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- Main Background Placeholder (Simulating the Dashboard behind the panel) -->
+<main class="flex-1 p-lg bg-surface">
+<div class="flex flex-col gap-md">
+<h1 class="font-headline-xl text-headline-xl text-primary">Bistro Moderno</h1>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Decorative Bento Grid Placeholders -->
+<div class="col-span-8 h-64 bg-surface-container rounded-2xl p-md">
+<div class="w-full h-full border-2 border-dashed border-outline-variant rounded-xl"></div>
+</div>
+<div class="col-span-4 h-64 bg-surface-container rounded-2xl p-md">
+<div class="w-full h-full border-2 border-dashed border-outline-variant rounded-xl"></div>
+</div>
+<div class="col-span-4 h-96 bg-surface-container rounded-2xl p-md"></div>
+<div class="col-span-8 h-96 bg-surface-container rounded-2xl p-md"></div>
+</div>
+</div>
+</main>
+<!-- Side Panel Overlay Background -->
+<div class="fixed inset-0 glass-overlay z-40 flex justify-end" id="panel-overlay">
+<!-- Right-aligned Slide-out Panel -->
+<aside class="w-[480px] h-full bg-surface-container-lowest custom-shadow side-panel-transition transform translate-x-0 overflow-y-auto flex flex-col" id="side-panel">
+<!-- Header -->
+<div class="px-lg py-md flex items-center justify-between sticky top-0 bg-surface-container-lowest z-10">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary text-3xl">group</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Familia García</h2>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low hover:bg-surface-variant transition-colors text-on-surface-variant" onclick="togglePanel()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Status Timeline -->
+<div class="px-lg py-base">
+<div class="flex items-center justify-between mb-base">
+<div class="flex flex-col items-center gap-xs flex-1">
+<div class="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hourglass_empty</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary">Esperando</span>
+</div>
+<div class="step-line mb-4"></div>
+<div class="flex flex-col items-center gap-xs flex-1 opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<span class="font-label-sm text-label-sm">Avisado</span>
+</div>
+<div class="step-line mb-4"></div>
+<div class="flex flex-col items-center gap-xs flex-1 opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<span class="font-label-sm text-label-sm">Sentado</span>
+</div>
+</div>
+</div>
+<div class="flex-1 px-lg py-md space-y-lg">
+<!-- Detailed Info Section -->
+<section>
+<h3 class="font-label-md text-label-md text-outline-variant uppercase tracking-wider mb-md">Detalles de la Visita</h3>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-2xl flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Comensales</span>
+<div class="flex items-center gap-xs text-on-surface font-bold">
+<span class="material-symbols-outlined text-secondary">person</span>
+<span class="font-headline-md text-headline-md">4 personas</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-2xl flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fila de Espera</span>
+<div class="flex items-center gap-xs text-on-surface font-bold">
+<span class="material-symbols-outlined text-secondary">list_alt</span>
+<span class="font-headline-md text-headline-md">General</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-2xl flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tiempo en espera</span>
+<div class="flex items-center gap-xs text-primary font-bold">
+<span class="material-symbols-outlined">schedule</span>
+<span class="font-headline-md text-headline-md">12 min</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-2xl flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">ETA Estimado</span>
+<div class="flex items-center gap-xs text-on-surface font-bold">
+<span class="material-symbols-outlined text-secondary">event_available</span>
+<span class="font-headline-md text-headline-md">14:30</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section>
+<h3 class="font-label-md text-label-md text-outline-variant uppercase tracking-wider mb-sm">Información de Contacto</h3>
+<div class="flex items-center justify-between bg-white border border-surface-container p-md rounded-2xl">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">call</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">+52 55 1234 5678</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Teléfono móvil</p>
+</div>
+</div>
+<button class="text-primary hover:bg-primary-fixed p-base rounded-full transition-colors">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+</div>
+</section>
+<!-- Notes Section -->
+<section>
+<h3 class="font-label-md text-label-md text-outline-variant uppercase tracking-wider mb-sm">Notas Especiales</h3>
+<div class="bg-surface-container-high p-md rounded-2xl border-l-4 border-primary">
+<div class="flex gap-base">
+<span class="material-symbols-outlined text-primary">priority_high</span>
+<p class="font-body-md text-body-md text-on-surface">
+                                Alergia a las nueces, requiere silla alta para bebé. Preferencia por mesa cerca de la ventana si es posible.
+                            </p>
+</div>
+</div>
+</section>
+</div>
+<!-- Action Buttons Footer -->
+<div class="px-lg py-lg bg-surface-container-low mt-auto space-y-base rounded-t-3xl border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-base">
+<button class="flex items-center justify-center gap-base h-14 rounded-full border-2 border-secondary text-secondary font-label-md hover:bg-secondary-container transition-all active:scale-95">
+<span class="material-symbols-outlined">chat</span>
+                        Avisar por WhatsApp
+                    </button>
+<button class="flex items-center justify-center gap-base h-14 rounded-full bg-primary text-white font-label-md hover:bg-on-primary-fixed-variant transition-all custom-shadow active:scale-95 shadow-lg">
+<span class="material-symbols-outlined">check_circle</span>
+                        Marcar sentado
+                    </button>
+</div>
+<div class="grid grid-cols-2 gap-base">
+<button class="flex items-center justify-center gap-base h-14 rounded-full bg-white border border-surface-container text-on-surface-variant font-label-md hover:bg-error-container hover:text-error transition-all active:scale-95">
+<span class="material-symbols-outlined">person_off</span>
+                        Marcar no-show
+                    </button>
+<button class="flex items-center justify-center gap-base h-14 rounded-full bg-white border border-surface-container text-on-surface-variant font-label-md hover:bg-surface-variant transition-all active:scale-95">
+<span class="material-symbols-outlined">edit</span>
+                        Editar datos
+                    </button>
+</div>
+</div>
+</aside>
+</div>
+<script>
+        function togglePanel() {
+            const panel = document.getElementById('side-panel');
+            const overlay = document.getElementById('panel-overlay');
+            
+            if (panel.classList.contains('translate-x-0')) {
+                panel.classList.remove('translate-x-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 400);
+            } else {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    panel.classList.add('translate-x-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            }
+        }
+
+        // Add some micro-interaction for the notes card
+        document.querySelector('.bg-surface-container-high').addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        document.querySelector('.bg-surface-container-high').addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0px)';
+        });
+    </script>
+</body></html>

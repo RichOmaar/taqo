@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Personalización del Formulario - Nexa Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;family=Be+Vietnam+Pro:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f5ece9",
+                        "primary-container": "#f2755c",
+                        "surface-container-low": "#fbf2ee",
+                        "on-surface-variant": "#57423d",
+                        "on-tertiary-container": "#37312d",
+                        "inverse-primary": "#ffb4a5",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "on-primary-fixed": "#3e0400",
+                        "error": "#ba1a1a",
+                        "tertiary": "#655d58",
+                        "tertiary-container": "#a29893",
+                        "on-secondary-container": "#006f66",
+                        "surface-bright": "#fff8f5",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1e1b19",
+                        "inverse-surface": "#34302d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#efe6e3",
+                        "secondary": "#006a62",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#00201d",
+                        "outline-variant": "#dec0ba",
+                        "background": "#fff8f5",
+                        "surface": "#fff8f5",
+                        "secondary-fixed": "#94f3e7",
+                        "on-primary-container": "#670f02",
+                        "surface-container-highest": "#e9e1dd",
+                        "tertiary-fixed": "#ece0da",
+                        "surface-tint": "#a43c27",
+                        "secondary-fixed-dim": "#77d7cb",
+                        "on-tertiary-fixed-variant": "#4c4541",
+                        "on-primary-fixed-variant": "#842413",
+                        "on-tertiary-fixed": "#201a17",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#cfc4bf",
+                        "on-surface": "#1e1b19",
+                        "surface-dim": "#e1d8d5",
+                        "outline": "#8a716c",
+                        "surface-variant": "#e9e1dd",
+                        "primary": "#a43c27",
+                        "secondary-container": "#91f0e4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdad3",
+                        "inverse-on-surface": "#f8efeb",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "xl": "80px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Quicksand"],
+                        "headline-md": ["Quicksand"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Quicksand"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FBF7F2;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: #1e1b19;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-shadow {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+        .drag-handle {
+            cursor: grab;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        .phone-frame {
+            border: 12px solid #34302d;
+            border-radius: 40px;
+        }
+        /* Custom Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #efe6e3;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #f2755c; }
+        input:checked + .slider:before { transform: translateX(20px); }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (Predicted Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 flex flex-col py-md bg-surface-container-low dark:bg-surface-dim z-50">
+<div class="px-md mb-lg">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Nexa Dashboard</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Administrador</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col space-y-1">
+<a class="flex items-center px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span class="font-label-md text-label-md">Resumen</span>
+</a>
+<a class="flex items-center px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">queue</span>
+<span class="font-label-md text-label-md">Lista de espera</span>
+</a>
+<a class="flex items-center px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">table_restaurant</span>
+<span class="font-label-md text-label-md">Mesas</span>
+</a>
+<!-- Active Tab: Personalización -->
+<a class="flex items-center px-md py-sm text-primary font-bold border-r-4 border-primary bg-surface-container-high scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-md" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-md text-label-md">Personalización</span>
+</a>
+<a class="flex items-center px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="font-label-md text-label-md">Configuración</span>
+</a>
+<a class="flex items-center px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">help_outline</span>
+<span class="font-label-md text-label-md">Ayuda</span>
+</a>
+</nav>
+<div class="mt-auto px-md py-md border-t border-outline-variant">
+<button class="flex items-center w-full px-md py-sm mb-sm rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md transition-all hover:brightness-95">
+<span class="material-symbols-outlined mr-md">visibility</span>
+                Ver restaurante
+            </button>
+<a class="flex items-center px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md">logout</span>
+<span class="font-label-md text-label-md">Cerrar sesión</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col p-lg max-w-[1400px]">
+<!-- Top Action Bar -->
+<header class="flex justify-between items-center mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Personalizar Formulario</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Diseña la experiencia de registro para tus comensales.</p>
+</div>
+<button class="bg-primary-container text-white px-xl py-sm rounded-full font-label-md text-label-md shadow-lg hover:brightness-110 active:scale-95 transition-all">
+                Guardar formulario
+            </button>
+</header>
+<!-- Builder Grid -->
+<div class="grid grid-cols-12 gap-gutter flex-1">
+<!-- Left Column: Campos disponibles -->
+<section class="col-span-3 bg-surface-container-lowest rounded-[24px] p-md custom-shadow flex flex-col gap-md">
+<div class="flex items-center gap-xs text-on-surface mb-xs">
+<span class="material-symbols-outlined text-primary">add_circle</span>
+<h3 class="font-headline-md text-headline-md">Campos disponibles</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-sm">Arrastra y suelta para añadir al formulario.</p>
+<div class="flex flex-col gap-sm">
+<!-- Field Types -->
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-move transition-all group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container p-xs bg-white rounded-lg">text_fields</span>
+<span class="font-label-md text-label-md">Texto corto</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary-container drag-handle">drag_indicator</span>
+</div>
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-move transition-all group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container p-xs bg-white rounded-lg">123</span>
+<span class="font-label-md text-label-md">Número</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary-container drag-handle">drag_indicator</span>
+</div>
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-move transition-all group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container p-xs bg-white rounded-lg">call</span>
+<span class="font-label-md text-label-md">Teléfono</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary-container drag-handle">drag_indicator</span>
+</div>
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-move transition-all group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container p-xs bg-white rounded-lg">mail</span>
+<span class="font-label-md text-label-md">Correo electrónico</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary-container drag-handle">drag_indicator</span>
+</div>
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-move transition-all group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container p-xs bg-white rounded-lg">checklist</span>
+<span class="font-label-md text-label-md">Selección múltiple</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary-container drag-handle">drag_indicator</span>
+</div>
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-move transition-all group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container p-xs bg-white rounded-lg">sticky_note_2</span>
+<span class="font-label-md text-label-md">Nota/Comentario</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary-container drag-handle">drag_indicator</span>
+</div>
+</div>
+</section>
+<!-- Center Column: Live Preview -->
+<section class="col-span-5 flex justify-center items-start">
+<div class="phone-frame w-[360px] h-[720px] bg-white relative overflow-hidden flex flex-col shadow-2xl">
+<!-- Status Bar -->
+<div class="h-10 flex justify-between items-center px-md text-on-surface-variant text-[12px] font-bold">
+<span>9:41</span>
+<div class="flex gap-xs items-center">
+<span class="material-symbols-outlined text-[14px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+<span class="material-symbols-outlined text-[14px]">battery_full</span>
+</div>
+</div>
+<!-- App Content Preview -->
+<div class="flex-1 overflow-y-auto px-md py-sm">
+<div class="w-full h-40 rounded-2xl mb-md bg-cover bg-center" data-alt="A high-end, cozy restaurant interior with warm ambient lighting, wooden furniture, and elegant table settings. The atmosphere is inviting and professional, designed for a boutique bistro in Mexico City with soft teal and coral accents. The photography style is modern and clean with shallow depth of field." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBBY7JsjrlEFlOeXJvTgPqp904MyAADgqCol6dL85guFtM4hNRAhBrox7Qc0rgt3e7TmbfNofRDT0axAPWIRk1Lnnu8-JCGMFjOEkBEeZ1VK_4Wo7uRG5W0QQfSNgySWgXqzyO152xwZVAssPFQNOvdnd8J-snTnpsAjL-4D9wvPzbdfDR3ajbFSA1kWvbenhvh3Cl5ARLDSZIhOIa8a2QiQ2tg07LxYduekcyqKYhzSJ4orpNpSkDCqnbpqzBRd9skVoOLLx_Ddnw')"></div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface text-center mb-xs">¡Bienvenidos!</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-center mb-lg">Completa tus datos para unirte a la lista de espera.</p>
+<div class="space-y-md">
+<!-- Field: Name -->
+<div class="space-y-xs group relative p-xs rounded-xl transition-colors hover:bg-surface-container-low border-2 border-transparent">
+<label class="font-label-md text-label-md text-on-surface-variant">Nombre del cliente *</label>
+<div class="w-full p-sm bg-surface-container-lowest border border-outline-variant rounded-[16px] text-on-surface-variant font-body-md italic">
+                                    Ej: Juan Pérez
+                                </div>
+</div>
+<!-- Field: Group Size (Selected State) -->
+<div class="space-y-xs p-xs rounded-xl bg-surface-container border-2 border-primary-container relative">
+<label class="font-label-md text-label-md text-primary font-bold">Tamaño del grupo *</label>
+<div class="w-full p-sm bg-white border border-primary-container rounded-[16px] text-on-surface font-body-md">
+                                    4 personas
+                                </div>
+<div class="absolute -right-3 -top-3 bg-primary-container text-white p-xs rounded-full flex">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</div>
+</div>
+<!-- Placeholder for new fields -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-lg flex flex-col items-center justify-center text-outline-variant gap-sm group hover:border-primary-container hover:text-primary-container transition-all cursor-pointer">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<p class="font-label-md text-label-md">Añadir nuevo campo aquí</p>
+</div>
+</div>
+<!-- Submit Button -->
+<div class="mt-xl pb-md">
+<button class="w-full py-md bg-primary-container text-white rounded-full font-headline-md text-headline-md shadow-lg opacity-50">
+                                Unirse a la lista
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Field Properties -->
+<section class="col-span-4 bg-surface-container-lowest rounded-[24px] p-md custom-shadow flex flex-col gap-md">
+<div class="flex items-center gap-xs text-on-surface mb-xs">
+<span class="material-symbols-outlined text-primary">settings_suggest</span>
+<h3 class="font-headline-md text-headline-md">Propiedades del campo</h3>
+</div>
+<div class="space-y-lg">
+<!-- Property: Label -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Etiqueta</label>
+<input class="w-full p-sm bg-surface-container-low border border-outline-variant rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary-container transition-all font-body-md text-on-surface" type="text" value="Tamaño del grupo"/>
+</div>
+<!-- Property: Required -->
+<div class="flex items-center justify-between p-sm bg-surface-container-low rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Obligatorio</span>
+<span class="text-[12px] text-on-surface-variant">El comensal debe completar este campo.</span>
+</div>
+<label class="switch">
+<input checked="" type="checkbox"/>
+<span class="slider"></span>
+</label>
+</div>
+<!-- Property: Help Text -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Texto de ayuda</label>
+<textarea class="w-full p-sm bg-surface-container-low border border-outline-variant rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary-container transition-all font-body-md text-on-surface resize-none" placeholder="Ej: Indica cuántas personas asistirán..." rows="3">Indica cuántas personas asistirán para asignarte la mejor mesa.</textarea>
+</div>
+<div class="pt-md flex gap-sm">
+<button class="flex-1 py-sm border-2 border-primary text-primary font-label-md text-label-md rounded-full hover:bg-primary-fixed-dim transition-colors">
+                            Eliminar campo
+                        </button>
+</div>
+</div>
+<div class="mt-auto p-md bg-secondary-container/10 rounded-2xl border border-secondary-container/20">
+<div class="flex items-center gap-sm mb-xs">
+<span class="material-symbols-outlined text-secondary">info</span>
+<h4 class="font-label-md text-label-md text-secondary font-bold">Consejo de experto</h4>
+</div>
+<p class="text-[13px] text-on-secondary-fixed-variant leading-relaxed">
+                        Mantén los formularios cortos (menos de 5 campos) para maximizar las conversiones de clientes hambrientos.
+                    </p>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for the draggable cards
+        document.querySelectorAll('.drag-handle').forEach(handle => {
+            handle.addEventListener('mousedown', () => {
+                handle.parentElement.style.opacity = '0.5';
+                handle.parentElement.style.transform = 'scale(0.98)';
+            });
+            handle.addEventListener('mouseup', () => {
+                handle.parentElement.style.opacity = '1';
+                handle.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Toggle focus state for property inputs
+        const inputs = document.querySelectorAll('input[type="text"], textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label').style.color = '#a43c27';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label').style.color = '#57423d';
+            });
+        });
+    </script>
+</body></html>

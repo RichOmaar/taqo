@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Anfitrión Pro - Bistro Moderno</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Quicksand:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#efe6e3",
+                    "inverse-surface": "#34302d",
+                    "on-surface-variant": "#57423d",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#006f66",
+                    "inverse-on-surface": "#f8efeb",
+                    "error": "#ba1a1a",
+                    "outline": "#8a716c",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ece0da",
+                    "on-primary-fixed": "#3e0400",
+                    "secondary-container": "#91f0e4",
+                    "on-primary-fixed-variant": "#842413",
+                    "primary-container": "#f2755c",
+                    "primary": "#a43c27",
+                    "surface-container-highest": "#e9e1dd",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "surface": "#fff8f5",
+                    "secondary-fixed-dim": "#77d7cb",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#ffdad3",
+                    "inverse-primary": "#ffb4a5",
+                    "secondary-fixed": "#94f3e7",
+                    "on-tertiary-container": "#37312d",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#a29893",
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "background": "#fff8f5",
+                    "surface-bright": "#fff8f5",
+                    "outline-variant": "#dec0ba",
+                    "surface-variant": "#e9e1dd",
+                    "secondary": "#006a62",
+                    "on-secondary-fixed": "#00201d",
+                    "on-surface": "#1e1b19",
+                    "surface-tint": "#a43c27",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#fbf2ee",
+                    "surface-container": "#f5ece9",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#201a17",
+                    "surface-dim": "#e1d8d5",
+                    "tertiary": "#655d58",
+                    "on-primary-container": "#670f02",
+                    "on-background": "#1e1b19"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px",
+                    "card": "20px"
+            },
+            "spacing": {
+                    "xl": "80px",
+                    "margin-desktop": "64px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "margin-mobile": "20px",
+                    "base": "8px",
+                    "lg": "48px",
+                    "xs": "4px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Quicksand"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "headline-md": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-lg": ["Quicksand"],
+                    "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #FBF7F2;
+        color: #1e1b19;
+        -webkit-font-smoothing: antialiased;
+      }
+      .custom-shadow {
+        box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+      }
+      .card-transition {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .card-transition:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 12px 35px rgba(46, 42, 40, 0.08);
+      }
+      .active-pill {
+        box-shadow: 0 4px 12px rgba(242, 117, 92, 0.2);
+      }
+    </style>
+</head>
+<body class="font-body-md text-on-background">
+<!-- Layout Container -->
+<div class="flex min-h-screen">
+<!-- SideNavBar (Authority: JSON & Strategy) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low flex flex-col py-md px-base shadow-md z-30">
+<!-- Header Identity -->
+<div class="px-4 mb-lg flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-primary leading-tight">Bistro Moderno</h2>
+<p class="font-label-sm text-on-surface-variant">Turno de Comida</p>
+</div>
+</div>
+<!-- Main Nav Items -->
+<nav class="flex-1 space-y-2">
+<a class="bg-primary-container text-on-primary-container rounded-xl flex items-center gap-3 px-4 py-3 active-pill transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">hourglass_empty</span>
+<span class="font-label-md">Lista de Espera</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span class="font-label-md">Mesas</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-md">Reservas</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md">Reportes</span>
+</a>
+</nav>
+<!-- CTA -->
+<div class="px-4 mb-6">
+<button class="w-full bg-primary-container text-on-primary-container font-headline-md py-4 rounded-full flex items-center justify-center gap-2 hover:brightness-105 transition-all shadow-md active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+                    Nueva Fila
+                </button>
+</div>
+<!-- Footer Nav -->
+<div class="border-t border-outline-variant pt-4 space-y-1">
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-2 hover:bg-surface-variant transition-all" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md">Ayuda</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-2 hover:bg-surface-variant transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Salir</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 ml-64 min-h-screen">
+<!-- TopAppBar (Authority: JSON & Strategy) -->
+<header class="bg-surface sticky top-0 z-20 shadow-sm px-margin-desktop py-4 flex justify-between items-center w-full">
+<div class="flex items-center gap-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Anfitrión Pro</h1>
+<!-- Stats Section (Dashboard specific) -->
+<div class="hidden lg:flex items-center gap-6 border-l border-outline-variant pl-8">
+<div class="flex flex-col">
+<span class="font-label-sm text-on-surface-variant">Personas en espera</span>
+<span class="font-headline-md text-on-surface">12 <small class="text-sm font-normal">pax</small></span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-on-surface-variant">Espera promedio</span>
+<span class="font-headline-md text-on-surface">18 <small class="text-sm font-normal">min</small></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary-container text-on-primary-container px-6 py-3 rounded-full font-label-md flex items-center gap-2 hover:brightness-105 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined">person_add</span>
+                        + Agregar manualmente
+                    </button>
+<div class="flex items-center gap-2 ml-4">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A detailed professional portrait of a restaurant hostess with a warm and welcoming smile, wearing a modern hospitality uniform in a brightly lit, high-end restaurant lobby with soft focus wooden interior background. The lighting is soft and golden, creating a warm boutique atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAigN5wACkFZtXS_hazFizF1TvqmkO19M3tB34O2jhvqLKsZYAMtEN4kYlpbKaADqn0ZYXOGUPZP8poL_if8JKS6OA67iBLSrYPFK-t2hYgjj_aD_y0LN4kPtEKXYRDNulR-uEzZccocNSfu5a80dr0uMpTsVxQtqiI5V8x9afkQJSHeRw_328jQu7MWY6koxtofueH9DPQMtxhKKcIyyepBtZpBUqaWHorT3ubLoGeaqfaK7kJuMvxHeXqlk9GisxaMnQb8zmMkuI"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8">
+<!-- Column Header Titles -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<h3 class="font-headline-md text-headline-md">General</h3>
+</div>
+<span class="bg-surface-container-highest px-3 py-1 rounded-full text-sm font-bold">5</span>
+</div>
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span>
+<h3 class="font-headline-md text-headline-md">VIP</h3>
+</div>
+<span class="bg-surface-container-highest px-3 py-1 rounded-full text-sm font-bold">3</span>
+</div>
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-tertiary"></span>
+<h3 class="font-headline-md text-headline-md">Visitante</h3>
+</div>
+<span class="bg-surface-container-highest px-3 py-1 rounded-full text-sm font-bold">4</span>
+</div>
+</div>
+<!-- Column Content (Kanban/Parallel Lists) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+<!-- General Column -->
+<div class="space-y-4 min-h-[500px]">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-card p-5 custom-shadow card-transition border border-transparent hover:border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg font-bold">Familia García</h4>
+<p class="text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">groups</span>
+                                        4 pers.
+                                    </p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Esperando</span>
+</div>
+<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Transcurrido</span>
+<span class="font-headline-md text-primary">12 min</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Estimado</span>
+<span class="font-headline-md text-on-surface">14:30</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-container-high hover:bg-secondary-container text-on-secondary-fixed-variant py-2 rounded-full font-label-md text-sm transition-all">Avisar</button>
+<button class="flex-1 bg-primary text-white py-2 rounded-full font-label-md text-sm transition-all hover:bg-primary-container">Sentar</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container hover:text-error transition-all">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-card p-5 custom-shadow card-transition">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg font-bold">Robert T.</h4>
+<p class="text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">person</span>
+                                        2 pers.
+                                    </p>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Avisado</span>
+</div>
+<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Transcurrido</span>
+<span class="font-headline-md text-primary">25 min</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Estimado</span>
+<span class="font-headline-md text-on-surface">14:15</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white py-2 rounded-full font-label-md text-sm transition-all hover:bg-primary-container">Sentar</button>
+<button class="px-4 bg-surface-container-high hover:bg-error-container hover:text-error rounded-full font-label-md text-sm transition-all">No-show</button>
+</div>
+</div>
+</div>
+<!-- VIP Column -->
+<div class="space-y-4 min-h-[500px]">
+<div class="bg-surface-container-lowest rounded-card p-5 custom-shadow card-transition border-2 border-primary-fixed">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<h4 class="font-headline-md text-lg font-bold">Dr. Martínez</h4>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Esperando</span>
+</div>
+<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Transcurrido</span>
+<span class="font-headline-md text-primary">5 min</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Preferencia</span>
+<span class="font-headline-md text-on-surface">Terraza</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white py-2 rounded-full font-label-md text-sm transition-all hover:bg-primary-container shadow-sm">Sentar Prioridad</button>
+</div>
+</div>
+</div>
+<!-- Visitante Column -->
+<div class="space-y-4 min-h-[500px]">
+<div class="bg-surface-container-lowest rounded-card p-5 custom-shadow card-transition border-dashed border-2 border-outline-variant opacity-80">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg font-bold italic">Mesa #24 (Walk-in)</h4>
+<p class="text-sm text-on-surface-variant">Sin reserva previa</p>
+</div>
+<span class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Consulta</span>
+</div>
+<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-semibold">Integrantes</span>
+<span class="font-headline-md text-on-surface">6 pers.</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-container-high py-2 rounded-full font-label-md text-sm transition-all hover:bg-surface-variant">Convertir a Lista</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple scale effect for interactive elements
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simulating auto-update of times
+        setInterval(() => {
+            document.querySelectorAll('.text-primary.font-headline-md').forEach(timeSpan => {
+                let current = parseInt(timeSpan.innerText);
+                if(!isNaN(current)) {
+                    // Logic to increment wait times visually could go here
+                }
+            });
+        }, 60000);
+    </script>
+</body></html>

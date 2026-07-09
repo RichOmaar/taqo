@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexa - Feedback</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Quicksand:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .star-active {
+            font-variation-settings: 'FILL' 1 !important;
+        }
+        .feedback-chip.active {
+            background-color: #f2755c;
+            color: white;
+            border-color: #f2755c;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#ffdad3",
+                    "on-secondary-container": "#006f66",
+                    "inverse-surface": "#34302d",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed-variant": "#842413",
+                    "inverse-on-surface": "#f8efeb",
+                    "surface-tint": "#a43c27",
+                    "surface": "#fff8f5",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#94f3e7",
+                    "surface-container": "#f5ece9",
+                    "primary": "#a43c27",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "surface-dim": "#e1d8d5",
+                    "tertiary-container": "#a29893",
+                    "surface-container-high": "#efe6e3",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#fff8f5",
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "on-background": "#1e1b19",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e9e1dd",
+                    "on-tertiary-container": "#37312d",
+                    "outline": "#8a716c",
+                    "inverse-primary": "#ffb4a5",
+                    "surface-variant": "#e9e1dd",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "on-primary-container": "#670f02",
+                    "secondary": "#006a62",
+                    "on-surface": "#1e1b19",
+                    "tertiary": "#655d58",
+                    "on-tertiary-fixed": "#201a17",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed-dim": "#77d7cb",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#57423d",
+                    "tertiary-fixed": "#ece0da",
+                    "on-primary-fixed": "#3e0400",
+                    "on-secondary-fixed": "#00201d",
+                    "background": "#fff8f5",
+                    "secondary-container": "#91f0e4",
+                    "primary-container": "#f2755c",
+                    "outline-variant": "#dec0ba",
+                    "surface-container-low": "#fbf2ee"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "sm": "12px",
+                    "gutter": "20px",
+                    "lg": "48px",
+                    "xl": "80px",
+                    "md": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "headline-xl": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-md": ["Quicksand"],
+                    "headline-lg": ["Quicksand"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 bg-surface z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md">restaurant</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Nexa</span>
+</div>
+<button class="hover:bg-surface-container-low transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 mt-16 pb-24 px-margin-mobile">
+<!-- Welcome Hero -->
+<section class="pt-8 pb-6 flex flex-col items-center text-center">
+<div class="w-20 h-20 mb-4 rounded-2xl bg-primary-container/10 flex items-center justify-center shadow-sm">
+<img class="w-16 h-16 rounded-xl object-cover" data-alt="A warm and inviting photograph of a rustic, charming Mexican restaurant logo, featuring handcrafted textures, warm wood accents, and soft overhead pendant lighting. The aesthetic is upscale hospitality with a cozy 'home-cooked' feel, utilizing a palette of rich terracottas, cream, and soft teal. The lighting is golden and welcoming, emphasizing a boutique dining atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD235hbZ-Y75Imb8J86ZMol5KQsbOYfdcVbDNaux7c0wtH6IR4nyogjdDrMcZ7sIcBXBV7AfPduuPPOveFAHNOVDFZEAhju-VT6S0qCTppawadtTT4MMkCvVNB4bzp7abY0EMNxQwuuYma0C6DXVeq69U1Ir9aNTA7qihSwySAafVNfbr8Cfl-LjJqGdrYBZzgZsT6tKh0mh1UgIHQzl1QCKkmqcDlwZTxQyf0Q03o1r62-Shcy9w1mvXg-aQjsFWNkRNnmDmz2O40"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">¡Gracias por visitarnos en El Sazón de la Abuela!</h1>
+<p class="font-body-md text-on-surface-variant px-4">Tu opinión nos ayuda a brindarte un servicio más cálido cada día.</p>
+</section>
+<!-- Feedback Card -->
+<div class="bg-surface-container-lowest rounded-[20px] p-md shadow-[0px_10px_30px_rgba(46,42,40,0.04)] mb-gutter">
+<h2 class="font-headline-md text-center text-on-surface mb-6">¿Cómo estuvo tu experiencia?</h2>
+<!-- Star Rating -->
+<div class="flex justify-center gap-2 mb-8" id="star-container">
+<button class="text-primary-container text-[40px] focus:outline-none transition-transform active:scale-90" onclick="setRating(1)">
+<span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 48;">star</span>
+</button>
+<button class="text-primary-container text-[40px] focus:outline-none transition-transform active:scale-90" onclick="setRating(2)">
+<span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 48;">star</span>
+</button>
+<button class="text-primary-container text-[40px] focus:outline-none transition-transform active:scale-90" onclick="setRating(3)">
+<span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 48;">star</span>
+</button>
+<button class="text-primary-container text-[40px] focus:outline-none transition-transform active:scale-90" onclick="setRating(4)">
+<span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 48;">star</span>
+</button>
+<button class="text-primary-container text-[40px] focus:outline-none transition-transform active:scale-90" onclick="setRating(5)">
+<span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 48;">star</span>
+</button>
+</div>
+<!-- Chips -->
+<div class="flex flex-wrap justify-center gap-3 mb-8">
+<button class="feedback-chip border-2 border-outline-variant text-on-surface-variant font-label-md px-5 py-2 rounded-full transition-all active:scale-95" onclick="this.classList.toggle('active')">
+                    Buena atención
+                </button>
+<button class="feedback-chip border-2 border-outline-variant text-on-surface-variant font-label-md px-5 py-2 rounded-full transition-all active:scale-95" onclick="this.classList.toggle('active')">
+                    Espera larga
+                </button>
+<button class="feedback-chip border-2 border-outline-variant text-on-surface-variant font-label-md px-5 py-2 rounded-full transition-all active:scale-95" onclick="this.classList.toggle('active')">
+                    Volvería
+                </button>
+</div>
+<!-- Text Area -->
+<div class="mb-gutter">
+<textarea class="w-full bg-surface-container-low border-none rounded-[16px] p-4 font-body-md text-on-surface placeholder:text-outline focus:ring-2 focus:ring-secondary transition-all min-h-[120px]" placeholder="Cuéntanos más (opcional)"></textarea>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary-container text-white font-headline-md py-4 rounded-full shadow-lg hover:brightness-110 active:scale-[0.98] transition-all duration-200">
+                Enviar
+            </button>
+</div>
+<!-- Secondary Note -->
+<p class="text-center font-label-md text-on-surface-variant px-8">
+            Agradecemos tu tiempo. Nexa utiliza esta información para mejorar la hospitalidad de tus lugares favoritos.
+        </p>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-[0px_-10px_30px_rgba(46,42,40,0.04)] rounded-t-3xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">¡Bienvenidos!</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">hourglass_top</span>
+<span class="font-label-md text-label-md">Mi Lugar</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Ajustes</span>
+</a>
+</nav>
+<script>
+        function setRating(rating) {
+            const stars = document.querySelectorAll('#star-container span');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('star-active');
+                } else {
+                    star.classList.remove('star-active');
+                }
+            });
+        }
+
+        // Initialize with 0 stars
+        setRating(0);
+
+        // Chip toggle logic handled via inline onclick for simplicity
+    </script>
+</body></html>

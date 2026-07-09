@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexa - Explorar Restaurantes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;family=Be+Vietnam+Pro:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#1e1b19",
+                    "tertiary-fixed": "#ece0da",
+                    "secondary": "#006a62",
+                    "primary-container": "#f2755c",
+                    "on-tertiary-container": "#37312d",
+                    "surface-tint": "#a43c27",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#57423d",
+                    "surface-dim": "#e1d8d5",
+                    "surface": "#fff8f5",
+                    "on-secondary-fixed": "#00201d",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "on-surface": "#1e1b19",
+                    "background": "#fff8f5",
+                    "outline": "#8a716c",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#fff8f5",
+                    "secondary-fixed": "#94f3e7",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "inverse-on-surface": "#f8efeb",
+                    "primary": "#a43c27",
+                    "tertiary": "#655d58",
+                    "surface-container": "#f5ece9",
+                    "on-primary-container": "#670f02",
+                    "secondary-container": "#91f0e4",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "on-primary-fixed-variant": "#842413",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#efe6e3",
+                    "inverse-surface": "#34302d",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#77d7cb",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#201a17",
+                    "surface-variant": "#e9e1dd",
+                    "surface-container-highest": "#e9e1dd",
+                    "tertiary-container": "#a29893",
+                    "surface-container-low": "#fbf2ee",
+                    "on-primary-fixed": "#3e0400",
+                    "outline-variant": "#dec0ba",
+                    "on-secondary-container": "#006f66",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#ffb4a5",
+                    "primary-fixed": "#ffdad3",
+                    "teal-accent": "#4FB0A5",
+                    "coral-accent": "#F2755C"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "20px",
+                    "3xl": "32px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "base": "8px",
+                    "gutter": "20px",
+                    "sm": "12px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "lg": "48px",
+                    "xl": "80px",
+                    "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Quicksand"],
+                    "headline-md": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "headline-xl": ["Quicksand"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #fff8f5; /* surface */
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3 {
+            font-family: 'Quicksand', sans-serif;
+        }
+        .soft-shadow {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+        /* Custom Scrollbar for filter row */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface selection:bg-primary-fixed-dim">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50 bg-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md">restaurant</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Nexa</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</header>
+<main class="pt-20 pb-24 min-h-screen px-margin-mobile flex flex-col gap-6">
+<!-- Search Section -->
+<section class="flex flex-col gap-4">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-none rounded-2xl font-body-md text-on-surface focus:ring-2 focus:ring-teal-accent/30 soft-shadow transition-all" placeholder="Buscar restaurante" type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex overflow-x-auto gap-3 no-scrollbar -mx-margin-mobile px-margin-mobile pb-2">
+<button class="whitespace-nowrap px-6 py-2 bg-primary-container text-on-primary-container rounded-full font-label-md soft-shadow transition-all active:scale-95">
+                    Cerca de mí
+                </button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-lowest text-on-surface-variant border border-outline-variant/30 rounded-full font-label-md soft-shadow transition-all hover:bg-surface-container-low">
+                    Comida Mexicana
+                </button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-lowest text-on-surface-variant border border-outline-variant/30 rounded-full font-label-md soft-shadow transition-all hover:bg-surface-container-low">
+                    Cafeterías
+                </button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-lowest text-on-surface-variant border border-outline-variant/30 rounded-full font-label-md soft-shadow transition-all hover:bg-surface-container-low">
+                    Italiana
+                </button>
+</div>
+</section>
+<!-- QR / Manual Code Entry -->
+<section class="flex justify-center">
+<button class="flex items-center gap-2 py-2 px-4 text-on-surface-variant hover:text-primary transition-colors active:scale-95 group">
+<span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">qr_code_scanner</span>
+<span class="font-label-md underline underline-offset-4 decoration-outline-variant">Tengo un código</span>
+</button>
+</section>
+<!-- Restaurant List -->
+<section class="flex flex-col gap-gutter">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Restaurantes cercanos</h2>
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest p-4 rounded-3xl soft-shadow flex flex-col gap-4 border border-surface-container transition-transform active:scale-[0.98]">
+<div class="flex gap-4 items-center">
+<div class="w-20 h-20 rounded-2xl bg-cover bg-center shrink-0" data-alt="A charming, authentic Mexican restaurant interior with vibrant warm lighting and traditional artisanal decor. The scene features a cozy atmosphere with wooden tables and potted succulents. Soft golden sunlight streams through a large window, highlighting the rich textures and premium hospitality aesthetic of the brand Nexa." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuArfjOlhZU7K1sxK7msW_geedmK4I_CRuuXwBPj3DMResfPjIysXI8SB5hCP2PA49CED-sz3vYI9leY0YwPI5IyeANdkP5n9UVUAn898aNabmtvUcxcvM0arSuWpR4Ol3cr-1Q88yyorhWuNT2ODbw_znFI5VqmzrwmDFy0sIGcEXSIjYmQrBC9oF_tK_gi0QMqEMaT_3UdtQoWzOwUGMXx1Y0WF42MpxArzzhGknsv9MyrVmVRFTqGPaM8ct_atmnRi3U7mGfGzOM')"></div>
+<div class="flex-1">
+<h3 class="font-headline-md text-on-surface">El Sazón de la Abuela</h3>
+<p class="font-body-md text-on-surface-variant">Comida Mexicana • 0.8 km</p>
+<div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-[#4FB0A5]/10 text-teal-accent rounded-full">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-label-sm font-bold uppercase tracking-wider">Espera ~20 min</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-coral-accent text-white font-label-md rounded-full soft-shadow hover:brightness-105 transition-all active:scale-95">
+                    Unirme a la fila
+                </button>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest p-4 rounded-3xl soft-shadow flex flex-col gap-4 border border-surface-container transition-transform active:scale-[0.98]">
+<div class="flex gap-4 items-center">
+<div class="w-20 h-20 rounded-2xl bg-cover bg-center shrink-0" data-alt="A modern minimalist café interior with clean lines, soft pastel tones, and elegant marble surfaces. The lighting is airy and bright, creating a serene hospitality environment. Small plants are scattered across the space, and the overall design reflects a high-end, contemporary bistro feel consistent with Nexa's brand identity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA-2RZ6SwfbN9WRtS7ZrKc0R3jxo6Df1RO5LjIEM4qXBgG4A6FTiiWyFXBf_suUwaJ0vdSq3c_ktRJ8GVolqkZ_tBiQhudKY56BN9EgsVV4s-xZXCoBw5yZD7V_cO5sAtzT-ixz71psfExaIqkulFXVw-rcwWi7rpfK_x8teAPbtIYU4NtXzwt0tfsqU0Xis7fCTEJ6YS2EvSb1pYAVAvKh8YW5dsjPuWzT4yw2MdQLTW49u6uhQI6komEOnH4pRtxNh7cRFCo4J7Q')"></div>
+<div class="flex-1">
+<h3 class="font-headline-md text-on-surface">Café Lumière</h3>
+<p class="font-body-md text-on-surface-variant">Cafetería &amp; Panadería • 1.2 km</p>
+<div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-secondary-fixed-dim/30 text-secondary rounded-full">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-sm font-bold uppercase tracking-wider">Sin espera</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-coral-accent text-white font-label-md rounded-full soft-shadow hover:brightness-105 transition-all active:scale-95">
+                    Unirme a la fila
+                </button>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest p-4 rounded-3xl soft-shadow flex flex-col gap-4 border border-surface-container transition-transform active:scale-[0.98]">
+<div class="flex gap-4 items-center">
+<div class="w-20 h-20 rounded-2xl bg-cover bg-center shrink-0" data-alt="An upscale Italian trattoria kitchen area with warm, ambient lighting and rustic brick walls. The scene depicts a high-quality culinary experience with copper cookware and fresh herbs visible in the background. The mood is sophisticated yet inviting, perfectly aligned with a premium restaurant waitlist app aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCt5N236KRCfKeNQQ11OTQhoKAS4jaAlZ8dd7AlzUxl9X_VVReZLfhPltVjh78wHtbr1-xQqQjbKhmWU9diRM6tWRO9C-hpejfxjLsRkjN0Yz1KBuBm3b-X_1JsVYW6x0Vz0Se1_plN8jikpxTNCGAUQqULdZHQ_Bl3S-TB_NTmp7QsvaDAYGBZ6tltpONvcQSIwdVWG-ElvAj3Qc115F3IZkaQ6kf9qEn7BIE5xwU4z2r8BJ82fRLeW_tUvD4F_NZKqbO0l-sFUcs')"></div>
+<div class="flex-1">
+<h3 class="font-headline-md text-on-surface">La Trattoria Romana</h3>
+<p class="font-body-md text-on-surface-variant">Comida Italiana • 2.5 km</p>
+<div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-[#4FB0A5]/10 text-teal-accent rounded-full">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-label-sm font-bold uppercase tracking-wider">Espera ~45 min</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-coral-accent text-white font-label-md rounded-full soft-shadow hover:brightness-105 transition-all active:scale-95">
+                    Unirme a la fila
+                </button>
+</article>
+</section>
+<!-- Spacer for FAB/BottomNav -->
+<div class="h-12"></div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-[0px_-10px_30px_rgba(46,42,40,0.04)] rounded-t-3xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">¡Bienvenidos!</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="font-label-md text-label-md">Explorar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">hourglass_top</span>
+<span class="font-label-md text-label-md">Mi Lugar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Ajustes</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for filter chips
+        const chips = document.querySelectorAll('.filter-chip-container button');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => {
+                    c.classList.remove('bg-primary-container', 'text-on-primary-container');
+                    c.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+                });
+                chip.classList.add('bg-primary-container', 'text-on-primary-container');
+                chip.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+            });
+        });
+
+        // Floating background animation effect (Atmospheric)
+        const addParallaxEffect = () => {
+            document.addEventListener('mousemove', (e) => {
+                const cards = document.querySelectorAll('article');
+                const x = (window.innerWidth - e.pageX) / 100;
+                const y = (window.innerHeight - e.pageY) / 100;
+                cards.forEach(card => {
+                    card.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+        };
+        // Commented out as it's more of a desktop luxury, but nice to have code ready
+        // addParallaxEffect();
+    </script>
+</body></html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuración - Anfitrión Pro</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&amp;family=Be+Vietnam+Pro:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "tertiary": "#655d58",
+                    "secondary": "#006a62",
+                    "tertiary-container": "#a29893",
+                    "on-primary-fixed-variant": "#842413",
+                    "on-primary-container": "#670f02",
+                    "outline-variant": "#dec0ba",
+                    "inverse-primary": "#ffb4a5",
+                    "surface-tint": "#a43c27",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "surface-bright": "#fff8f5",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "outline": "#8a716c",
+                    "inverse-surface": "#34302d",
+                    "secondary-fixed-dim": "#77d7cb",
+                    "on-tertiary-fixed": "#201a17",
+                    "surface-container-low": "#fbf2ee",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fff8f5",
+                    "secondary-container": "#91f0e4",
+                    "on-background": "#1e1b19",
+                    "on-primary-fixed": "#3e0400",
+                    "surface-container-highest": "#e9e1dd",
+                    "secondary-fixed": "#94f3e7",
+                    "on-secondary-container": "#006f66",
+                    "primary": "#a43c27",
+                    "on-surface-variant": "#57423d",
+                    "on-surface": "#1e1b19",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#e1d8d5",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#efe6e3",
+                    "surface-container": "#f5ece9",
+                    "surface-variant": "#e9e1dd",
+                    "on-tertiary-container": "#37312d",
+                    "tertiary-fixed": "#ece0da",
+                    "background": "#fff8f5",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#00201d",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f8efeb",
+                    "primary-fixed": "#ffdad3",
+                    "error-container": "#ffdad6",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "primary-container": "#f2755c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "lg": "48px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "gutter": "20px",
+                    "xs": "4px",
+                    "md": "24px",
+                    "xl": "80px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Quicksand"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-xl": ["Quicksand"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "headline-md": ["Quicksand"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Quicksand"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FBF7F2;
+            color: #1e1b19;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-card-shadow {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #dec0ba;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (The Anchor) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-surface-dim shadow-md flex flex-col py-md px-base z-50">
+<div class="mb-lg px-4">
+<h1 class="font-headline-md text-headline-md text-primary">Bistro Moderno</h1>
+<p class="font-label-sm text-on-surface-variant">Turno de Comida</p>
+</div>
+<nav class="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">hourglass_empty</span>
+<span class="font-label-md">Lista de Espera</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span class="font-label-md">Mesas</span>
+</a>
+<a class="bg-primary-container text-on-primary-container rounded-xl flex items-center gap-3 px-4 py-3 shadow-sm scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Configuración</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md">Formulario</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Plan</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1">
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl font-label-md mb-4 flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">add</span>
+                Nueva Fila
+            </button>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md">Ayuda</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-variant transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Salir</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 flex-1 p-margin-desktop bg-background min-h-screen">
+<!-- Header Section -->
+<header class="flex justify-between items-center mb-lg">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-on-background">Configuración</h2>
+<p class="font-body-md text-on-surface-variant">Personaliza la experiencia de tus comensales y el flujo de tu local.</p>
+</div>
+<button class="bg-primary text-on-primary font-label-md px-10 py-3 rounded-full hover:shadow-lg transition-shadow active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                Guardar cambios
+            </button>
+</header>
+<!-- Bento Grid Configuration -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- 1. Datos del restaurante -->
+<section class="col-span-12 lg:col-span-7 bg-surface-container-lowest p-md rounded-[20px] soft-card-shadow">
+<div class="flex items-center gap-3 mb-md">
+<span class="material-symbols-outlined text-primary">storefront</span>
+<h3 class="font-headline-md text-headline-md">Datos del restaurante</h3>
+</div>
+<div class="space-y-md">
+<div>
+<label class="block font-label-md text-on-surface-variant mb-2">Nombre del restaurante</label>
+<input class="w-full bg-surface-container border-transparent focus:border-secondary focus:ring-0 rounded-xl px-4 py-3 text-on-surface font-body-md transition-all" type="text" value="Bistro Moderno"/>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-24 h-24 rounded-2xl bg-surface-variant flex items-center justify-center overflow-hidden border-2 border-dashed border-outline">
+<img class="w-full h-full object-cover" data-alt="A premium professional logo for a boutique modern bistro, featuring minimalist typography and a soft terracotta color palette. The logo is displayed on a clean white background with subtle ambient lighting reflecting a high-end hospitality environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4CVX3x-2vdY8XWqRlPfux4W6VoJJor-y0GQvxy8ctoaVmlWQXjnMuQkfad96Y9TcoUsac8ckBz1E6HXUPjkVgo_RTxxHCbYcyvyA95sRgNlP5KPj1TwhqcCcP0bPFnUphIGRL46qGrDomFRpIorBdUsCMPB9GU5EIp48it06BIZ6rczwa5nXxZYnURv6sGre22j0wdo3vnnDdazhH_L57BzgllU5lMMF02NPPXrBC7776SKsSjAqE0sPRCE4Z6OIpEgWCl5hRNRY"/>
+</div>
+<div class="flex flex-col gap-2">
+<button class="bg-surface-variant text-on-surface-variant font-label-md px-4 py-2 rounded-full hover:bg-surface-container-high transition-colors text-sm">Cambiar logotipo</button>
+<p class="text-xs text-on-surface-variant font-label-sm">Recomendado: SVG o PNG (512x512px)</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. QR y código de acceso -->
+<section class="col-span-12 lg:col-span-5 bg-secondary-container/20 p-md rounded-[20px] soft-card-shadow border border-secondary-container/30">
+<div class="flex items-center gap-3 mb-md">
+<span class="material-symbols-outlined text-secondary">qr_code_2</span>
+<h3 class="font-headline-md text-headline-md text-on-secondary-container">QR de bienvenida</h3>
+</div>
+<div class="flex flex-col items-center gap-4 text-center">
+<div class="p-4 bg-white rounded-2xl shadow-sm border border-outline-variant">
+<img class="w-32 h-32" data-alt="A clean, minimalist QR code graphic centered on a white card. The QR code has rounded modules and a subtle green accent color in the corners, symbolizing a modern restaurant check-in point. Professional and sharp design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhgkTYtzyLZBt2jYNryYqZaxoe4da1JSIFB5eeVVIRgJQ6kVg8zCogPh-SnTdLPD3me9dxD23YYTXcH5CGBdyzAToeMg2qzUhWlkL41OXrlOtvpJZhRE3KttghBD7YMbUXnR69NO6O39Z6N8rYn1X03evE6cnAFzCb90LORt4p_A3_JVD4TzLhrTwaeisSKbGHGVft44RoGbd06pU0ixYenA0SZFoWWFWWf3qIQy7nobqqTgwM3N1JZ_4oexas7UmwqzH8w3NV0ac"/>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Código de acceso</p>
+<div class="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-outline-variant">
+<span class="font-headline-md text-primary tracking-widest">NEXA-123</span>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">content_copy</button>
+</div>
+</div>
+<button class="w-full bg-secondary text-on-secondary font-label-md py-3 rounded-full hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">download</span>
+                        Descargar para imprimir
+                    </button>
+</div>
+</section>
+<!-- 3. Colas (Filas) -->
+<section class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-md rounded-[20px] soft-card-shadow">
+<div class="flex justify-between items-center mb-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">groups</span>
+<h3 class="font-headline-md text-headline-md">Gestión de Filas</h3>
+</div>
+<button class="bg-primary-container/20 text-on-primary-container font-label-md px-4 py-2 rounded-full flex items-center gap-2 hover:bg-primary-container/40 transition-colors">
+<span class="material-symbols-outlined text-base">add</span>
+                        Agregar fila
+                    </button>
+</div>
+<div class="space-y-3">
+<!-- Fila General -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-surface-variant hover:border-outline-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface">General</h4>
+<p class="text-xs text-on-surface-variant font-label-sm">Uso para clientes sin reserva</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<!-- Fila VIP -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-surface-variant hover:border-outline-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">star</span>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface">VIP</h4>
+<p class="text-xs text-on-surface-variant font-label-sm">Prioridad alta y eventos especiales</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<!-- Fila Visitante -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-surface-variant hover:border-outline-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">person_pin</span>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface">Visitante</h4>
+<p class="text-xs text-on-surface-variant font-label-sm">Consumo rápido o barra</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- 4 & 5. Tiempos y ETA -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- ETA Card -->
+<section class="bg-surface-container-lowest p-md rounded-[20px] soft-card-shadow border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<h3 class="font-label-md text-on-surface">Tiempo base (ETA)</h3>
+</div>
+<div class="flex items-end gap-3 mb-2">
+<input class="w-24 bg-surface-container border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 py-3 text-headline-md font-headline-md text-primary" type="number" value="15"/>
+<span class="font-label-md text-on-surface-variant mb-3">minutos / mesa</span>
+</div>
+<p class="text-xs text-on-surface-variant font-label-sm leading-relaxed">
+                        Este valor se utiliza para calcular automáticamente el tiempo de espera aproximado que ven los clientes.
+                    </p>
+</section>
+<!-- No-Show Card -->
+<section class="bg-surface-container-lowest p-md rounded-[20px] soft-card-shadow">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-error">person_off</span>
+<h3 class="font-label-md text-on-surface">Expiración de turno</h3>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-on-surface-variant">Margen de tolerancia</span>
+<span class="font-label-md text-primary bg-primary-fixed px-2 py-1 rounded-md">10 min</span>
+</div>
+<input class="w-full h-2 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" max="30" min="5" type="range" value="10"/>
+<p class="text-xs text-on-surface-variant font-label-sm italic">
+                            Los turnos se marcarán como "No-show" automáticamente después de este tiempo.
+                        </p>
+</div>
+</section>
+<!-- Status Feedback -->
+<div class="bg-secondary/10 p-4 rounded-2xl flex items-start gap-3 border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">info</span>
+<p class="text-xs text-on-secondary-container leading-snug">
+<strong>Tip del host:</strong> Un tiempo base de 15 minutos es ideal para cenas de 2-4 personas. Ajusta según tu demanda.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Floating Action Button Contextual Mock (Hidden by logic but present in design system) -->
+<!-- Suppressed as per instructions for Settings Screen -->
+</main>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simple Copy Logic
+        const copyBtn = document.querySelector('button .material-symbols-outlined:contains("content_copy")');
+        if(copyBtn) {
+            copyBtn.parentElement.addEventListener('click', () => {
+                const text = "NEXA-123";
+                navigator.clipboard.writeText(text).then(() => {
+                    const original = copyBtn.textContent;
+                    copyBtn.textContent = 'check';
+                    setTimeout(() => {
+                        copyBtn.textContent = original;
+                    }, 2000);
+                });
+            });
+        }
+    </script>
+</body></html>

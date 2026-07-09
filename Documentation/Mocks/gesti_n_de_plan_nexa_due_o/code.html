@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexa Dashboard - Gestión de Plan</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#34302d",
+                        "tertiary-fixed": "#ece0da",
+                        "on-secondary-fixed": "#00201d",
+                        "background": "#fff8f5",
+                        "tertiary": "#655d58",
+                        "secondary-container": "#91f0e4",
+                        "inverse-primary": "#ffb4a5",
+                        "surface": "#fff8f5",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "on-tertiary-container": "#37312d",
+                        "surface-container": "#f5ece9",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1e1b19",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#77d7cb",
+                        "secondary": "#006a62",
+                        "on-secondary-container": "#006f66",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#a43c27",
+                        "surface-variant": "#e9e1dd",
+                        "primary": "#a43c27",
+                        "on-surface": "#1e1b19",
+                        "tertiary-fixed-dim": "#cfc4bf",
+                        "tertiary-container": "#a29893",
+                        "surface-dim": "#e1d8d5",
+                        "outline-variant": "#dec0ba",
+                        "on-surface-variant": "#57423d",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "primary-fixed": "#ffdad3",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#3e0400",
+                        "on-primary-container": "#670f02",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#efe6e3",
+                        "on-tertiary-fixed-variant": "#4c4541",
+                        "on-tertiary-fixed": "#201a17",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e9e1dd",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fbf2ee",
+                        "primary-container": "#f2755c",
+                        "secondary-fixed": "#94f3e7",
+                        "outline": "#8a716c",
+                        "on-primary-fixed-variant": "#842413",
+                        "inverse-on-surface": "#f8efeb",
+                        "surface-bright": "#fff8f5",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "20px",
+                        "3xl": "32px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "sm": "12px",
+                        "margin-mobile": "20px",
+                        "base": "8px",
+                        "xl": "80px",
+                        "lg": "48px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Quicksand"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Quicksand"],
+                        "headline-lg": ["Quicksand"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fbf7f2; /* Custom override for "Soft Hospitality" warmth */
+            color: #1e1b19;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pro-card-glow {
+            box-shadow: 0px 10px 30px rgba(242, 117, 92, 0.15);
+        }
+        .ambient-card {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-64 flex flex-col py-md bg-surface-container-low border-r border-transparent z-50">
+<div class="px-md mb-lg">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Nexa Dashboard</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Administrador</p>
+</div>
+<nav class="flex-1 px-sm space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Resumen</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">queue</span>
+<span class="font-label-md">Lista de espera</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">table_restaurant</span>
+<span class="font-label-md">Mesas</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-md">Personalización</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Configuración</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md">Ayuda</span>
+</a>
+<!-- Plan Item (Active) -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-high active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-label-md">Plan</span>
+</a>
+</nav>
+<div class="px-sm pt-md border-t border-surface-variant mt-auto">
+<button class="w-full flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Cerrar sesión</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-xl max-w-[1200px]">
+<!-- Header Section -->
+<header class="mb-lg">
+<h2 class="font-headline-xl text-headline-xl text-on-surface mb-xs">Tu Plan</h2>
+<p class="text-on-surface-variant opacity-80">Administra tu suscripción y visualiza tu consumo mensual.</p>
+</header>
+<!-- Pricing Cards Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md mb-lg items-stretch">
+<!-- Gratis Card -->
+<div class="bg-surface-container-lowest ambient-card rounded-2xl p-lg flex flex-col transition-all hover:translate-y-[-4px]">
+<div class="mb-md">
+<span class="bg-surface-container px-sm py-xs rounded-full text-label-sm font-label-md text-on-surface-variant">PLAN ACTUAL</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg mb-xs">Gratis</h3>
+<p class="text-on-surface-variant font-body-md mb-md">Ideal para pequeños bistros comenzando su viaje digital.</p>
+<div class="text-on-surface mb-lg">
+<span class="font-headline-xl text-headline-xl">$0</span>
+<span class="text-on-surface-variant">/mes</span>
+</div>
+<ul class="space-y-sm mb-lg flex-1">
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<span class="font-body-md">Gestión de fila</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<span class="font-body-md">Colas ilimitadas</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<span class="font-body-md">Notificaciones web</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<span class="font-body-md">Métricas básicas</span>
+</li>
+</ul>
+<button class="w-full py-md px-lg rounded-full border-2 border-outline-variant text-on-surface-variant font-label-md hover:bg-surface-container transition-all">
+                    Tu plan actual
+                </button>
+</div>
+<!-- Pro Card -->
+<div class="bg-surface-container-lowest pro-card-glow rounded-2xl p-lg flex flex-col border-2 border-primary-container relative overflow-hidden transition-all hover:translate-y-[-4px]">
+<!-- Decorative Glow Background (Subtle) -->
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-primary-container text-white px-md py-xs rounded-full text-label-sm font-label-md uppercase tracking-wider">RECOMENDADO</span>
+</div>
+<div class="mb-md">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-sm py-xs rounded-full text-label-sm font-label-md">POTENCIA TU NEGOCIO</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg mb-xs">Pro</h3>
+<p class="text-on-surface-variant font-body-md mb-md">Optimiza la rotación de mesas y deleita a tus clientes con comunicación premium.</p>
+<div class="text-on-surface mb-lg">
+<span class="font-headline-xl text-headline-xl">$499</span>
+<span class="text-on-surface-variant">/mes MXN</span>
+</div>
+<ul class="space-y-sm mb-lg flex-1">
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<span class="font-body-md font-semibold">Todo lo de Gratis</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span class="font-body-md">Notificaciones SMS y WhatsApp</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span class="font-body-md">Métricas avanzadas</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span class="font-body-md">Soporte prioritario</span>
+</li>
+</ul>
+<button class="w-full py-md px-lg rounded-full bg-primary-container text-white font-label-md hover:brightness-110 shadow-lg shadow-primary-container/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    Mejorar a Pro
+                </button>
+</div>
+</div>
+<!-- Usage Section -->
+<section class="mt-xl">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Uso actual</h3>
+<span class="text-label-md text-on-surface-variant">Periodo: Octubre 2023</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Usage Card 1 -->
+<div class="bg-surface-container-low rounded-2xl p-md border border-surface-variant">
+<div class="flex justify-between items-end mb-sm">
+<div>
+<p class="font-label-md text-on-surface-variant uppercase tracking-tight mb-xs">Notificaciones enviadas</p>
+<p class="font-headline-md text-on-surface">450 <span class="text-on-surface-variant text-body-md">/ 500</span></p>
+</div>
+<span class="text-label-md text-primary font-bold">90%</span>
+</div>
+<div class="w-full bg-surface-variant h-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-1000 ease-out" style="width: 90%;"></div>
+</div>
+<p class="mt-sm text-label-sm text-on-surface-variant">Quedan 50 mensajes este mes.</p>
+</div>
+<!-- Usage Card 2 -->
+<div class="bg-surface-container-low rounded-2xl p-md border border-surface-variant">
+<div class="flex justify-between items-end mb-sm">
+<div>
+<p class="font-label-md text-on-surface-variant uppercase tracking-tight mb-xs">Clientes registrados</p>
+<p class="font-headline-md text-on-surface">1,280 <span class="text-on-surface-variant text-body-md">totales</span></p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">group</span>
+</div>
+<div class="w-full bg-surface-variant h-3 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full transition-all duration-1000 ease-out" style="width: 65%;"></div>
+</div>
+<p class="mt-sm text-label-sm text-on-surface-variant">Base de datos creciendo un 12% vs mes anterior.</p>
+</div>
+</div>
+</section>
+<!-- Help Section (Asymmetric) -->
+<section class="mt-xl flex flex-col md:flex-row gap-lg items-center bg-tertiary-fixed rounded-3xl p-lg overflow-hidden relative">
+<div class="flex-1 z-10">
+<h4 class="font-headline-md text-headline-md text-on-tertiary-fixed mb-sm">¿Necesitas un plan personalizado?</h4>
+<p class="font-body-md text-on-tertiary-fixed-variant mb-md max-w-md">Para cadenas de restaurantes o grupos gastronómicos con más de 5 sucursales, ofrecemos integraciones API y soporte dedicado.</p>
+<button class="flex items-center gap-sm text-on-tertiary-fixed font-label-md hover:underline">
+                    Contactar con ventas <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="flex-1 w-full relative h-48 md:h-auto min-h-[200px]">
+<div class="absolute inset-0 rounded-2xl bg-cover bg-center" data-alt="A warm and inviting photograph of a contemporary boutique restaurant interior with soft ambient lighting, wooden tables, and green plants. The scene is photographed in a minimalist style, capturing the essence of modern hospitality and efficiency. The color palette consists of soft beiges, terracotta, and muted teals, creating a welcoming and professional atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7ArxGyWt1NqRjQT0Ow2YI-FUSew-9v23Yr-h4NwovenRWIH_sGjbGW5wlwVHa_AsI_D76PUjEoYuhTKc-Zib4Gt6L-T4_mecn2D2SBvPnZZiqBo4mmEaAIRktsarA0IfV1gz7Yh0ijF6Ai2qJPj0ZlwyoHVmyXiL5-O7gAT4VsgygaIwUBUfByqWEX7h71loWF2LUrduChlHCWWMw2IEc8duKlbJnfG_WtMchtkKxCxUwBxDKLlRXB5sW7BDhS3YuzXE87TL4ZDU')"></div>
+</div>
+</section>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple entry animation logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.bg-primary, .bg-secondary');
+            bars.forEach(bar => {
+                const targetWidth = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = targetWidth;
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

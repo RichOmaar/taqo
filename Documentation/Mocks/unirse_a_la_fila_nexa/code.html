@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexa - Unirse a la fila</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Quicksand:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-soft-gradient {
+            background: radial-gradient(circle at top right, #fff8f5 0%, #fbf2ee 100%);
+        }
+        .shadow-soft {
+            box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "on-error": "#ffffff",
+                "surface-tint": "#a43c27",
+                "surface-dim": "#e1d8d5",
+                "background": "#fff8f5",
+                "tertiary-container": "#a29893",
+                "on-error-container": "#93000a",
+                "secondary-fixed": "#94f3e7",
+                "secondary": "#006a62",
+                "surface-bright": "#fff8f5",
+                "inverse-surface": "#34302d",
+                "on-tertiary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#91f0e4",
+                "on-secondary-fixed-variant": "#00504a",
+                "on-tertiary-container": "#37312d",
+                "on-secondary-container": "#006f66",
+                "on-secondary-fixed": "#00201d",
+                "on-secondary": "#ffffff",
+                "tertiary-fixed": "#ece0da",
+                "secondary-fixed-dim": "#77d7cb",
+                "surface-variant": "#e9e1dd",
+                "on-surface": "#1e1b19",
+                "inverse-primary": "#ffb4a5",
+                "outline-variant": "#dec0ba",
+                "on-tertiary-fixed-variant": "#4c4541",
+                "tertiary-fixed-dim": "#cfc4bf",
+                "primary-container": "#f2755c",
+                "surface-container-highest": "#e9e1dd",
+                "on-surface-variant": "#57423d",
+                "on-background": "#1e1b19",
+                "surface": "#fff8f5",
+                "on-tertiary-fixed": "#201a17",
+                "on-primary-fixed": "#3e0400",
+                "on-primary": "#ffffff",
+                "outline": "#8a716c",
+                "primary": "#a43c27",
+                "error-container": "#ffdad6",
+                "on-primary-fixed-variant": "#842413",
+                "surface-container-low": "#fbf2ee",
+                "on-primary-container": "#670f02",
+                "tertiary": "#655d58",
+                "surface-container-high": "#efe6e3",
+                "surface-container": "#f5ece9",
+                "inverse-on-surface": "#f8efeb",
+                "primary-fixed": "#ffdad3",
+                "primary-fixed-dim": "#ffb4a5",
+                "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "2xl": "1.25rem",
+                "3xl": "20px",
+                "full": "9999px"
+              },
+              "spacing": {
+                "xs": "4px",
+                "base": "8px",
+                "gutter": "20px",
+                "margin-mobile": "20px",
+                "margin-desktop": "64px",
+                "sm": "12px",
+                "xl": "80px",
+                "lg": "48px",
+                "md": "24px"
+              },
+              "fontFamily": {
+                "label-sm": ["Be Vietnam Pro"],
+                "headline-lg": ["Quicksand"],
+                "headline-md": ["Quicksand"],
+                "headline-xl": ["Quicksand"],
+                "body-lg": ["Be Vietnam Pro"],
+                "headline-lg-mobile": ["Quicksand"],
+                "body-md": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex flex-col items-center">
+<!-- Top Navigation Anchor -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 bg-surface z-50">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary" data-icon="restaurant">restaurant</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Nexa</span>
+</div>
+<button class="hover:bg-surface-container-low transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</button>
+</header>
+<main class="w-full max-w-lg mt-16 px-margin-mobile flex-1 pb-32">
+<!-- Header Section -->
+<section class="flex flex-col items-center text-center mt-md mb-lg">
+<div class="w-20 h-20 rounded-full shadow-soft mb-md border-4 border-white overflow-hidden bg-white">
+<img class="w-full h-full object-cover" data-alt="A warm, inviting close-up of a traditional Mexican restaurant logo for 'El Sazón de la Abuela'. The image should feature rustic textures like terracotta and hand-painted ceramics, with a soft blur on traditional décor in the background. The lighting is golden and high-key, reflecting a welcoming home-style hospitality vibe, dominated by warm earth tones and soft whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkn5BAssJSyBYmQXfDp6OULSuEVh5ntDYZHIySE_TD67ZOSjNuPmaxH0230zXmKG59zGyPSkTBqBKnmCmShSwOA9gkEWQs3_Brd8y97_CuS9TBJ3sSA8u5TL7mJnmWUNX7X22fvzs9OxAtJlxfUwmTSb64A3N654h5eO3vZbE6lFwP3e9rLB-ADj2sJXLjibO0yTZkvRtrgbokLx_WAvqxj0SIrinzEi5exER-2Z9Fr0c1n_CHskqw6EyPdVL_TWczL6Sm2EwOGbQ"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs">¡Te damos la bienvenida!</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Estamos felices de recibirte en El Sazón de la Abuela.</p>
+</section>
+<!-- Form Card -->
+<div class="bg-surface-container-lowest rounded-3xl p-md shadow-soft space-y-lg">
+<!-- Field 1: Name -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-xs" for="user-name">Tu nombre</label>
+<input class="w-full h-14 px-md bg-surface-container-low rounded-2xl border-none focus:ring-2 focus:ring-secondary transition-all placeholder:text-outline-variant font-body-md text-body-md" id="user-name" placeholder="Usa un apodo divertido si prefieres" type="text"/>
+</div>
+<!-- Field 2: Party Size -->
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant ml-xs">¿Cuántos vienen contigo?</label>
+<div class="flex items-center justify-between bg-surface-container-low rounded-2xl p-sm">
+<button class="w-12 h-12 flex items-center justify-center bg-white rounded-full text-primary shadow-sm active:scale-90 transition-transform" id="party-minus">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="font-headline-md text-headline-md text-on-surface" id="party-count">2</span>
+<button class="w-12 h-12 flex items-center justify-center bg-white rounded-full text-primary shadow-sm active:scale-90 transition-transform" id="party-plus">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- Field 3: Phone -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-xs" for="user-phone">Tu teléfono (opcional)</label>
+<input class="w-full h-14 px-md bg-surface-container-low rounded-2xl border-none focus:ring-2 focus:ring-secondary transition-all placeholder:text-outline-variant font-body-md text-body-md" id="user-phone" placeholder="55 1234 5678" type="tel"/>
+<p class="font-label-sm text-label-sm text-on-surface-variant ml-xs mt-xs opacity-80">Solo para avisarte por WhatsApp o SMS cuando tu mesa esté lista.</p>
+</div>
+<!-- Field 4: Queue Selector -->
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant ml-xs">Tipo de fila</label>
+<div class="flex gap-sm overflow-x-auto no-scrollbar pb-xs">
+<button class="queue-tab px-md py-sm rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md whitespace-nowrap active:scale-95 transition-all" data-type="general">General</button>
+<button class="queue-tab px-md py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap active:scale-95 transition-all" data-type="vip">VIP</button>
+<button class="queue-tab px-md py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap active:scale-95 transition-all" data-type="visitante">Visitante</button>
+</div>
+</div>
+</div>
+<!-- Action Section -->
+<section class="mt-lg space-y-md">
+<button class="w-full h-16 bg-primary-container text-white rounded-full font-headline-md text-headline-md shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-sm">
+                Unirme a la fila
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="w-full text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors py-xs">
+                Continuar como invitado
+            </button>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-[0px_-10px_30px_rgba(46,42,40,0.04)] rounded-t-3xl md:hidden">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">¡Bienvenidos!</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="hourglass_top">hourglass_top</span>
+<span class="font-label-md text-label-md">Mi Lugar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Ajustes</span>
+</div>
+</nav>
+<script>
+        // Simple party counter logic
+        const partyMinus = document.getElementById('party-minus');
+        const partyPlus = document.getElementById('party-plus');
+        const partyCountDisplay = document.getElementById('party-count');
+        let currentPartySize = 2;
+
+        partyMinus.addEventListener('click', () => {
+            if (currentPartySize > 1) {
+                currentPartySize--;
+                partyCountDisplay.innerText = currentPartySize;
+            }
+        });
+
+        partyPlus.addEventListener('click', () => {
+            if (currentPartySize < 20) {
+                currentPartySize++;
+                partyCountDisplay.innerText = currentPartySize;
+            }
+        });
+
+        // Queue tab logic
+        const tabs = document.querySelectorAll('.queue-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('bg-primary-container', 'text-on-primary-container');
+                    t.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                tab.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                tab.classList.add('bg-primary-container', 'text-on-primary-container');
+            });
+        });
+
+        // Micro-interaction: button scales
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => btn.classList.add('scale-95'));
+            btn.addEventListener('touchend', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>

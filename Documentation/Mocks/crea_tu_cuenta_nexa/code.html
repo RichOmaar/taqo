@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es-MX"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexa - Crea tu cuenta</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Execution -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#ffdad3",
+                    "on-secondary-container": "#006f66",
+                    "inverse-surface": "#34302d",
+                    "surface": "#fff8f5",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#a43c27",
+                    "on-primary-fixed-variant": "#842413",
+                    "inverse-on-surface": "#f8efeb",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "surface-container": "#f5ece9",
+                    "primary": "#a43c27",
+                    "secondary-fixed": "#94f3e7",
+                    "tertiary-container": "#a29893",
+                    "surface-dim": "#e1d8d5",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#4c4541",
+                    "surface-container-high": "#efe6e3",
+                    "tertiary-fixed-dim": "#cfc4bf",
+                    "surface-bright": "#fff8f5",
+                    "surface-container-highest": "#e9e1dd",
+                    "on-tertiary-container": "#37312d",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#1e1b19",
+                    "surface-variant": "#e9e1dd",
+                    "error": "#ba1a1a",
+                    "inverse-primary": "#ffb4a5",
+                    "outline": "#8a716c",
+                    "on-primary-container": "#670f02",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#655d58",
+                    "on-tertiary-fixed": "#201a17",
+                    "secondary": "#006a62",
+                    "on-surface": "#1e1b19",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#57423d",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#77d7cb",
+                    "tertiary-fixed": "#ece0da",
+                    "on-secondary-fixed": "#00201d",
+                    "background": "#fff8f5",
+                    "on-primary-fixed": "#3e0400",
+                    "surface-container-low": "#fbf2ee",
+                    "secondary-container": "#91f0e4",
+                    "primary-container": "#f2755c",
+                    "outline-variant": "#dec0ba"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "20px",
+                    "sm": "12px",
+                    "base": "8px",
+                    "md": "24px",
+                    "xl": "80px",
+                    "lg": "48px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-md": ["Quicksand"],
+                    "headline-lg": ["Quicksand"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #fbf7f2; /* Explicit warm off-white from prompt */
+        -webkit-tap-highlight-color: transparent;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        line-height: 1;
+      }
+      .ambient-shadow {
+        box-shadow: 0px 10px 30px rgba(46, 42, 40, 0.04);
+      }
+      .input-transition:focus {
+        border-color: #4FB0A5; /* Soft teal focus from guidance */
+        outline: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar - Using Shared Component Logic -->
+<header class="bg-surface fixed full-width top-0 z-50 flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="restaurant">restaurant</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Nexa</span>
+</div>
+<button class="hover:bg-surface-container-low transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="pt-24 pb-32 px-margin-mobile flex flex-col min-h-screen">
+<!-- Welcome Section -->
+<div class="mb-10 mt-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-3">Crea tu cuenta</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[280px]">Guarda tu historial y entra más rápido</p>
+</div>
+<!-- Decorative Element (Organic Visual) -->
+<div class="relative w-full h-48 mb-10 overflow-hidden rounded-3xl ambient-shadow">
+<div class="w-full h-full bg-cover bg-center" data-alt="A warm and inviting interior shot of a boutique Mediterranean bistro during the golden hour. The space features soft terracotta walls, wooden furniture, and lush green plants hanging from the ceiling. Warm, diffused sunlight creates long shadows and a cozy, human-centric atmosphere. The aesthetic is clean, minimalist, and premium, reflecting a high-end restaurant experience with a focus on comfort and hospitality." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCv0uJg5ScCSv_37XH8PZtAZI4hEwHekgQkyXw-nmhbaknFibvv-fcDdgA4MzlF1BhyYr7spj4WydYW74qalRmWplXYyVv0b0qWEaH_XUUtbrrdCFbIXG0jDmUSUfNCh76mgr6tIZGNl475lgw4L5_1r-bz2C3UENEqQUUiF9mVZidNxlBwFp9Btwr6WDQGLPc8wB76aJyjFezP4Q8PYfqAL-gpxp7RSSylWvu1taOcs45XE02pupF1Nao8-o6qDFTXzpIefuTeEWw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+<!-- Registration Form -->
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="email">Correo electrónico</label>
+<input class="w-full h-14 px-4 rounded-2xl bg-surface-container-lowest border-none ring-1 ring-outline-variant font-body-md text-body-md input-transition ambient-shadow" id="email" placeholder="ejemplo@correo.com" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="password">Contraseña</label>
+<input class="w-full h-14 px-4 rounded-2xl bg-surface-container-lowest border-none ring-1 ring-outline-variant font-body-md text-body-md input-transition ambient-shadow" id="password" placeholder="••••••••" type="password"/>
+</div>
+<!-- Primary Action -->
+<div class="pt-4 space-y-4">
+<button class="w-full h-14 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-full shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2" type="submit">
+                    Crear cuenta
+                </button>
+<!-- Secondary / Opt-out Action -->
+<div class="flex flex-col items-center gap-4">
+<button class="font-label-md text-label-md text-primary tracking-wide hover:opacity-80 transition-opacity" type="button">
+                        Continuar como invitado
+                    </button>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center px-8 opacity-70">
+                        Al registrarte, aceptas nuestros Términos de Servicio y Política de Privacidad.
+                    </p>
+</div>
+</div>
+</form>
+<!-- Social Proof Chip (Optional Contextual Add) -->
+<div class="mt-12 flex justify-center">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/30 rounded-full border border-secondary-container">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-secondary-container">Más de 50,000 usuarios confían en Nexa</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar - Mapping active state based on "Crea tu cuenta" -> Settings/Profile Context -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-[0px_-10px_30px_rgba(46,42,40,0.04)] rounded-t-3xl">
+<!-- ¡Bienvenidos! (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">¡Bienvenidos!</span>
+</a>
+<!-- Mi Lugar (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="hourglass_top">hourglass_top</span>
+<span class="font-label-md text-label-md">Mi Lugar</span>
+</a>
+<!-- Ajustes (Active - Logical mapping for "Create Account/Profile") -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md">Ajustes</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for form feedback
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label').classList.add('text-primary');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label').classList.remove('text-primary');
+            });
+        });
+
+        // Simple feedback for the primary button
+        const mainBtn = document.querySelector('button[type="submit"]');
+        mainBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            mainBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span>';
+            setTimeout(() => {
+                mainBtn.innerHTML = 'Crear cuenta';
+            }, 1500);
+        });
+    </script>
+</body></html>
