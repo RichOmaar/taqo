@@ -23,5 +23,8 @@
     "prettier": "catalog:",
     "turbo": "^2.3.3",
     "typescript": "catalog:"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@prisma/client", "prisma", "@prisma/engines", "esbuild"]
   }
 }
