@@ -1,9 +1,11 @@
+import 'dotenv/config';
+
+import { loadEnv } from './config/env';
 import { createServer } from './server';
 
-const port = Number(process.env.API_PORT ?? 4000);
-
+const env = loadEnv();
 const app = createServer();
 
-app.listen(port, () => {
-  console.log(`[nexa-api] listening on http://localhost:${port}`);
+app.listen(env.API_PORT, () => {
+  console.log(`[nexa-api] listening on http://localhost:${env.API_PORT} (${env.NODE_ENV})`);
 });
