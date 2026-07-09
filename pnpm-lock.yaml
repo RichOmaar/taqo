@@ -4,16 +4,34 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    prettier:
+      specifier: ^3.4.2
+      version: 3.9.5
+    typescript:
+      specifier: ^5.7.2
+      version: 5.9.3
+
 importers:
 
   .:
     devDependencies:
       prettier:
-        specifier: ^3.4.2
+        specifier: 'catalog:'
         version: 3.9.5
       turbo:
         specifier: ^2.3.3
         version: 2.10.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/config:
+    dependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
 packages:
 
@@ -56,6 +74,11 @@ packages:
     resolution: {integrity: sha512-GQpduILaKjoaGljw097ScsSyKTtZSY7cZ3bJktzfTkPMyCf3ShKLuXK2IaOEN2Plziml+ArR7WJ1m+V4VbnaKQ==}
     hasBin: true
 
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
 snapshots:
 
   '@turbo/darwin-64@2.10.4':
@@ -86,3 +109,5 @@ snapshots:
       '@turbo/linux-arm64': 2.10.4
       '@turbo/windows-64': 2.10.4
       '@turbo/windows-arm64': 2.10.4
+
+  typescript@5.9.3: {}
