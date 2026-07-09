@@ -1,7 +1,7 @@
 import type { ApiError } from '@nexa/types';
 import type { ErrorRequestHandler, RequestHandler } from 'express';
 
-import { HttpError } from '../errors';
+import { AppError } from '../../shared/errors';
 
 /** Terminal middleware for unmatched routes. */
 export const notFoundHandler: RequestHandler = (_req, res) => {
@@ -11,7 +11,7 @@ export const notFoundHandler: RequestHandler = (_req, res) => {
 
 /** Centralized error handler: maps thrown errors to the ApiError envelope. */
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  if (err instanceof HttpError) {
+  if (err instanceof AppError) {
     const body: ApiError = {
       error: { code: err.code, message: err.message, details: err.details },
     };

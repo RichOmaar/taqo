@@ -1,0 +1,63 @@
+import type { WaitlistEntry } from '@nexa/types';
+import { Prisma } from '@prisma/client';
+import type { PrismaClient, WaitlistEntry as PrismaWaitlistEntry } from '@prisma/client';
+
+import type { NewWaitlistEntry, WaitlistRepository } from '../domain/waitlist-repository';
+
+const ACTIVE_STATUSES = ['waiting', 'notified'] as const;
+
+function toEntry(row: PrismaWaitlistEntry): WaitlistEntry {
+  return {
+    id: row.id,
+    queueId: row.queueId,
+    restaurantId: row.restaurantId,
+    userId: row.userId,
+    displayName: row.displayName,
+    partySize: row.partySize,
+    phone: row.phone,
+    status: row.status,
+    position: row.position,
+    etaMinutes: row.etaMinutes,
+    etaIsManual: row.etaIsManual,
+    formData: (row.formData ?? {}) as Record<string, unknown>,
+    joinedAt: row.joinedAt.toISOString(),
+    notifiedAt: row.notifiedAt?.toISOString() ?? null,
+    seatedAt: row.seatedAt?.toISOString() ?? null,
+  };
+}
+
+export class PrismaWaitlistRepository implements WaitlistRepository {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  countActiveInQueue(queueId: string): Promise<number> {
+    return this.prisma.waitlistEntry.count({
+      where: { queueId, status: { in: [...ACTIVE_STATUSES] } },
+    });
+  }
+
+  async create(entry: NewWaitlistEntry): Promise<WaitlistEntry> {
+    const row = await this.prisma.waitlistEntry.create({
+      data: {
+        queueId: entry.queueId,
+        restaurantId: entry.restaurantId,
+        userId: entry.userId,
+        displayName: entry.displayName,
+        partySize: entry.partySize,
+        phone: entry.phone,
+        status: 'waiting',
+        position: entry.position,
+        etaMinutes: entry.etaMinutes,
+        formData: entry.formData as Prisma.InputJsonValue,
+      },
+    });
+    return toEntry(row);
+  }
+
+  async listByQueue(queueId: string): Promise<WaitlistEntry[]> {
+    const rows = await this.prisma.waitlistEntry.findMany({
+      where: { queueId, status: { in: [...ACTIVE_STATUSES] } },
+      orderBy: { position: 'asc' },
+    });
+    return rows.map(toEntry);
+  }
+}
