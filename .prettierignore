@@ -12,3 +12,6 @@ pnpm-lock.yaml
 # Imported / generated reference material — keep verbatim
 Documentation/V1 - Nexa MVP/
 Documentation/Mocks/
+
+# Next.js managed
+**/next-env.d.ts
