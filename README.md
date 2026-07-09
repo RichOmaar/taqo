@@ -43,17 +43,17 @@ nexa/
 
 ### Componentes
 
-| Workspace | Qué es | Tecnología |
-|---|---|---|
-| `apps/landing` | Sitio de marketing público. Propuesta de valor, precios, captación. SEO/rendimiento. | Next.js |
-| `apps/client` | App del comensal. Alta en la fila, posición, ETA, notificaciones. Móvil. | Next.js |
-| `apps/reception` | App de la hostess. Gestión de la cola en tiempo real. Tablet/desktop. | Next.js |
-| `apps/admin` | Panel del dueño. Configuración y métricas. Desktop. | Next.js |
-| `apps/api` | Backend compartido. Lógica de negocio (DDD), API REST y WebSockets. | Node + Express |
-| `apps/cms` | Formularios configurables y contenidos de usuario (catálogo, textos). | Strapi |
-| `packages/types` | Contratos compartidos: DTOs de API y payloads de eventos WebSocket. | TypeScript |
-| `packages/config` | Configuración compartida de tooling. | TypeScript |
-| `packages/ui` | Componentes de interfaz reutilizados por las apps. | React |
+| Workspace         | Qué es                                                                               | Tecnología     |
+| ----------------- | ------------------------------------------------------------------------------------ | -------------- |
+| `apps/landing`    | Sitio de marketing público. Propuesta de valor, precios, captación. SEO/rendimiento. | Next.js        |
+| `apps/client`     | App del comensal. Alta en la fila, posición, ETA, notificaciones. Móvil.             | Next.js        |
+| `apps/reception`  | App de la hostess. Gestión de la cola en tiempo real. Tablet/desktop.                | Next.js        |
+| `apps/admin`      | Panel del dueño. Configuración y métricas. Desktop.                                  | Next.js        |
+| `apps/api`        | Backend compartido. Lógica de negocio (DDD), API REST y WebSockets.                  | Node + Express |
+| `apps/cms`        | Formularios configurables y contenidos de usuario (catálogo, textos).                | Strapi         |
+| `packages/types`  | Contratos compartidos: DTOs de API y payloads de eventos WebSocket.                  | TypeScript     |
+| `packages/config` | Configuración compartida de tooling.                                                 | TypeScript     |
+| `packages/ui`     | Componentes de interfaz reutilizados por las apps.                                   | React          |
 
 ### Backend (DDD)
 

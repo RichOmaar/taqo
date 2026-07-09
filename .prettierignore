@@ -1,0 +1,14 @@
+# Dependencies & build outputs
+node_modules/
+dist/
+.next/
+.turbo/
+out/
+coverage/
+
+# Generated
+pnpm-lock.yaml
+
+# Imported / generated reference material — keep verbatim
+Documentation/V1 - Nexa MVP/
+Documentation/Mocks/

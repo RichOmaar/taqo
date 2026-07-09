@@ -45,42 +45,48 @@ Fase 3  Engordar ─────────────────►  007 res
 ### Fase 0 — Fundaciones (bloqueantes; primero y rápido)
 
 #### NEXA-001 · Init monorepo — ✅ HECHO
+
 - [x] **S1.** Scaffold del monorepo (pnpm-workspace, package.json raíz, turbo.json,
-  .gitignore, .nvmrc, .npmrc, `apps/` y `packages/`).
+      .gitignore, .nvmrc, .npmrc, `apps/` y `packages/`).
 - [x] **S2.** `CLAUDE.md` + `README.md` (estructura, `apps/landing`, Turborepo, regla de
-  idioma inglés, regla de design system / librería de componentes).
+      idioma inglés, regla de design system / librería de componentes).
 - [x] **S3.** Importar documentación + `Execution_Plan.md` + `UI_Mocks_Map.md`.
 
 #### NEXA-002 · Package de config compartida — ⏳
+
 - [ ] **S1.** `packages/config` (`@nexa/config`) con `tsconfig.base.json` (strict).
-  → `chore(config): add base tsconfig`
+      → `chore(config): add base tsconfig`
 - [ ] **S2.** ESLint compartido (flat config, typescript-eslint + prettier compat).
-  → `chore(config): add shared eslint config`
+      → `chore(config): add shared eslint config`
 - [ ] **S3.** Prettier compartido. → `chore(config): add shared prettier config`
 
 #### NEXA-003 · Package de tipos/contratos — ⏳
+
 - [ ] **S1.** `packages/types` (`@nexa/types`) init como internal package (exporta source,
-  sin build). → `chore(types): init shared types package`
+      sin build). → `chore(types): init shared types package`
 - [ ] **S2.** DTOs de dominio (Restaurant, Queue, WaitlistEntry, User, StaffUser,
-  Notification, ServiceReview) + enums de estado. → `feat(types): add domain DTOs and enums`
+      Notification, ServiceReview) + enums de estado. → `feat(types): add domain DTOs and enums`
 - [ ] **S3.** Payloads de eventos WebSocket (`entry_added/updated/removed`) + contratos
-  REST. → `feat(types): add websocket event and API contracts`
+      REST. → `feat(types): add websocket event and API contracts`
 
 ### Fase 1 — Arrancan los dos tracks en paralelo
 
 #### 🔵 Backend (Omar)
 
 **NEXA-004 · Esqueleto backend Express**
+
 - [ ] **S1.** `apps/api` init (Node + Express + TS), healthcheck, arranque local (tsx). → `feat(api): bootstrap express server with healthcheck`
 - [ ] **S2.** Estructura `src/contexts/`, middlewares y manejo de errores. → `feat(api): add app structure and error handling`
 - [ ] **S3.** Env tipada (dotenv + validación). → `feat(api): add typed env config`
 
 **NEXA-005 · Prisma + PostgreSQL**
+
 - [ ] **S1.** Prisma init + Postgres local (docker-compose). → `feat(api): set up prisma and local postgres`
 - [ ] **S2.** Schema inicial (entidades de la Spec). → `feat(api): add initial prisma schema`
 - [ ] **S3.** Primera migración + **seed de 1 restaurante + colas** (para la rebanada vertical). → `feat(api): add first migration and seed`
 
 **NEXA-006 · Estructura DDD por bounded context**
+
 - [ ] **S1.** Capas de `waitlist`. → `feat(api): scaffold waitlist context layers`
 - [ ] **S2.** Capas de `restaurant`. → `feat(api): scaffold restaurant context layers`
 - [ ] **S3.** Capas de `notifications`. → `feat(api): scaffold notifications context layers`
@@ -89,11 +95,13 @@ Fase 3  Engordar ─────────────────►  007 res
 #### 🟠 Frontend (tú)
 
 **NEXA-012 · Package de UI compartida (design system)**
+
 - [ ] **S1.** `packages/ui` init + tokens desde `DESIGN.md` (Tailwind preset / CSS vars). → `feat(ui): init design system tokens`
 - [ ] **S2.** Tipografía (Quicksand + Be Vietnam Pro) + primitivas (Button pill, Card, Input). → `feat(ui): add base components`
 - [ ] **S3.** Componentes de dominio desde mocks (Chip/Badge de estado, Stepper, WaitCard, StatusTimeline, BottomSheet). → `feat(ui): add domain components from mocks`
 
 **NEXA-011 · Scaffold de apps Next.js**
+
 - [ ] **S1.** `apps/landing` (Next.js + TS + Tailwind, consume `packages/*`). → `feat(landing): scaffold next.js app`
 - [ ] **S2.** `apps/client`. → `feat(client): scaffold next.js app`
 - [ ] **S3.** `apps/reception`. → `feat(reception): scaffold next.js app`
@@ -101,8 +109,9 @@ Fase 3  Engordar ─────────────────►  007 res
 
 ### Fase 2 — Rebanada vertical (walking skeleton demoable)
 
-Flujo objetivo: *el comensal se une a la fila → aparece en el board de recepción en
-tiempo real.* Arranca con **guest-only** (stub de identity).
+Flujo objetivo: _el comensal se une a la fila → aparece en el board de recepción en
+tiempo real._ Arranca con **guest-only** (stub de identity).
+
 - [ ] **NEXA-008 (parcial).** Waitlist core: `WaitlistEntry` + estados + `JoinWaitlist` + endpoint REST. → `feat(api): add waitlist join and entry domain`
 - [ ] **NEXA-010 (parcial).** WebSockets: server con rooms + emitir `entry_added`. → `feat(api): add websocket server and emit entry_added`
 - [ ] **client.** Pantalla de alta (mock `unirse_a_la_fila`) → POST al API. → `feat(client): add join waitlist screen`
@@ -149,4 +158,7 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
 - **En curso:** Fase 0 — NEXA-002 (config) → NEXA-003 (types).
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
+
+```
+
 ```

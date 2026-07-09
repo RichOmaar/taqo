@@ -56,6 +56,9 @@ importers:
       eslint-config-prettier:
         specifier: 'catalog:'
         version: 9.1.2(eslint@9.39.4)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.5
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

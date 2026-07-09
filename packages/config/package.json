@@ -6,6 +6,7 @@
   "exports": {
     "./tsconfig.base.json": "./tsconfig.base.json",
     "./eslint": "./eslint/base.js",
+    "./prettier": "./prettier/index.js",
     "./package.json": "./package.json"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
   },
   "peerDependencies": {
     "eslint": "catalog:",
+    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

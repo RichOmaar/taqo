@@ -215,12 +215,14 @@ compleja en el MVP).
 ## Qué hacer / qué evitar al asistir en este repo
 
 **Hazlo:**
+
 - Respeta las capas DDD y la dirección de dependencias.
 - Coloca tipos y contratos compartidos en `packages/types`.
 - Mantén el dominio libre de framework.
 - Pregunta o marca `[POR DEFINIR]` cuando falte una decisión, en vez de inventar.
 
 **Evítalo:**
+
 - Meter reglas de negocio en controladores Express o componentes React.
 - Duplicar lógica entre las tres apps (extráela a `packages/`).
 - Acceder a la base de datos desde los frontends (siempre vía backend).
