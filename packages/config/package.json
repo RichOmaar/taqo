@@ -5,9 +5,16 @@
   "type": "module",
   "exports": {
     "./tsconfig.base.json": "./tsconfig.base.json",
+    "./eslint": "./eslint/base.js",
     "./package.json": "./package.json"
   },
+  "dependencies": {
+    "@eslint/js": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "typescript-eslint": "catalog:"
+  },
   "peerDependencies": {
+    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }
