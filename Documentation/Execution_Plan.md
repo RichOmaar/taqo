@@ -94,18 +94,18 @@ Fase 3  Engordar ─────────────────►  007 res
 
 #### 🟠 Frontend (tú)
 
-**NEXA-012 · Package de UI compartida (design system)**
+**NEXA-012 · Package de UI compartida (design system)** — ✅ HECHO
 
-- [ ] **S1.** `packages/ui` init + tokens desde `DESIGN.md` (Tailwind preset / CSS vars). → `feat(ui): init design system tokens`
-- [ ] **S2.** Tipografía (Quicksand + Be Vietnam Pro) + primitivas (Button pill, Card, Input). → `feat(ui): add base components`
-- [ ] **S3.** Componentes de dominio desde mocks (Chip/Badge de estado, Stepper, WaitCard, StatusTimeline, BottomSheet). → `feat(ui): add domain components from mocks`
+- [x] **S1.** `packages/ui` init + tokens desde `DESIGN.md` (Tailwind preset). → `feat(ui): init design system tokens`
+- [x] **S2.** Primitivas (Button pill, Card, Input) + helper `cn`. → `feat(ui): add base components`
+- [x] **S3.** Componentes de dominio desde mocks (StatusBadge, Stepper, WaitCard, StatusTimeline, BottomSheet). → `feat(ui): add domain components from mocks`
 
-**NEXA-011 · Scaffold de apps Next.js**
+**NEXA-011 · Scaffold de apps Next.js** — ✅ HECHO
 
-- [ ] **S1.** `apps/landing` (Next.js + TS + Tailwind, consume `packages/*`). → `feat(landing): scaffold next.js app`
-- [ ] **S2.** `apps/client`. → `feat(client): scaffold next.js app`
-- [ ] **S3.** `apps/reception`. → `feat(reception): scaffold next.js app`
-- [ ] **S4.** `apps/admin`. → `feat(admin): scaffold next.js app`
+- [x] **S1.** `apps/landing` (Next.js 15 + TS + Tailwind + `@nexa/ui`, build + smoke verificados). → `feat(landing): scaffold next.js app`
+- [x] **S2.** `apps/client` (mobile-first, join starter). → `feat(client): scaffold next.js app`
+- [x] **S3.** `apps/reception` (board starter). → `feat(reception): scaffold next.js app`
+- [x] **S4.** `apps/admin` (dashboard starter). → `feat(admin): scaffold next.js app`
 
 ### Fase 2 — Rebanada vertical (walking skeleton demoable)
 
@@ -157,10 +157,10 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   reglas de `CLAUDE.md` actualizadas.
 - **Hecho:** Fase 0 completa — NEXA-002 (config: tsconfig/eslint/prettier) y NEXA-003
   (types: DTOs, enums, eventos WS y contratos REST).
-- **Hecho:** Fase 1 track 🔵 backend completo — NEXA-004 (express + errores + env),
-  NEXA-005 (Prisma + Postgres + schema + migración + seed), NEXA-006 (capas DDD de los 4 contexts).
-- **Siguiente:** Fase 1 track 🟠 frontend — NEXA-012 (ui design system) / NEXA-011 (scaffold apps),
-  luego Fase 2 (rebanada vertical).
+- **Hecho:** Fase 1 completa — 🔵 backend (NEXA-004/005/006) y 🟠 frontend (NEXA-012 ui +
+  NEXA-011 scaffold de las 4 apps Next.js, build y smoke verificados).
+- **Siguiente:** Fase 2 — rebanada vertical (join → board en tiempo real):
+  NEXA-008 (parcial) + NEXA-010 (parcial) + pantalla de alta client + board reception.
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
 
