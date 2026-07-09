@@ -73,24 +73,24 @@ Fase 3  Engordar ─────────────────►  007 res
 
 #### 🔵 Backend (Omar)
 
-**NEXA-004 · Esqueleto backend Express**
+**NEXA-004 · Esqueleto backend Express** — ✅ HECHO
 
-- [ ] **S1.** `apps/api` init (Node + Express + TS), healthcheck, arranque local (tsx). → `feat(api): bootstrap express server with healthcheck`
-- [ ] **S2.** Estructura `src/contexts/`, middlewares y manejo de errores. → `feat(api): add app structure and error handling`
-- [ ] **S3.** Env tipada (dotenv + validación). → `feat(api): add typed env config`
+- [x] **S1.** `apps/api` init (Node + Express + TS), healthcheck, arranque local (tsx). → `feat(api): bootstrap express server with healthcheck`
+- [x] **S2.** Estructura `src/contexts/`, middlewares y manejo de errores. → `feat(api): add app structure and error handling`
+- [x] **S3.** Env tipada (dotenv + validación). → `feat(api): add typed env config`
 
-**NEXA-005 · Prisma + PostgreSQL**
+**NEXA-005 · Prisma + PostgreSQL** — ✅ HECHO
 
-- [ ] **S1.** Prisma init + Postgres local (docker-compose). → `feat(api): set up prisma and local postgres`
-- [ ] **S2.** Schema inicial (entidades de la Spec). → `feat(api): add initial prisma schema`
-- [ ] **S3.** Primera migración + **seed de 1 restaurante + colas** (para la rebanada vertical). → `feat(api): add first migration and seed`
+- [x] **S1.** Prisma init + Postgres local (docker-compose, host 5433). → `feat(api): set up prisma and local postgres`
+- [x] **S2.** Schema inicial (entidades de la Spec). → `feat(api): add initial prisma schema`
+- [x] **S3.** Primera migración + **seed de 1 restaurante + colas** (para la rebanada vertical). → `feat(api): add first migration and seed`
 
-**NEXA-006 · Estructura DDD por bounded context**
+**NEXA-006 · Estructura DDD por bounded context** — ✅ HECHO
 
-- [ ] **S1.** Capas de `waitlist`. → `feat(api): scaffold waitlist context layers`
-- [ ] **S2.** Capas de `restaurant`. → `feat(api): scaffold restaurant context layers`
-- [ ] **S3.** Capas de `notifications`. → `feat(api): scaffold notifications context layers`
-- [ ] **S4.** Capas de `identity`. → `feat(api): scaffold identity context layers`
+- [x] **S1.** Capas de `waitlist`. → `feat(api): scaffold waitlist context layers`
+- [x] **S2.** Capas de `restaurant`. → `feat(api): scaffold restaurant context layers`
+- [x] **S3.** Capas de `notifications`. → `feat(api): scaffold notifications context layers`
+- [x] **S4.** Capas de `identity`. → `feat(api): scaffold identity context layers`
 
 #### 🟠 Frontend (tú)
 
@@ -157,7 +157,10 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   reglas de `CLAUDE.md` actualizadas.
 - **Hecho:** Fase 0 completa — NEXA-002 (config: tsconfig/eslint/prettier) y NEXA-003
   (types: DTOs, enums, eventos WS y contratos REST).
-- **Siguiente:** Fase 1 — tracks en paralelo: 🔵 NEXA-004 (express) y 🟠 NEXA-012 (ui) / NEXA-011 (scaffold apps).
+- **Hecho:** Fase 1 track 🔵 backend completo — NEXA-004 (express + errores + env),
+  NEXA-005 (Prisma + Postgres + schema + migración + seed), NEXA-006 (capas DDD de los 4 contexts).
+- **Siguiente:** Fase 1 track 🟠 frontend — NEXA-012 (ui design system) / NEXA-011 (scaffold apps),
+  luego Fase 2 (rebanada vertical).
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
 
