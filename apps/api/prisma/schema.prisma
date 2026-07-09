@@ -1,4 +1,5 @@
-// Nexa data model. Models are added in NEXA-005 S2.
+// Nexa data model. Field names are camelCase in Prisma and mapped to snake_case
+// columns; enum values mirror the shared contracts in @nexa/types.
 
 generator client {
   provider = "prisma-client-js"
@@ -7,4 +8,150 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum RestaurantPlan {
+  free
+  paid
+}
+
+enum WaitlistStatus {
+  waiting
+  notified
+  seated
+  no_show
+  cancelled
+}
+
+enum StaffRole {
+  admin
+  hostess
+}
+
+enum NotificationChannel {
+  web_push
+  sms
+  whatsapp
+}
+
+enum NotificationEventType {
+  registered
+  turn_near
+  table_ready
+}
+
+enum NotificationStatus {
+  sent
+  failed
+}
+
+model Restaurant {
+  id                String         @id @default(uuid()) @db.Uuid
+  name              String
+  code              String         @unique
+  qrToken           String         @unique @map("qr_token")
+  etaBaseMinutes    Int            @map("eta_base_minutes")
+  expirationMinutes Int            @map("expiration_minutes")
+  plan              RestaurantPlan @default(free)
+  createdAt         DateTime       @default(now()) @map("created_at")
+
+  queues  Queue[]
+  entries WaitlistEntry[]
+  staff   StaffUser[]
+  reviews ServiceReview[]
+
+  @@map("restaurants")
+}
+
+model Queue {
+  id           String  @id @default(uuid()) @db.Uuid
+  restaurantId String  @map("restaurant_id") @db.Uuid
+  name         String
+  priority     Int     @default(0)
+  isActive     Boolean @default(true) @map("is_active")
+
+  restaurant Restaurant      @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  entries    WaitlistEntry[]
+
+  @@index([restaurantId])
+  @@map("queues")
+}
+
+model WaitlistEntry {
+  id           String         @id @default(uuid()) @db.Uuid
+  queueId      String         @map("queue_id") @db.Uuid
+  restaurantId String         @map("restaurant_id") @db.Uuid
+  userId       String?        @map("user_id") @db.Uuid
+  displayName  String         @map("display_name")
+  partySize    Int            @map("party_size")
+  phone        String?
+  status       WaitlistStatus @default(waiting)
+  position     Int
+  etaMinutes   Int?           @map("eta_minutes")
+  etaIsManual  Boolean        @default(false) @map("eta_is_manual")
+  formData     Json           @default("{}") @map("form_data")
+  joinedAt     DateTime       @default(now()) @map("joined_at")
+  notifiedAt   DateTime?      @map("notified_at")
+  seatedAt     DateTime?      @map("seated_at")
+
+  queue         Queue          @relation(fields: [queueId], references: [id], onDelete: Cascade)
+  restaurant    Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  notifications Notification[]
+  review        ServiceReview?
+
+  @@index([queueId, status])
+  @@index([restaurantId])
+  @@map("waitlist_entries")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  entries WaitlistEntry[]
+
+  @@map("users")
+}
+
+model StaffUser {
+  id           String    @id @default(uuid()) @db.Uuid
+  restaurantId String    @map("restaurant_id") @db.Uuid
+  email        String    @unique
+  role         StaffRole
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+  @@map("staff_users")
+}
+
+model Notification {
+  id        String                @id @default(uuid()) @db.Uuid
+  entryId   String                @map("entry_id") @db.Uuid
+  channel   NotificationChannel
+  eventType NotificationEventType @map("event_type")
+  status    NotificationStatus
+  sentAt    DateTime              @default(now()) @map("sent_at")
+
+  entry WaitlistEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@index([entryId])
+  @@map("notifications")
+}
+
+model ServiceReview {
+  id           String   @id @default(uuid()) @db.Uuid
+  entryId      String   @unique @map("entry_id") @db.Uuid
+  restaurantId String   @map("restaurant_id") @db.Uuid
+  rating       Int
+  feedback     String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  entry      WaitlistEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  restaurant Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("service_reviews")
 }
