@@ -52,21 +52,21 @@ Fase 3  Engordar ─────────────────►  007 res
       idioma inglés, regla de design system / librería de componentes).
 - [x] **S3.** Importar documentación + `Execution_Plan.md` + `UI_Mocks_Map.md`.
 
-#### NEXA-002 · Package de config compartida — ⏳
+#### NEXA-002 · Package de config compartida — ✅ HECHO
 
-- [ ] **S1.** `packages/config` (`@nexa/config`) con `tsconfig.base.json` (strict).
+- [x] **S1.** `packages/config` (`@nexa/config`) con `tsconfig.base.json` (strict).
       → `chore(config): add base tsconfig`
-- [ ] **S2.** ESLint compartido (flat config, typescript-eslint + prettier compat).
+- [x] **S2.** ESLint compartido (flat config, typescript-eslint + prettier compat).
       → `chore(config): add shared eslint config`
-- [ ] **S3.** Prettier compartido. → `chore(config): add shared prettier config`
+- [x] **S3.** Prettier compartido. → `chore(config): add shared prettier config`
 
-#### NEXA-003 · Package de tipos/contratos — ⏳
+#### NEXA-003 · Package de tipos/contratos — ✅ HECHO
 
-- [ ] **S1.** `packages/types` (`@nexa/types`) init como internal package (exporta source,
+- [x] **S1.** `packages/types` (`@nexa/types`) init como internal package (exporta source,
       sin build). → `chore(types): init shared types package`
-- [ ] **S2.** DTOs de dominio (Restaurant, Queue, WaitlistEntry, User, StaffUser,
+- [x] **S2.** DTOs de dominio (Restaurant, Queue, WaitlistEntry, User, StaffUser,
       Notification, ServiceReview) + enums de estado. → `feat(types): add domain DTOs and enums`
-- [ ] **S3.** Payloads de eventos WebSocket (`entry_added/updated/removed`) + contratos
+- [x] **S3.** Payloads de eventos WebSocket (`entry_added/updated/removed`) + contratos
       REST. → `feat(types): add websocket event and API contracts`
 
 ### Fase 1 — Arrancan los dos tracks en paralelo
@@ -155,7 +155,9 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
 
 - **Hecho:** repo en GitHub, scaffold del monorepo (NEXA-001), documentación importada y
   reglas de `CLAUDE.md` actualizadas.
-- **En curso:** Fase 0 — NEXA-002 (config) → NEXA-003 (types).
+- **Hecho:** Fase 0 completa — NEXA-002 (config: tsconfig/eslint/prettier) y NEXA-003
+  (types: DTOs, enums, eventos WS y contratos REST).
+- **Siguiente:** Fase 1 — tracks en paralelo: 🔵 NEXA-004 (express) y 🟠 NEXA-012 (ui) / NEXA-011 (scaffold apps).
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
 
