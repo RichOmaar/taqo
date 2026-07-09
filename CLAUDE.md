@@ -18,8 +18,9 @@ una experiencia de usuario excelente y tiempo real fluido.
 
 ## Principios de arquitectura (respetar siempre)
 
-1. **Un solo backend compartido.** Las tres apps de frontend consumen el mismo backend.
-   No dupliques lógica de negocio en los frontends.
+1. **Un solo backend compartido.** Las apps de frontend operativas (`client`,
+   `reception`, `admin`) consumen el mismo backend. No dupliques lógica de negocio en
+   los frontends. (`landing` es marketing mayormente estático y casi no lo consume.)
 2. **Domain-Driven Design en el backend.** La lógica de negocio vive en el dominio,
    organizada por bounded contexts. No metas reglas de negocio en controladores ni en
    componentes de UI.
@@ -34,7 +35,7 @@ una experiencia de usuario excelente y tiempo real fluido.
 
 ## Stack
 
-- **Monorepo:** pnpm workspaces
+- **Monorepo:** pnpm workspaces + Turborepo (orquestación de tareas y caché)
 - **Frontends:** Next.js (React, TypeScript) — 3 apps
 - **Backend:** Node.js + Express (TypeScript), con WebSockets integrados en el
   mismo proceso
@@ -48,6 +49,7 @@ una experiencia de usuario excelente y tiempo real fluido.
 ```
 nexa/
 ├── apps/
+│   ├── landing/         # Sitio de marketing (público, SEO/conversión) — Next.js
 │   ├── client/          # Webapp cliente (móvil) — Next.js
 │   ├── reception/       # Webapp hostess (tablet/desktop) — Next.js
 │   ├── admin/           # Panel dueño (desktop) — Next.js
@@ -56,17 +58,21 @@ nexa/
 ├── packages/
 │   ├── types/           # Tipos y contratos compartidos (DTOs, eventos WS)
 │   ├── config/          # Config compartida (tsconfig, eslint, prettier)
-│   └── ui/              # Componentes UI compartidos entre las 3 apps
+│   └── ui/              # Design system + componentes compartidos (ver Mocks/)
 ├── package.json
 ├── pnpm-workspace.yaml
+├── turbo.json
 ├── CLAUDE.md
 └── README.md
 ```
 
+> `landing` vive en el monorepo como un workspace más. La separación de su despliegue
+> respecto al resto de las apps es un asunto de CI/CD (postbuild), no de la estructura.
+
 ### Reglas de dependencia entre workspaces
 
-- Las apps de frontend (`client`, `reception`, `admin`) **pueden** importar de
-  `packages/*`. **No** importan directamente del código interno de `apps/api`; se
+- Las apps de frontend (`landing`, `client`, `reception`, `admin`) **pueden** importar
+  de `packages/*`. **No** importan directamente del código interno de `apps/api`; se
   comunican con el backend por HTTP/WebSocket usando los contratos de `packages/types`.
 - `apps/api` **puede** importar de `packages/types` y `packages/config`. **No** importa
   de las apps de frontend ni de `packages/ui`.
@@ -126,6 +132,34 @@ El `domain` no conoce a nadie hacia afuera: no importa Express, ni Prisma, ni Tw
   `entry_removed`. Los payloads viven en `packages/types`.
 - La UI de recepción y la del cliente reflejan cambios sin recargar.
 
+## Frontend: design system y librería de componentes
+
+La identidad visual está definida en `Documentation/Mocks/nexa_design_system/DESIGN.md`
+(paleta cálida coral `#F2755C` + teal `#4FB0A5`, tipografías Quicksand + Be Vietnam Pro,
+radios grandes, botones pill, sombras suaves). Los mocks de cada pantalla están en
+`Documentation/Mocks/` (HTML + PNG generados con Google Stitch). El mapeo pantalla → app
+está en `Documentation/UI_Mocks_Map.md`.
+
+Reglas al construir UI:
+
+1. **`packages/ui` es la fuente única del design system.** Los tokens (colores,
+   tipografía, spacing, radios, sombras) y los componentes base (Button pill, Card,
+   Input, Chip/Badge, BottomSheet, Stepper, StatusTimeline, etc.) viven ahí y se
+   reutilizan en `landing`, `client`, `reception` y `admin`. No redefinas estilos por app.
+2. **Encapsula a partir de los mocks.** Al implementar una pantalla, identifica los
+   patrones repetidos y extráelos como componentes reutilizables en `packages/ui` en vez
+   de copiarlos por app. Si un patrón lo usa una sola app, puede vivir en esa app hasta
+   que se repita (regla de tres).
+3. **Componentes presentacionales.** `packages/ui` no conoce el backend ni el dominio: el
+   fetching, WebSocket y estado viven en las apps. Los componentes reciben datos por props.
+4. **Copy en español (es-MX), API en inglés.** Nombres de componentes, props y
+   comentarios en inglés; el texto visible por defecto puede ir en español o exponerse
+   como prop para que cada app pase su copy.
+5. **Shared libraries.** Además de `ui`, extrae a `packages/*` cualquier lógica que
+   compartan 2+ apps (utilidades de formato, cliente de API/WS tipado sobre
+   `packages/types`). Crea un package nuevo solo cuando el patrón se repite; no
+   sobre-abstraigas en el MVP.
+
 ## Strapi ↔ backend: frontera de responsabilidades
 
 Para no duplicar responsabilidades, respetar esta división:
@@ -164,9 +198,14 @@ compleja en el MVP).
 
 ## Convenciones generales
 
-- **Idioma:** código, nombres de variables y comentarios en inglés. Los textos de
-  interfaz visibles para el usuario, en español (es-MX).
-- **Commits:** estilo Conventional Commits (`feat:`, `fix:`, `chore:`, etc.).
+- **Idioma del código (obligatorio):** TODO el código en inglés — nombres de variables,
+  funciones, tipos, archivos, comentarios y **mensajes de commit**. Esto aplica aunque
+  los prompts o la conversación estén en español. Los únicos textos en español son:
+  (a) el copy visible para el usuario en la UI (es-MX) y (b) la documentación del
+  proyecto (archivos `.md`, docs de negocio), que puede escribirse en español.
+- **Commits:** Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`,
+  `test:`, `ci:`, etc.), **siempre en inglés**. Un commit por step: cada tarea de sprint
+  se subdivide en steps y cada step es un commit (ver `Documentation/Execution_Plan.md`).
 - **Formato:** Prettier + ESLint compartidos desde `packages/config`.
 - **Tests:** escribir tests para la lógica de dominio y los casos de uso. El dominio,
   al no depender de infraestructura, debe ser fácil de testear de forma aislada.

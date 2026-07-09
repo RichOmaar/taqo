@@ -16,13 +16,15 @@ espera (clínicas, barberías, retail) y a más servicios (reservas, CRM, menú,
 
 ## Arquitectura
 
-Monorepo con **pnpm workspaces**. Tres frontends (Next.js) que consumen un **backend
-compartido** (Node + Express con WebSockets integrados), organizado con **Domain-Driven
-Design**, datos en **PostgreSQL** vía **Prisma**, y contenidos gestionados con **Strapi**.
+Monorepo con **pnpm workspaces** + **Turborepo**. Un sitio de marketing y tres frontends
+operativos (Next.js) sobre un **backend compartido** (Node + Express con WebSockets
+integrados), organizado con **Domain-Driven Design**, datos en **PostgreSQL** vía
+**Prisma**, y contenidos gestionados con **Strapi**.
 
 ```
 nexa/
 ├── apps/
+│   ├── landing/         # Sitio de marketing (público, SEO/conversión) — Next.js
 │   ├── client/          # Webapp cliente (móvil) — Next.js
 │   ├── reception/       # Webapp hostess (tablet/desktop) — Next.js
 │   ├── admin/           # Panel dueño (desktop) — Next.js
@@ -31,9 +33,10 @@ nexa/
 ├── packages/
 │   ├── types/           # Tipos y contratos compartidos (DTOs, eventos WS)
 │   ├── config/          # Config compartida (tsconfig, eslint, prettier)
-│   └── ui/              # Componentes UI compartidos
+│   └── ui/              # Design system + componentes compartidos
 ├── package.json
 ├── pnpm-workspace.yaml
+├── turbo.json
 ├── CLAUDE.md
 └── README.md
 ```
@@ -42,6 +45,7 @@ nexa/
 
 | Workspace | Qué es | Tecnología |
 |---|---|---|
+| `apps/landing` | Sitio de marketing público. Propuesta de valor, precios, captación. SEO/rendimiento. | Next.js |
 | `apps/client` | App del comensal. Alta en la fila, posición, ETA, notificaciones. Móvil. | Next.js |
 | `apps/reception` | App de la hostess. Gestión de la cola en tiempo real. Tablet/desktop. | Next.js |
 | `apps/admin` | Panel del dueño. Configuración y métricas. Desktop. | Next.js |
@@ -73,7 +77,7 @@ publicado de Strapi cuando aplica (ej. el catálogo).
 
 ## Stack
 
-- **Monorepo:** pnpm workspaces
+- **Monorepo:** pnpm workspaces + Turborepo
 - **Frontend:** Next.js (React, TypeScript)
 - **Backend:** Node.js + Express (TypeScript) + WebSockets
 - **Base de datos:** PostgreSQL
