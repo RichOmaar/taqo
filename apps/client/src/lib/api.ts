@@ -1,5 +1,7 @@
 import type { GetRestaurantResponse, JoinWaitlistRequest, JoinWaitlistResponse } from '@nexa/types';
 
+import { authHeader } from './auth';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export async function getRestaurant(code: string): Promise<GetRestaurantResponse> {
@@ -14,7 +16,7 @@ export async function joinWaitlist(
 ): Promise<JoinWaitlistResponse> {
   const res = await fetch(`${API_URL}/restaurants/${code}/waitlist`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...authHeader() },
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`Failed to join (${res.status})`);

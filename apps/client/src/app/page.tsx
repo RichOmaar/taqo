@@ -2,6 +2,7 @@
 
 import type { Queue, WaitlistEntry } from '@nexa/types';
 import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { getRestaurant, joinWaitlist } from '../lib/api';
@@ -127,6 +128,10 @@ export default function JoinPage() {
           {submitting ? 'Uniéndote…' : 'Unirme a la fila'}
         </Button>
       </Card>
+
+      <Link href="/cuenta" className="text-center font-body text-sm text-primary-dark">
+        Crea tu cuenta para guardar tu historial
+      </Link>
     </main>
   );
 }

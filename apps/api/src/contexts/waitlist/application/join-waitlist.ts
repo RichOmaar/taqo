@@ -7,6 +7,8 @@ import type { WaitlistEventPublisher } from './ports';
 
 export interface JoinWaitlistInput extends JoinWaitlistRequest {
   restaurantCode: string;
+  /** Set when the diner is authenticated; null for guests. */
+  userId?: string | null;
 }
 
 /** Use case: a diner joins a restaurant queue. */
@@ -32,7 +34,7 @@ export class JoinWaitlist {
     const entry = await this.waitlist.create({
       queueId: queue.id,
       restaurantId: found.restaurant.id,
-      userId: null,
+      userId: input.userId ?? null,
       displayName: input.displayName,
       partySize: input.partySize,
       phone: input.phone ?? null,

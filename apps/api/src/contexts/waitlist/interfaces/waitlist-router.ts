@@ -4,10 +4,12 @@ import type {
   ListQueueEntriesResponse,
   WaitlistEntry,
 } from '@nexa/types';
+import { fromNodeHeaders } from 'better-auth/node';
 import type { RequestHandler } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 
+import { auth } from '../../../auth';
 import { requireStaff } from '../../../http/middleware/require-staff';
 import { ValidationError } from '../../../shared/errors';
 import type { EntryActions } from '../application/entry-actions';
@@ -51,7 +53,16 @@ export function waitlistRouter(
       if (!parsed.success) {
         throw new ValidationError('Invalid join payload', { issues: parsed.error.issues });
       }
-      const entry = await join.execute({ restaurantCode: req.params.code, ...parsed.data });
+      // Optional auth: link the entry to the diner's account when signed in.
+      const session = await auth.api
+        .getSession({ headers: fromNodeHeaders(req.headers) })
+        .catch(() => null);
+      const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
+      const entry = await join.execute({
+        restaurantCode: req.params.code,
+        userId,
+        ...parsed.data,
+      });
       const response: JoinWaitlistResponse = { entry };
       res.status(201).json(response);
     } catch (error) {
