@@ -6,6 +6,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   BETTER_AUTH_SECRET: z.string().min(16),
   BETTER_AUTH_URL: z.string().url().default('http://localhost:4000'),
+  /** How often to sweep expired (notified but not seated) entries, in ms. */
+  EXPIRATION_SWEEP_MS: z.coerce.number().int().positive().default(30000),
 });
 
 export type Env = z.infer<typeof envSchema>;

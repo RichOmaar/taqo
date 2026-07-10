@@ -34,3 +34,11 @@ httpServer.on('error', (error: NodeJS.ErrnoException) => {
 httpServer.listen(env.API_PORT, () => {
   console.log(`[nexa-api] listening on http://localhost:${env.API_PORT} (${env.NODE_ENV})`);
 });
+
+// Periodically expire notified-but-not-seated entries into no_show.
+const sweep = setInterval(() => {
+  container.expireNoShows.execute().catch((error) => {
+    console.error('[nexa-api] expiration sweep failed', error);
+  });
+}, env.EXPIRATION_SWEEP_MS);
+sweep.unref();
