@@ -120,7 +120,7 @@ tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-e
 
 ### Fase 3 — Engordar
 
-- **NEXA-007** Restaurant: dominio + repos + casos de uso (create/edit, colas, ETA base, expiración) + UI de config en admin. _(pendiente)_
+- [x] **NEXA-007** ✅ Restaurant config: repos + `RestaurantConfig` (update config, add/rename queues) + endpoints, y UI `/configuracion` en admin. → `feat(api): add restaurant config use cases` · `feat(admin): add restaurant config UI`
 - [x] **NEXA-008 (resto)** ✅ Acciones waitlist: `Notify` / `Seat` / `MarkNoShow` / `Cancel` con guardas de estado + endpoints + botones en el board. → `feat(api): add waitlist status transitions` · `feat(reception): wire queue actions and live updates`
 - [x] **NEXA-010 (resto)** ✅ WS: emisión de `entry_updated` / `entry_removed` y board reactivo. _(Falta: auth de subscripción por restaurante/cola → va con NEXA-009.)_
 - **NEXA-009** Identity completo: BetterAuth (guest → registrado con correo) + staff (hostess/admin). _(pendiente)_ — incluye auth de las acciones de recepción y de la subscripción WS.
