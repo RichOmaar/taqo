@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [dev, qa, prod]
+  pull_request:
+    branches: [dev, qa, prod]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @nexa/api exec prisma generate
+
+      - name: Lint, typecheck and build
+        run: pnpm turbo run lint typecheck build
