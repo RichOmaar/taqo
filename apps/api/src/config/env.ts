@@ -8,6 +8,10 @@ const envSchema = z.object({
   BETTER_AUTH_URL: z.string().url().default('http://localhost:4000'),
   /** How often to sweep expired (notified but not seated) entries, in ms. */
   EXPIRATION_SWEEP_MS: z.coerce.number().int().positive().default(30000),
+  // Web push (VAPID). Optional: push is a no-op when unset.
+  VAPID_PUBLIC_KEY: z.string().optional(),
+  VAPID_PRIVATE_KEY: z.string().optional(),
+  VAPID_SUBJECT: z.string().default('mailto:dev@nexa.local'),
 });
 
 export type Env = z.infer<typeof envSchema>;

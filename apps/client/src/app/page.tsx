@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
 import { API_URL, getEntry, getRestaurant, joinWaitlist, submitReview } from '../lib/api';
+import { subscribeToPush } from '../lib/push';
 
 export default function JoinPage() {
   const [code] = useState(() => {
@@ -52,6 +53,12 @@ export default function JoinPage() {
     return () => {
       socket.close();
     };
+  }, [entryId]);
+
+  // Best-effort web push so the diner is notified even without the tab focused.
+  useEffect(() => {
+    if (!entryId) return;
+    subscribeToPush(entryId).catch(() => undefined);
   }, [entryId]);
 
   async function handleSubmit() {
