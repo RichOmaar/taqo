@@ -8,12 +8,9 @@ import { useEffect, useState } from 'react';
 
 import { getMetrics } from '../lib/api';
 import { getToken, signOut } from '../lib/auth';
+import { formatPercent, formatRating, formatWaitMinutes } from '../lib/format';
 
 const CODE = 'DEMO';
-
-function percent(value: number): string {
-  return `${Math.round(value * 100)}%`;
-}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -36,17 +33,11 @@ export default function DashboardPage() {
 
   const stats = metrics
     ? [
-        {
-          label: 'Espera promedio',
-          value: metrics.averageWaitMinutes != null ? `${metrics.averageWaitMinutes} min` : '—',
-        },
+        { label: 'Espera promedio', value: formatWaitMinutes(metrics.averageWaitMinutes) },
         { label: 'Personas hoy', value: String(metrics.peopleToday) },
-        { label: 'Tasa de no-show', value: percent(metrics.noShowRate) },
-        { label: 'Conversión anotado → sentado', value: percent(metrics.seatedConversion) },
-        {
-          label: 'Rating promedio',
-          value: metrics.averageRating != null ? `${metrics.averageRating} ⭐` : '—',
-        },
+        { label: 'Tasa de no-show', value: formatPercent(metrics.noShowRate) },
+        { label: 'Conversión anotado → sentado', value: formatPercent(metrics.seatedConversion) },
+        { label: 'Rating promedio', value: formatRating(metrics.averageRating) },
       ]
     : [];
 

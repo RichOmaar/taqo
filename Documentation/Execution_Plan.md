@@ -21,7 +21,9 @@ a **steps ejecutables**, donde **cada step = un commit**.
 - **Ramas:** `dev` (default) es la base de las tareas; cada tarea sale de `dev` en una
   rama `nexa-00x-slug` y regresa por PR. Promoción `dev → qa → prod` (cada una un entorno).
   Ver `Documentation/Branching.md`.
-- **Definition of Done por step:** compila (`typecheck`), pasa lint y, si aplica, tests.
+- **Definition of Done por step:** compila (`typecheck`), pasa lint y **tests**.
+- **Tests unitarios obligatorios (Vitest):** todo caso de uso / lógica de dominio (backend)
+  y utilidad/componente con lógica (frontend) lleva tests. E2E (Playwright) queda pendiente.
 - Cada tarea NEXA-xxx se subdivide en steps aquí; los steps se afinan al empezar la tarea.
 
 ---
