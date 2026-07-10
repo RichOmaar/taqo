@@ -1,22 +1,96 @@
 'use client';
 
-import { Button, Card, Input, Stepper } from '@nexa/ui';
-import { useState } from 'react';
+import type { Queue, WaitlistEntry } from '@nexa/types';
+import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
+import { useEffect, useState } from 'react';
+
+import { getRestaurant, joinWaitlist } from '../lib/api';
+
+const RESTAURANT_CODE = 'DEMO';
 
 export default function JoinPage() {
+  const [restaurantName, setRestaurantName] = useState('');
+  const [queues, setQueues] = useState<Queue[]>([]);
+  const [queueId, setQueueId] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [partySize, setPartySize] = useState(2);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [entry, setEntry] = useState<WaitlistEntry | null>(null);
+
+  useEffect(() => {
+    getRestaurant(RESTAURANT_CODE)
+      .then((data) => {
+        setRestaurantName(data.restaurant.name);
+        setQueues(data.queues);
+        setQueueId(data.queues[0]?.id ?? '');
+      })
+      .catch(() => setError('No pudimos cargar el restaurante.'));
+  }, []);
+
+  async function handleSubmit() {
+    if (!queueId || !displayName.trim()) {
+      setError('Escribe tu nombre y elige una cola.');
+      return;
+    }
+    setSubmitting(true);
+    setError(null);
+    try {
+      const res = await joinWaitlist(RESTAURANT_CODE, {
+        queueId,
+        displayName: displayName.trim(),
+        partySize,
+      });
+      setEntry(res.entry);
+    } catch {
+      setError('No pudimos unirte a la fila. Intenta de nuevo.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (entry) {
+    return (
+      <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-5 py-10 text-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/15 font-display text-3xl font-bold text-secondary-dark">
+          {entry.position}
+        </div>
+        <div>
+          <h1 className="font-display text-3xl font-bold text-foreground">¡Estás en la fila!</h1>
+          <p className="mt-1 font-body text-muted">Tu lugar en {restaurantName}</p>
+        </div>
+        <Card className="w-full">
+          <div className="flex items-center justify-between">
+            <span className="font-body text-sm text-muted">Tiempo estimado</span>
+            <span className="font-display text-2xl font-bold text-primary-dark">
+              ~{entry.etaMinutes} min
+            </span>
+          </div>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="font-body text-sm text-muted">Estado</span>
+            <StatusBadge status={entry.status} />
+          </div>
+        </Card>
+        <p className="font-body text-sm text-muted">Te avisaremos cuando tu mesa esté lista.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-5 py-10">
       <header className="text-center">
         <h1 className="font-display text-3xl font-bold text-foreground">Te damos la bienvenida</h1>
-        <p className="mt-1 font-body text-muted">Bistro Moderno</p>
+        <p className="mt-1 font-body text-muted">{restaurantName || 'Cargando…'}</p>
       </header>
 
       <Card className="flex flex-col gap-5">
         <label className="flex flex-col gap-2">
           <span className="font-body text-sm font-semibold text-foreground">Tu nombre</span>
-          <Input placeholder="O usa un apodo divertido" />
+          <Input
+            value={displayName}
+            onChange={(event) => setDisplayName(event.target.value)}
+            placeholder="O usa un apodo divertido"
+          />
         </label>
 
         <div className="flex items-center justify-between">
@@ -24,17 +98,35 @@ export default function JoinPage() {
           <Stepper value={partySize} onChange={setPartySize} />
         </div>
 
-        <Button size="lg" className="mt-2 w-full">
-          Unirme a la fila
-        </Button>
-        <Button variant="ghost" className="w-full">
-          Continuar como invitado
+        {queues.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <span className="font-body text-sm font-semibold text-foreground">Cola</span>
+            <div className="flex flex-wrap gap-2">
+              {queues.map((queue) => (
+                <button
+                  key={queue.id}
+                  type="button"
+                  onClick={() => setQueueId(queue.id)}
+                  className={cn(
+                    'rounded-full border px-4 py-2 font-body text-sm font-semibold transition-colors',
+                    queue.id === queueId
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border bg-surface text-foreground',
+                  )}
+                >
+                  {queue.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {error && <p className="font-body text-sm text-error">{error}</p>}
+
+        <Button size="lg" className="mt-2 w-full" onClick={handleSubmit} disabled={submitting}>
+          {submitting ? 'Uniéndote…' : 'Unirme a la fila'}
         </Button>
       </Card>
-
-      <p className="text-center font-body text-xs text-muted">
-        apps/client · scaffold. El flujo real llega en NEXA-013.
-      </p>
     </main>
   );
 }

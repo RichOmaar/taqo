@@ -1,7 +1,13 @@
 import type { JsonObject, UUID } from './common';
-import type { WaitlistEntry } from './entities';
+import type { Queue, Restaurant, WaitlistEntry } from './entities';
 
 // REST request/response contracts shared between the backend and the frontends.
+
+/** GET /restaurants/:code — a restaurant with its active queues. */
+export interface GetRestaurantResponse {
+  restaurant: Restaurant;
+  queues: Queue[];
+}
 
 /** POST /restaurants/:code/waitlist — join a queue (guest-friendly). */
 export interface JoinWaitlistRequest {
