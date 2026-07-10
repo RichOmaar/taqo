@@ -70,6 +70,17 @@ export class PrismaWaitlistRepository implements WaitlistRepository {
     return row ? toEntry(row) : null;
   }
 
+  async findNotified(): Promise<Array<{ entry: WaitlistEntry; expirationMinutes: number }>> {
+    const rows = await this.prisma.waitlistEntry.findMany({
+      where: { status: 'notified' },
+      include: { restaurant: { select: { expirationMinutes: true } } },
+    });
+    return rows.map((row) => ({
+      entry: toEntry(row),
+      expirationMinutes: row.restaurant.expirationMinutes,
+    }));
+  }
+
   async transition(
     id: string,
     status: WaitlistStatus,

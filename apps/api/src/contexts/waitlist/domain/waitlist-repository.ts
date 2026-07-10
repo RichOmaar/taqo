@@ -31,4 +31,6 @@ export interface WaitlistRepository {
     status: WaitlistStatus,
     options?: TransitionOptions,
   ): Promise<WaitlistEntry>;
+  /** Notified entries paired with their restaurant's expiration window. */
+  findNotified(): Promise<Array<{ entry: WaitlistEntry; expirationMinutes: number }>>;
 }
