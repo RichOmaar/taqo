@@ -1,30 +1,54 @@
 'use client';
 
+import type { RestaurantMetrics } from '@nexa/types';
 import { Card } from '@nexa/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { getMetrics } from '../lib/api';
 import { getToken, signOut } from '../lib/auth';
 
-const stats = [
-  { label: 'Espera promedio', value: '18 min' },
-  { label: 'Personas hoy', value: '142' },
-  { label: 'Tasa de no-show', value: '4%' },
-  { label: 'Conversión anotado → sentado', value: '92%' },
-];
+const CODE = 'DEMO';
+
+function percent(value: number): string {
+  return `${Math.round(value * 100)}%`;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
+  const [metrics, setMetrics] = useState<RestaurantMetrics | null>(null);
 
   useEffect(() => {
-    if (!getToken()) router.replace('/login');
+    if (!getToken()) {
+      router.replace('/login');
+      return;
+    }
+    getMetrics(CODE)
+      .then((data) => setMetrics(data.metrics))
+      .catch(() => undefined);
   }, [router]);
 
   function logout() {
     signOut();
     router.replace('/login');
   }
+
+  const stats = metrics
+    ? [
+        {
+          label: 'Espera promedio',
+          value: metrics.averageWaitMinutes != null ? `${metrics.averageWaitMinutes} min` : '—',
+        },
+        { label: 'Personas hoy', value: String(metrics.peopleToday) },
+        { label: 'Tasa de no-show', value: percent(metrics.noShowRate) },
+        { label: 'Conversión anotado → sentado', value: percent(metrics.seatedConversion) },
+        {
+          label: 'Rating promedio',
+          value: metrics.averageRating != null ? `${metrics.averageRating} ⭐` : '—',
+        },
+      ]
+    : [];
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-8">
@@ -43,18 +67,20 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.label} className="flex flex-col gap-1">
-            <span className="font-body text-sm text-muted">{stat.label}</span>
-            <span className="font-display text-3xl font-bold text-primary-dark">{stat.value}</span>
-          </Card>
-        ))}
-      </div>
-
-      <p className="mt-8 font-body text-xs text-muted">
-        apps/admin · scaffold. El dashboard real llega en NEXA-019.
-      </p>
+      {metrics ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {stats.map((stat) => (
+            <Card key={stat.label} className="flex flex-col gap-1">
+              <span className="font-body text-sm text-muted">{stat.label}</span>
+              <span className="font-display text-3xl font-bold text-primary-dark">
+                {stat.value}
+              </span>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <p className="font-body text-muted">Cargando métricas…</p>
+      )}
     </main>
   );
 }

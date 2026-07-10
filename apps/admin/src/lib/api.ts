@@ -1,5 +1,6 @@
 import type {
   AddQueueRequest,
+  GetMetricsResponse,
   GetRestaurantResponse,
   QueueResponse,
   UpdateQueueRequest,
@@ -17,6 +18,12 @@ function jsonHeaders(): Record<string, string> {
 async function json<T>(res: Response): Promise<T> {
   if (!res.ok) throw new Error(`Request failed (${res.status})`);
   return res.json() as Promise<T>;
+}
+
+export function getMetrics(code: string): Promise<GetMetricsResponse> {
+  return fetch(`${API_URL}/restaurants/${code}/metrics`, { headers: authHeader() }).then((r) =>
+    json<GetMetricsResponse>(r),
+  );
 }
 
 export function getRestaurant(code: string): Promise<GetRestaurantResponse> {
