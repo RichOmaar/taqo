@@ -7,10 +7,11 @@ import type { WaitlistRepository } from '../domain/waitlist-repository';
 import { EntryActions } from './entry-actions';
 import type { DinerNotifier, WaitlistEventPublisher } from './ports';
 
-function setup(entry: WaitlistEntry | null) {
+function setup(entry: WaitlistEntry | null, resequenced: WaitlistEntry[] = []) {
   const waitlist = {
     findById: vi.fn().mockResolvedValue(entry),
     transition: vi.fn(async (_id, status) => makeEntry({ ...(entry ?? {}), status })),
+    resequence: vi.fn().mockResolvedValue(resequenced),
   } as unknown as WaitlistRepository;
   const publisher: WaitlistEventPublisher = {
     entryAdded: vi.fn(),
@@ -44,8 +45,16 @@ describe('EntryActions', () => {
   it('markNoShow removes the entry from the queue', async () => {
     const { waitlist, publisher, actions } = setup(makeEntry({ status: 'notified' }));
     await actions.markNoShow('e1');
-    expect(waitlist.transition).toHaveBeenCalledWith('e1', 'no_show');
+    expect(waitlist.transition).toHaveBeenCalledWith('e1', 'no_show', undefined);
     expect(publisher.entryRemoved).toHaveBeenCalledOnce();
+  });
+
+  it('renumbers the queue and emits updates when an entry leaves', async () => {
+    const shifted = makeEntry({ id: 'e2', position: 1 });
+    const { waitlist, publisher, actions } = setup(makeEntry({ status: 'notified' }), [shifted]);
+    await actions.seat('e1');
+    expect(waitlist.resequence).toHaveBeenCalledOnce();
+    expect(publisher.entryUpdated).toHaveBeenCalledWith({ entry: shifted });
   });
 
   it('rejects acting on a non-active entry', async () => {

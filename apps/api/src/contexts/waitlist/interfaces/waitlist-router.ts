@@ -86,6 +86,12 @@ export function waitlistRouter(
     }
   });
 
+  // Diner self-cancel — the entry id is the capability, no staff auth required.
+  router.post(
+    '/entries/:id/leave',
+    actionRoute((id) => actions.cancel(id)),
+  );
+
   router.post('/restaurants/:code/waitlist', async (req, res, next) => {
     try {
       const parsed = joinSchema.safeParse(req.body);

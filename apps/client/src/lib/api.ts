@@ -1,4 +1,5 @@
 import type {
+  EntryActionResponse,
   GetEntryResponse,
   GetRestaurantResponse,
   JoinWaitlistRequest,
@@ -11,6 +12,12 @@ import type {
 import { authHeader } from './auth';
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+
+export async function leaveWaitlist(entryId: string): Promise<EntryActionResponse> {
+  const res = await fetch(`${API_URL}/entries/${entryId}/leave`, { method: 'POST' });
+  if (!res.ok) throw new Error(`Failed to leave (${res.status})`);
+  return res.json() as Promise<EntryActionResponse>;
+}
 
 export async function submitReview(
   entryId: string,

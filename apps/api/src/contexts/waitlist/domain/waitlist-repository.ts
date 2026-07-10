@@ -33,4 +33,6 @@ export interface WaitlistRepository {
   ): Promise<WaitlistEntry>;
   /** Notified entries paired with their restaurant's expiration window. */
   findNotified(): Promise<Array<{ entry: WaitlistEntry; expirationMinutes: number }>>;
+  /** Reassign 1..n positions to a queue's active entries; returns the ones that changed. */
+  resequence(queueId: string): Promise<WaitlistEntry[]>;
 }

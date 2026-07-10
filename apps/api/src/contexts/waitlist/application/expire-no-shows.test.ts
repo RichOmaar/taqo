@@ -17,6 +17,7 @@ describe('ExpireNoShows', () => {
     const waitlist = {
       findNotified: vi.fn().mockResolvedValue([{ entry, expirationMinutes: 10 }]),
       transition: vi.fn(async (_id, status) => makeEntry({ ...entry, status })),
+      resequence: vi.fn().mockResolvedValue([]),
     } as unknown as WaitlistRepository;
     const pub = publisher();
 
@@ -34,6 +35,7 @@ describe('ExpireNoShows', () => {
     const waitlist = {
       findNotified: vi.fn().mockResolvedValue([{ entry, expirationMinutes: 10 }]),
       transition: vi.fn(),
+      resequence: vi.fn().mockResolvedValue([]),
     } as unknown as WaitlistRepository;
 
     const count = await new ExpireNoShows(waitlist, publisher()).execute(
