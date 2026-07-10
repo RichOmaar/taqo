@@ -141,7 +141,7 @@ Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
 - [x] **NEXA-019** ✅ admin: dashboard de métricas real · [x] **NEXA-020** ✅ admin: UI de configuración _(NEXA-007)_.
 - **NEXA-021** notifications: web push · [x] **NEXA-023** ✅ expiración & no-show (barrido periódico notified→no_show).
 - [x] **NEXA-022** ✅ landing (hero, cómo funciona, beneficios, precios, visión, CTA/footer).
-- **NEXA-024** CI · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.
+- [x] **NEXA-024** ✅ CI (lint+typecheck+build en push/PR) · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.
 
 ## Sprint 3 (sem 5–6) — Strapi, ETA dinámico, pagos, estabilización
 
