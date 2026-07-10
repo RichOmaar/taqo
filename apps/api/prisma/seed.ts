@@ -22,9 +22,6 @@ async function main(): Promise<void> {
           { name: 'Visitante', priority: 2 },
         ],
       },
-      staff: {
-        create: [{ email: 'owner@demo.nexa', role: 'admin' }],
-      },
     },
     include: { queues: true },
   });
