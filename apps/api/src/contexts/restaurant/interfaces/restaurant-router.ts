@@ -1,9 +1,10 @@
-import type { GetRestaurantResponse, QueueResponse } from '@nexa/types';
+import type { GetRestaurantResponse, ListRestaurantsResponse, QueueResponse } from '@nexa/types';
 import { Router } from 'express';
 import { z } from 'zod';
 
 import { requireStaff } from '../../../http/middleware/require-staff';
 import { NotFoundError, ValidationError } from '../../../shared/errors';
+import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
 
@@ -27,9 +28,20 @@ const updateQueueSchema = z.object({
 /** Routes for reading and editing restaurant config and its queues. */
 export function restaurantRouter(
   restaurants: RestaurantRepository,
+  list: ListRestaurants,
   config: RestaurantConfig,
 ): Router {
   const router = Router();
+
+  router.get('/restaurants', async (_req, res, next) => {
+    try {
+      const restaurantsList = await list.execute();
+      const response: ListRestaurantsResponse = { restaurants: restaurantsList };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
 
   router.get('/restaurants/:code', async (req, res, next) => {
     try {

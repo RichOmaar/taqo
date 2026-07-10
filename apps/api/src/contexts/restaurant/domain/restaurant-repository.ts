@@ -1,4 +1,4 @@
-import type { Queue, Restaurant } from '@nexa/types';
+import type { Queue, Restaurant, RestaurantSummary } from '@nexa/types';
 
 export interface RestaurantWithQueues {
   restaurant: Restaurant;
@@ -24,6 +24,7 @@ export interface QueueUpdate {
 
 /** Read + config-write port for restaurant data. */
 export interface RestaurantRepository {
+  listSummaries(): Promise<RestaurantSummary[]>;
   findByCode(code: string): Promise<RestaurantWithQueues | null>;
   findIdByCode(code: string): Promise<string | null>;
   updateConfig(id: string, data: RestaurantConfigUpdate): Promise<void>;

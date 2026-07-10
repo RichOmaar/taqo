@@ -3,11 +3,18 @@ import type {
   GetRestaurantResponse,
   JoinWaitlistRequest,
   JoinWaitlistResponse,
+  ListRestaurantsResponse,
 } from '@nexa/types';
 
 import { authHeader } from './auth';
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+
+export async function listRestaurants(): Promise<ListRestaurantsResponse> {
+  const res = await fetch(`${API_URL}/restaurants`);
+  if (!res.ok) throw new Error(`Failed to load catalog (${res.status})`);
+  return res.json() as Promise<ListRestaurantsResponse>;
+}
 
 export async function getEntry(id: string): Promise<GetEntryResponse> {
   const res = await fetch(`${API_URL}/entries/${id}`);

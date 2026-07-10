@@ -1,3 +1,4 @@
+import { ListRestaurants } from './contexts/restaurant/application/list-restaurants';
 import { RestaurantConfig } from './contexts/restaurant/application/restaurant-config';
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
 import { PrismaRestaurantRepository } from './contexts/restaurant/infrastructure/prisma-restaurant-repository';
@@ -11,6 +12,7 @@ import { prisma } from './db/prisma';
 
 export interface Container {
   restaurants: RestaurantRepository;
+  listRestaurants: ListRestaurants;
   restaurantConfig: RestaurantConfig;
   joinWaitlist: JoinWaitlist;
   listQueueEntries: ListQueueEntries;
@@ -24,6 +26,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
   const waitlist = new PrismaWaitlistRepository(prisma);
   return {
     restaurants,
+    listRestaurants: new ListRestaurants(restaurants),
     restaurantConfig: new RestaurantConfig(restaurants),
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),
     listQueueEntries: new ListQueueEntries(waitlist),
