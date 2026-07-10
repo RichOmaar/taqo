@@ -29,5 +29,5 @@ jobs:
       - name: Generate Prisma client
         run: pnpm --filter @nexa/api exec prisma generate
 
-      - name: Lint, typecheck and build
-        run: pnpm turbo run lint typecheck build
+      - name: Lint, typecheck, build and test
+        run: pnpm turbo run lint typecheck build test

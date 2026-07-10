@@ -211,8 +211,12 @@ compleja en el MVP).
   y regresa a `dev` por PR; nunca se commitea directo a `qa`/`prod` (solo por promoción).
   Detalle en `Documentation/Branching.md`.
 - **Formato:** Prettier + ESLint compartidos desde `packages/config`.
-- **Tests:** escribir tests para la lógica de dominio y los casos de uso. El dominio,
-  al no depender de infraestructura, debe ser fácil de testear de forma aislada.
+- **Tests (OBLIGATORIO):** las pruebas **unitarias con Vitest son obligatorias**. Todo
+  caso de uso / lógica de dominio del backend y toda utilidad/componente con lógica del
+  frontend deben tener tests. Cada `feat` que agregue lógica incluye sus tests en el mismo
+  PR; el dominio y los casos de uso (que dependen de puertos, no de infraestructura) se
+  testean de forma aislada con repos/publishers de prueba (sin DB). Script: `pnpm test`
+  (via Turbo). E2E (Playwright/DB real) queda para más adelante.
 - **Variables de entorno:** nunca commitear secretos. Usar `.env` local y documentar
   las variables necesarias en el README.
 
