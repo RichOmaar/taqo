@@ -23,25 +23,34 @@ export class EntryActions {
     return entry;
   }
 
-  async seat(entryId: string): Promise<WaitlistEntry> {
+  seat(entryId: string): Promise<WaitlistEntry> {
+    return this.leave(entryId, 'seated', { seated: true });
+  }
+
+  markNoShow(entryId: string): Promise<WaitlistEntry> {
+    return this.leave(entryId, 'no_show');
+  }
+
+  cancel(entryId: string): Promise<WaitlistEntry> {
+    return this.leave(entryId, 'cancelled');
+  }
+
+  /** Transition out of the queue, notify the board, and renumber the remaining entries. */
+  private async leave(
+    entryId: string,
+    status: 'seated' | 'no_show' | 'cancelled',
+    options?: { seated?: boolean },
+  ): Promise<WaitlistEntry> {
     await this.loadActive(entryId);
-    const entry = await this.waitlist.transition(entryId, 'seated', { seated: true });
+    const entry = await this.waitlist.transition(entryId, status, options);
     this.publishRemoved(entry);
+    await this.resequence(entry.queueId);
     return entry;
   }
 
-  async markNoShow(entryId: string): Promise<WaitlistEntry> {
-    await this.loadActive(entryId);
-    const entry = await this.waitlist.transition(entryId, 'no_show');
-    this.publishRemoved(entry);
-    return entry;
-  }
-
-  async cancel(entryId: string): Promise<WaitlistEntry> {
-    await this.loadActive(entryId);
-    const entry = await this.waitlist.transition(entryId, 'cancelled');
-    this.publishRemoved(entry);
-    return entry;
+  private async resequence(queueId: string): Promise<void> {
+    const changed = await this.waitlist.resequence(queueId);
+    for (const entry of changed) this.publisher.entryUpdated({ entry });
   }
 
   private async loadActive(entryId: string): Promise<WaitlistEntry> {

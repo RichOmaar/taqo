@@ -178,8 +178,7 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
 - **Sprint 3 (features nuevas):** Strapi/`apps/cms` + formularios configurables (027–029),
   catálogo desde Strapi (030), ETA dinámico (031), SMS/WhatsApp Twilio (032), integraciones
   externas (033), revisión de arquitectura (034), buffer (035), UX (036).
-- **Huecos de MVP pendientes:** cancelar-lugar por el comensal, re-numeración de posiciones,
-  registro en la tabla `Notification`.
+- **Huecos de MVP pendientes:** registro en la tabla `Notification` (el web push no lo loguea). Cancelar-lugar y re-numeración de posiciones: ✅ hechos.
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   expiración (cron vs. lectura).
 

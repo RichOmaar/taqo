@@ -7,7 +7,14 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-import { API_URL, getEntry, getRestaurant, joinWaitlist, submitReview } from '../lib/api';
+import {
+  API_URL,
+  getEntry,
+  getRestaurant,
+  joinWaitlist,
+  leaveWaitlist,
+  submitReview,
+} from '../lib/api';
 import { subscribeToPush } from '../lib/push';
 
 export default function JoinPage() {
@@ -172,6 +179,7 @@ function WaitingStatus({
           <p className="mt-1 font-body text-muted">Acércate a la recepción de {restaurantName}.</p>
         </div>
         <StatusBadge status={entry.status} />
+        <CancelButton entryId={entry.id} />
       </>
     );
   }
@@ -282,6 +290,24 @@ function WaitingCard({ entry, restaurantName }: { entry: WaitlistEntry; restaura
         </div>
       </Card>
       <p className="font-body text-sm text-muted">Te avisaremos cuando tu mesa esté lista.</p>
+      <CancelButton entryId={entry.id} />
     </>
+  );
+}
+
+function CancelButton({ entryId }: { entryId: string }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={() => {
+        setBusy(true);
+        leaveWaitlist(entryId).catch(() => setBusy(false));
+      }}
+      className="font-body text-sm text-muted underline disabled:opacity-50"
+    >
+      Cancelar mi lugar
+    </button>
   );
 }

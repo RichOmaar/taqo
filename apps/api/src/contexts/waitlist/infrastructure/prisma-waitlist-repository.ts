@@ -81,6 +81,28 @@ export class PrismaWaitlistRepository implements WaitlistRepository {
     }));
   }
 
+  async resequence(queueId: string): Promise<WaitlistEntry[]> {
+    const rows = await this.prisma.waitlistEntry.findMany({
+      where: { queueId, status: { in: [...ACTIVE_STATUSES] } },
+      orderBy: [{ position: 'asc' }, { joinedAt: 'asc' }],
+    });
+    const changed: WaitlistEntry[] = [];
+    const updates = [];
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
+      if (!row) continue;
+      const position = i + 1;
+      if (row.position !== position) {
+        changed.push(toEntry({ ...row, position }));
+        updates.push(
+          this.prisma.waitlistEntry.update({ where: { id: row.id }, data: { position } }),
+        );
+      }
+    }
+    if (updates.length > 0) await this.prisma.$transaction(updates);
+    return changed;
+  }
+
   async transition(
     id: string,
     status: WaitlistStatus,

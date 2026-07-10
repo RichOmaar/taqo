@@ -24,6 +24,8 @@ export class ExpireNoShows {
           queueId: updated.queueId,
           restaurantId: updated.restaurantId,
         });
+        const changed = await this.waitlist.resequence(updated.queueId);
+        for (const e of changed) this.publisher.entryUpdated({ entry: e });
         expired += 1;
       }
     }
