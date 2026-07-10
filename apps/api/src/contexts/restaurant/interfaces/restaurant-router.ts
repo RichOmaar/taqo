@@ -2,6 +2,7 @@ import type { GetRestaurantResponse, QueueResponse } from '@nexa/types';
 import { Router } from 'express';
 import { z } from 'zod';
 
+import { requireStaff } from '../../../http/middleware/require-staff';
 import { NotFoundError, ValidationError } from '../../../shared/errors';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
@@ -40,12 +41,14 @@ export function restaurantRouter(
     }
   });
 
-  router.patch('/restaurants/:code', async (req, res, next) => {
+  router.patch('/restaurants/:code', requireStaff, async (req, res, next) => {
     try {
       const parsed = updateConfigSchema.safeParse(req.body);
       if (!parsed.success)
         throw new ValidationError('Invalid config', { issues: parsed.error.issues });
-      const updated = await config.updateConfig(req.params.code, parsed.data);
+      const code = req.params.code;
+      if (!code) throw new ValidationError('Missing restaurant code');
+      const updated = await config.updateConfig(code, parsed.data);
       const response: GetRestaurantResponse = updated;
       res.json(response);
     } catch (error) {
@@ -53,16 +56,14 @@ export function restaurantRouter(
     }
   });
 
-  router.post('/restaurants/:code/queues', async (req, res, next) => {
+  router.post('/restaurants/:code/queues', requireStaff, async (req, res, next) => {
     try {
       const parsed = addQueueSchema.safeParse(req.body);
       if (!parsed.success)
         throw new ValidationError('Invalid queue', { issues: parsed.error.issues });
-      const updated = await config.addQueue(
-        req.params.code,
-        parsed.data.name,
-        parsed.data.priority ?? 0,
-      );
+      const code = req.params.code;
+      if (!code) throw new ValidationError('Missing restaurant code');
+      const updated = await config.addQueue(code, parsed.data.name, parsed.data.priority ?? 0);
       const response: GetRestaurantResponse = updated;
       res.status(201).json(response);
     } catch (error) {
@@ -70,7 +71,7 @@ export function restaurantRouter(
     }
   });
 
-  router.patch('/queues/:id', async (req, res, next) => {
+  router.patch('/queues/:id', requireStaff, async (req, res, next) => {
     try {
       const id = req.params.id;
       if (!id) throw new ValidationError('Missing queue id');

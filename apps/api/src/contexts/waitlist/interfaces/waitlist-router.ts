@@ -8,6 +8,7 @@ import type { RequestHandler } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 
+import { requireStaff } from '../../../http/middleware/require-staff';
 import { ValidationError } from '../../../shared/errors';
 import type { EntryActions } from '../application/entry-actions';
 import type { JoinWaitlist } from '../application/join-waitlist';
@@ -70,18 +71,22 @@ export function waitlistRouter(
 
   router.post(
     '/entries/:id/notify',
+    requireStaff,
     actionRoute((id) => actions.notify(id)),
   );
   router.post(
     '/entries/:id/seat',
+    requireStaff,
     actionRoute((id) => actions.seat(id)),
   );
   router.post(
     '/entries/:id/no-show',
+    requireStaff,
     actionRoute((id) => actions.markNoShow(id)),
   );
   router.post(
     '/entries/:id/cancel',
+    requireStaff,
     actionRoute((id) => actions.cancel(id)),
   );
 
