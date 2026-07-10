@@ -23,6 +23,11 @@ export interface JoinWaitlistResponse {
   entry: WaitlistEntry;
 }
 
+/** Response for entry lifecycle actions (notify/seat/no-show/cancel). */
+export interface EntryActionResponse {
+  entry: WaitlistEntry;
+}
+
 /** GET /restaurants/:restaurantId/queues/:queueId/entries — live queue snapshot. */
 export interface ListQueueEntriesResponse {
   entries: WaitlistEntry[];

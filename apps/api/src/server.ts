@@ -16,7 +16,9 @@ export function createServer(container: Container): Express {
 
   app.use('/health', healthRouter);
   app.use(restaurantRouter(container.restaurants));
-  app.use(waitlistRouter(container.joinWaitlist, container.listQueueEntries));
+  app.use(
+    waitlistRouter(container.joinWaitlist, container.listQueueEntries, container.entryActions),
+  );
 
   // 404 + centralized error handling — must be registered last.
   app.use(notFoundHandler);

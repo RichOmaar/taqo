@@ -1,8 +1,15 @@
-import type { JoinWaitlistResponse, ListQueueEntriesResponse } from '@nexa/types';
+import type {
+  EntryActionResponse,
+  JoinWaitlistResponse,
+  ListQueueEntriesResponse,
+  WaitlistEntry,
+} from '@nexa/types';
+import type { RequestHandler } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 
 import { ValidationError } from '../../../shared/errors';
+import type { EntryActions } from '../application/entry-actions';
 import type { JoinWaitlist } from '../application/join-waitlist';
 import type { ListQueueEntries } from '../application/list-queue-entries';
 
@@ -14,8 +21,27 @@ const joinSchema = z.object({
   formData: z.record(z.unknown()).optional(),
 });
 
-/** Routes for joining a queue and reading a queue snapshot. */
-export function waitlistRouter(join: JoinWaitlist, list: ListQueueEntries): Router {
+/** Wrap an entry action into a route handler returning the updated entry. */
+function actionRoute(action: (id: string) => Promise<WaitlistEntry>): RequestHandler {
+  return async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (!id) throw new ValidationError('Missing entry id');
+      const entry = await action(id);
+      const response: EntryActionResponse = { entry };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+}
+
+/** Routes for joining a queue, reading a snapshot, and entry lifecycle actions. */
+export function waitlistRouter(
+  join: JoinWaitlist,
+  list: ListQueueEntries,
+  actions: EntryActions,
+): Router {
   const router = Router();
 
   router.post('/restaurants/:code/waitlist', async (req, res, next) => {
@@ -41,6 +67,23 @@ export function waitlistRouter(join: JoinWaitlist, list: ListQueueEntries): Rout
       next(error);
     }
   });
+
+  router.post(
+    '/entries/:id/notify',
+    actionRoute((id) => actions.notify(id)),
+  );
+  router.post(
+    '/entries/:id/seat',
+    actionRoute((id) => actions.seat(id)),
+  );
+  router.post(
+    '/entries/:id/no-show',
+    actionRoute((id) => actions.markNoShow(id)),
+  );
+  router.post(
+    '/entries/:id/cancel',
+    actionRoute((id) => actions.cancel(id)),
+  );
 
   return router;
 }
