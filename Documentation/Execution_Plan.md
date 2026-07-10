@@ -18,8 +18,9 @@ a **steps ejecutables**, donde **cada step = un commit**.
   `docs:`, `refactor:`, `test:`, `ci:`).
 - **Todo el código en inglés** (variables, comentarios, commits). Copy de UI en es-MX.
   Documentación en español permitida.
-- **Ramas:** trabajo en ramas por tarea (`nexa-00x-slug`) y merge a `main` vía PR, salvo
-  cambios triviales. (Convención inicial; ajustable.)
+- **Ramas:** `dev` (default) es la base de las tareas; cada tarea sale de `dev` en una
+  rama `nexa-00x-slug` y regresa por PR. Promoción `dev → qa → prod` (cada una un entorno).
+  Ver `Documentation/Branching.md`.
 - **Definition of Done por step:** compila (`typecheck`), pasa lint y, si aplica, tests.
 - Cada tarea NEXA-xxx se subdivide en steps aquí; los steps se afinan al empezar la tarea.
 

@@ -206,6 +206,10 @@ compleja en el MVP).
 - **Commits:** Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`,
   `test:`, `ci:`, etc.), **siempre en inglés**. Un commit por step: cada tarea de sprint
   se subdivide en steps y cada step es un commit (ver `Documentation/Execution_Plan.md`).
+- **Ramas:** `dev` (default, base de todas las tareas) → `qa` → `prod`, cada una mapeada
+  a un entorno vía CD. El trabajo de cada tarea sale de `dev` en una rama `nexa-00x-slug`
+  y regresa a `dev` por PR; nunca se commitea directo a `qa`/`prod` (solo por promoción).
+  Detalle en `Documentation/Branching.md`.
 - **Formato:** Prettier + ESLint compartidos desde `packages/config`.
 - **Tests:** escribir tests para la lógica de dominio y los casos de uso. El dominio,
   al no depender de infraestructura, debe ser fácil de testear de forma aislada.

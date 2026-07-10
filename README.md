@@ -191,6 +191,14 @@ las reglas de arquitectura, las convenciones DDD y qué hacer / evitar.
 
 ---
 
+## Ramas y entornos
+
+Tres ramas de larga vida mapeadas a entornos: **`dev`** (default, base de tareas) →
+**`qa`** → **`prod`**. El trabajo de cada tarea sale de `dev` en una rama `nexa-00x-slug`
+y vuelve por PR. Detalle en [`Documentation/Branching.md`](Documentation/Branching.md).
+
+---
+
 ## Licencia
 
 [POR DEFINIR]
