@@ -137,7 +137,7 @@ Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
 - [x] **NEXA-013** ✅ client: flujo de alta (join) _(Fase 2)_ · [x] **NEXA-014** ✅ client:
       estado en espera en vivo (posición/ETA/mesa lista) · [x] **NEXA-015** ✅ client: catálogo (/explorar + join por código) ·
       [x] **NEXA-016** ✅ client: evaluación post-servicio (rating + comentario en estado sentado).
-- **NEXA-017** reception: cola en vivo _(parcial, Fase 2/3)_ · **NEXA-018** reception: alta manual + acciones.
+- [x] **NEXA-017** ✅ reception: cola en vivo multi-cola (tabs) · [x] **NEXA-018** ✅ reception: alta manual (walk-in).
 - **NEXA-019** admin: dashboard · [x] **NEXA-020** ✅ admin: UI de configuración _(NEXA-007)_.
 - **NEXA-021** notifications: web push · [x] **NEXA-023** ✅ expiración & no-show (barrido periódico notified→no_show).
 - **NEXA-022** landing page (implementa los 6 mocks de landing).
