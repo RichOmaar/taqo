@@ -9,6 +9,30 @@ export interface GetRestaurantResponse {
   queues: Queue[];
 }
 
+/** PATCH /restaurants/:code — update editable restaurant config. */
+export interface UpdateRestaurantConfigRequest {
+  name?: string;
+  etaBaseMinutes?: number;
+  expirationMinutes?: number;
+}
+
+/** POST /restaurants/:code/queues — add a queue. */
+export interface AddQueueRequest {
+  name: string;
+  priority?: number;
+}
+
+/** PATCH /queues/:id — update a queue. */
+export interface UpdateQueueRequest {
+  name?: string;
+  priority?: number;
+  isActive?: boolean;
+}
+
+export interface QueueResponse {
+  queue: Queue;
+}
+
 /** POST /restaurants/:code/waitlist — join a queue (guest-friendly). */
 export interface JoinWaitlistRequest {
   queueId: UUID;
