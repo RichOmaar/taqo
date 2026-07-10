@@ -2,7 +2,7 @@ import type { WaitlistEntry } from '@nexa/types';
 
 import { NotFoundError, ValidationError } from '../../../shared/errors';
 import type { WaitlistRepository } from '../domain/waitlist-repository';
-import type { WaitlistEventPublisher } from './ports';
+import type { DinerNotifier, WaitlistEventPublisher } from './ports';
 
 /**
  * Lifecycle actions on a waitlist entry performed by reception:
@@ -12,12 +12,14 @@ export class EntryActions {
   constructor(
     private readonly waitlist: WaitlistRepository,
     private readonly publisher: WaitlistEventPublisher,
+    private readonly notifier: DinerNotifier,
   ) {}
 
   async notify(entryId: string): Promise<WaitlistEntry> {
     await this.loadActive(entryId);
     const entry = await this.waitlist.transition(entryId, 'notified', { notified: true });
     this.publisher.entryUpdated({ entry });
+    this.notifier.tableReady(entry);
     return entry;
   }
 

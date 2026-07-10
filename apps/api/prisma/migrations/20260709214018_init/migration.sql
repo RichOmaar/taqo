@@ -77,6 +77,18 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
+CREATE TABLE "push_subscriptions" (
+    "id" UUID NOT NULL,
+    "entry_id" TEXT NOT NULL,
+    "endpoint" TEXT NOT NULL,
+    "p256dh" TEXT NOT NULL,
+    "auth" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "push_subscriptions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "notifications" (
     "id" UUID NOT NULL,
     "entry_id" UUID NOT NULL,
@@ -162,6 +174,12 @@ CREATE INDEX "waitlist_entries_restaurant_id_idx" ON "waitlist_entries"("restaur
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "push_subscriptions_endpoint_key" ON "push_subscriptions"("endpoint");
+
+-- CreateIndex
+CREATE INDEX "push_subscriptions_entry_id_idx" ON "push_subscriptions"("entry_id");
 
 -- CreateIndex
 CREATE INDEX "notifications_entry_id_idx" ON "notifications"("entry_id");

@@ -100,6 +100,17 @@ export interface SubmitReviewResponse {
   review: ServiceReview;
 }
 
+/** GET /push/public-key — VAPID public key for the browser (null if push is off). */
+export interface VapidKeyResponse {
+  publicKey: string | null;
+}
+
+/** POST /entries/:id/push-subscription — browser push subscription. */
+export interface PushSubscriptionRequest {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+}
+
 /** GET /restaurants/:restaurantId/queues/:queueId/entries — live queue snapshot. */
 export interface ListQueueEntriesResponse {
   entries: WaitlistEntry[];
