@@ -168,11 +168,20 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   Operación básica end-to-end con auth: comensal (guest o registrado) se une, la hostess
   avisa/sienta/no-show en vivo, el dueño configura, todo protegido por login de staff.
 - **Credenciales dev:** staff admin `owner@demo.nexa` / `ownerpass123` (seed).
-- **Siguiente:** **Sprint 2** — completar pantallas contra los mocks (client: espera en vivo,
-  catálogo, evaluación; reception: alta manual, detalle; admin: dashboard real), web push,
-  expiración/no-show, la **landing**, y CI/CD para publicar.
+- **Hecho:** **Sprint 2 (producto) completo** — client (013–016), reception (017/018),
+  admin dashboard (019), landing (022), web push (021), expiración (023) y **CI** (024).
+- **Hecho:** **Testing** — unitarios Vitest obligatorios en todo el monorepo + **E2E de
+  backend** (Vitest + Postgres real) + **E2E de frontend** (Playwright, tiempo real) + job
+  de CI E2E nightly (`.github/workflows/e2e.yml`).
+- **Pendiente de despliegue:** NEXA-025 (aprovisionar servidor) y NEXA-026 (CD) — requieren
+  decisión de hosting + secrets.
+- **Sprint 3 (features nuevas):** Strapi/`apps/cms` + formularios configurables (027–029),
+  catálogo desde Strapi (030), ETA dinámico (031), SMS/WhatsApp Twilio (032), integraciones
+  externas (033), revisión de arquitectura (034), buffer (035), UX (036).
+- **Huecos de MVP pendientes:** cancelar-lugar por el comensal, re-numeración de posiciones,
+  registro en la tabla `Notification`.
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
-  web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
+  expiración (cron vs. lectura).
 
 ```
 
