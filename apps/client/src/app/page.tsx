@@ -1,11 +1,13 @@
 'use client';
 
-import type { Queue, WaitlistEntry } from '@nexa/types';
+import type { EntryRemovedPayload, EntryUpdatedPayload, Queue, WaitlistEntry } from '@nexa/types';
+import { WS_EVENTS } from '@nexa/types';
 import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 
-import { getRestaurant, joinWaitlist } from '../lib/api';
+import { API_URL, getEntry, getRestaurant, joinWaitlist } from '../lib/api';
 
 const RESTAURANT_CODE = 'DEMO';
 
@@ -28,6 +30,27 @@ export default function JoinPage() {
       })
       .catch(() => setError('No pudimos cargar el restaurante.'));
   }, []);
+
+  // Live status: subscribe to this entry's room once we have joined.
+  const entryId = entry?.id;
+  useEffect(() => {
+    if (!entryId) return;
+    const socket = io(API_URL, { transports: ['websocket'] });
+    socket.on('connect', () => socket.emit('subscribe-entry', { entryId }));
+    socket.on(WS_EVENTS.ENTRY_UPDATED, (p: EntryUpdatedPayload) => {
+      if (p.entry.id === entryId) setEntry(p.entry);
+    });
+    socket.on(WS_EVENTS.ENTRY_REMOVED, (p: EntryRemovedPayload) => {
+      if (p.entryId === entryId) {
+        getEntry(entryId)
+          .then((r) => setEntry(r.entry))
+          .catch(() => undefined);
+      }
+    });
+    return () => {
+      socket.close();
+    };
+  }, [entryId]);
 
   async function handleSubmit() {
     if (!queueId || !displayName.trim()) {
@@ -53,26 +76,7 @@ export default function JoinPage() {
   if (entry) {
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/15 font-display text-3xl font-bold text-secondary-dark">
-          {entry.position}
-        </div>
-        <div>
-          <h1 className="font-display text-3xl font-bold text-foreground">¡Estás en la fila!</h1>
-          <p className="mt-1 font-body text-muted">Tu lugar en {restaurantName}</p>
-        </div>
-        <Card className="w-full">
-          <div className="flex items-center justify-between">
-            <span className="font-body text-sm text-muted">Tiempo estimado</span>
-            <span className="font-display text-2xl font-bold text-primary-dark">
-              ~{entry.etaMinutes} min
-            </span>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="font-body text-sm text-muted">Estado</span>
-            <StatusBadge status={entry.status} />
-          </div>
-        </Card>
-        <p className="font-body text-sm text-muted">Te avisaremos cuando tu mesa esté lista.</p>
+        <WaitingStatus entry={entry} restaurantName={restaurantName} />
       </main>
     );
   }
@@ -133,5 +137,77 @@ export default function JoinPage() {
         Crea tu cuenta para guardar tu historial
       </Link>
     </main>
+  );
+}
+
+function WaitingStatus({
+  entry,
+  restaurantName,
+}: {
+  entry: WaitlistEntry;
+  restaurantName: string;
+}) {
+  if (entry.status === 'notified') {
+    return (
+      <>
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/15 text-5xl">
+          🎉
+        </div>
+        <div>
+          <h1 className="font-display text-3xl font-bold text-foreground">¡Tu mesa está lista!</h1>
+          <p className="mt-1 font-body text-muted">Acércate a la recepción de {restaurantName}.</p>
+        </div>
+        <StatusBadge status={entry.status} />
+      </>
+    );
+  }
+
+  if (entry.status === 'seated') {
+    return (
+      <>
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary/15 text-5xl">
+          🍽️
+        </div>
+        <h1 className="font-display text-3xl font-bold text-foreground">¡Buen provecho!</h1>
+        <p className="font-body text-muted">Gracias por visitar {restaurantName}.</p>
+      </>
+    );
+  }
+
+  if (entry.status === 'no_show' || entry.status === 'cancelled') {
+    return (
+      <>
+        <h1 className="font-display text-2xl font-bold text-foreground">
+          {entry.status === 'cancelled' ? 'Tu lugar se canceló' : 'Tu lugar expiró'}
+        </h1>
+        <p className="font-body text-muted">Puedes volver a anotarte cuando quieras.</p>
+      </>
+    );
+  }
+
+  // waiting
+  return (
+    <>
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/15 font-display text-3xl font-bold text-secondary-dark">
+        {entry.position}
+      </div>
+      <div>
+        <h1 className="font-display text-3xl font-bold text-foreground">¡Estás en la fila!</h1>
+        <p className="mt-1 font-body text-muted">Tu lugar en {restaurantName}</p>
+      </div>
+      <Card className="w-full">
+        <div className="flex items-center justify-between">
+          <span className="font-body text-sm text-muted">Tiempo estimado</span>
+          <span className="font-display text-2xl font-bold text-primary-dark">
+            {entry.etaMinutes != null ? `~${entry.etaMinutes} min` : '—'}
+          </span>
+        </div>
+        <div className="mt-3 flex items-center justify-between">
+          <span className="font-body text-sm text-muted">Estado</span>
+          <StatusBadge status={entry.status} />
+        </div>
+      </Card>
+      <p className="font-body text-sm text-muted">Te avisaremos cuando tu mesa esté lista.</p>
+    </>
   );
 }
