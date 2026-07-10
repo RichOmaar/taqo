@@ -1,12 +1,28 @@
 import type {
   EntryActionResponse,
   GetRestaurantResponse,
+  JoinWaitlistRequest,
+  JoinWaitlistResponse,
   ListQueueEntriesResponse,
 } from '@nexa/types';
 
 import { authHeader } from './auth';
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+
+// Manual add: no auth header so the walk-in stays a guest (userId null).
+export async function joinWaitlist(
+  code: string,
+  body: JoinWaitlistRequest,
+): Promise<JoinWaitlistResponse> {
+  const res = await fetch(`${API_URL}/restaurants/${code}/waitlist`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Failed to add diner (${res.status})`);
+  return res.json() as Promise<JoinWaitlistResponse>;
+}
 
 export async function getRestaurant(code: string): Promise<GetRestaurantResponse> {
   const res = await fetch(`${API_URL}/restaurants/${code}`);
