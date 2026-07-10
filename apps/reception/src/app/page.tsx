@@ -9,6 +9,7 @@ import type {
 } from '@nexa/types';
 import { WS_EVENTS } from '@nexa/types';
 import { Button, WaitCard, cn } from '@nexa/ui';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Socket, io } from 'socket.io-client';
 
@@ -20,6 +21,7 @@ import {
   notifyEntry,
   seatEntry,
 } from '../lib/api';
+import { getToken, signOut } from '../lib/auth';
 
 const RESTAURANT_CODE = 'DEMO';
 
@@ -28,12 +30,18 @@ export default function BoardPage() {
   const [queue, setQueue] = useState<Queue | null>(null);
   const [entries, setEntries] = useState<WaitlistEntry[]>([]);
   const [connected, setConnected] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!getToken()) router.replace('/login');
+  }, [router]);
 
   useEffect(() => {
     let socket: Socket | undefined;
     let cancelled = false;
 
     async function start() {
+      if (!getToken()) return;
       const data = await getRestaurant(RESTAURANT_CODE);
       const general = data.queues.find((q) => q.name === 'General') ?? data.queues[0];
       if (!general || cancelled) return;
@@ -45,7 +53,7 @@ export default function BoardPage() {
       if (cancelled) return;
       setEntries(snapshot.entries);
 
-      socket = io(API_URL, { transports: ['websocket'] });
+      socket = io(API_URL, { transports: ['websocket'], auth: { token: getToken() ?? '' } });
       socket.on('connect', () => {
         setConnected(true);
         socket?.emit('subscribe', { restaurantId: data.restaurant.id, queueId: general.id });
@@ -79,6 +87,11 @@ export default function BoardPage() {
     fn(id).catch(() => undefined);
   };
 
+  function logout() {
+    signOut();
+    router.replace('/login');
+  }
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-8">
       <header className="mb-6 flex items-center justify-between">
@@ -89,15 +102,20 @@ export default function BoardPage() {
             {queue ? ` · ${queue.name}` : ''}
           </p>
         </div>
-        <span
-          className={cn(
-            'flex items-center gap-2 rounded-full px-3 py-1 font-body text-xs font-semibold',
-            connected ? 'bg-secondary/15 text-secondary-dark' : 'bg-black/5 text-muted',
-          )}
-        >
-          <span className={cn('h-2 w-2 rounded-full', connected ? 'bg-secondary' : 'bg-muted')} />
-          {connected ? 'En vivo' : 'Conectando…'}
-        </span>
+        <div className="flex items-center gap-4">
+          <span
+            className={cn(
+              'flex items-center gap-2 rounded-full px-3 py-1 font-body text-xs font-semibold',
+              connected ? 'bg-secondary/15 text-secondary-dark' : 'bg-black/5 text-muted',
+            )}
+          >
+            <span className={cn('h-2 w-2 rounded-full', connected ? 'bg-secondary' : 'bg-muted')} />
+            {connected ? 'En vivo' : 'Conectando…'}
+          </span>
+          <button type="button" onClick={logout} className="font-body text-sm text-muted">
+            Salir
+          </button>
+        </div>
       </header>
 
       {entries.length === 0 ? (

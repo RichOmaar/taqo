@@ -123,7 +123,10 @@ tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-e
 - [x] **NEXA-007** ✅ Restaurant config: repos + `RestaurantConfig` (update config, add/rename queues) + endpoints, y UI `/configuracion` en admin. → `feat(api): add restaurant config use cases` · `feat(admin): add restaurant config UI`
 - [x] **NEXA-008 (resto)** ✅ Acciones waitlist: `Notify` / `Seat` / `MarkNoShow` / `Cancel` con guardas de estado + endpoints + botones en el board. → `feat(api): add waitlist status transitions` · `feat(reception): wire queue actions and live updates`
 - [x] **NEXA-010 (resto)** ✅ WS: emisión de `entry_updated` / `entry_removed` y board reactivo. _(Falta: auth de subscripción por restaurante/cola → va con NEXA-009.)_
-- **NEXA-009** Identity completo: BetterAuth (guest → registrado con correo) + staff (hostess/admin). _(pendiente)_ — incluye auth de las acciones de recepción y de la subscripción WS.
+- [x] **NEXA-009** ✅ Identity completo (BetterAuth email/password + bearer): user con `role`
+      (diner/hostess/admin), acciones de recepción + config + subscripción WS protegidas por
+      staff, login en admin/reception, y modo comensal registrado en client (`/cuenta`).
+      Seed de staff admin `owner@demo.nexa`. → `feat(api): integrate betterauth` · `feat(api): protect staff actions and seed admin` · `feat(identity): add staff login and route guards` · `feat(client): add registered-diner mode`
 
 ---
 
@@ -158,10 +161,13 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   reglas de `CLAUDE.md` actualizadas.
 - **Hecho:** Fase 0 completa — NEXA-002 (config: tsconfig/eslint/prettier) y NEXA-003
   (types: DTOs, enums, eventos WS y contratos REST).
-- **Hecho:** Fases 0, 1 y **2** completas. La rebanada vertical funciona end-to-end:
-  el comensal se une (client → API) y aparece en el board de recepción en vivo (WS).
-- **Siguiente:** Fase 3 — engordar: NEXA-007 (restaurant config + UI admin), NEXA-008
-  resto (Notify/Seat/NoShow/Cancel + `entry_updated`/`entry_removed`), NEXA-009 (identity/BetterAuth).
+- **Hecho:** Fases 0, 1, 2 y **3** completas → **Sprint 1 cerrado** (alcance extendido).
+  Operación básica end-to-end con auth: comensal (guest o registrado) se une, la hostess
+  avisa/sienta/no-show en vivo, el dueño configura, todo protegido por login de staff.
+- **Credenciales dev:** staff admin `owner@demo.nexa` / `ownerpass123` (seed).
+- **Siguiente:** **Sprint 2** — completar pantallas contra los mocks (client: espera en vivo,
+  catálogo, evaluación; reception: alta manual, detalle; admin: dashboard real), web push,
+  expiración/no-show, la **landing**, y CI/CD para publicar.
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
 
