@@ -9,6 +9,20 @@ export interface GetRestaurantResponse {
   queues: Queue[];
 }
 
+/** A restaurant catalog entry with its current wait. */
+export interface RestaurantSummary {
+  id: UUID;
+  name: string;
+  code: string;
+  /** People currently in line (waiting or notified). */
+  waitingCount: number;
+}
+
+/** GET /restaurants — public catalog. */
+export interface ListRestaurantsResponse {
+  restaurants: RestaurantSummary[];
+}
+
 /** PATCH /restaurants/:code — update editable restaurant config. */
 export interface UpdateRestaurantConfigRequest {
   name?: string;

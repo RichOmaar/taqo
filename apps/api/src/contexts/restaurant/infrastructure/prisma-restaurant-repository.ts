@@ -1,4 +1,4 @@
-import type { Queue, Restaurant } from '@nexa/types';
+import type { Queue, Restaurant, RestaurantSummary } from '@nexa/types';
 import type {
   PrismaClient,
   Queue as PrismaQueue,
@@ -38,6 +38,25 @@ function toQueue(row: PrismaQueue): Queue {
 
 export class PrismaRestaurantRepository implements RestaurantRepository {
   constructor(private readonly prisma: PrismaClient) {}
+
+  async listSummaries(): Promise<RestaurantSummary[]> {
+    const restaurants = await this.prisma.restaurant.findMany({
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true, code: true },
+    });
+    const counts = await this.prisma.waitlistEntry.groupBy({
+      by: ['restaurantId'],
+      where: { status: { in: ['waiting', 'notified'] } },
+      _count: { _all: true },
+    });
+    const waitingByRestaurant = new Map(counts.map((c) => [c.restaurantId, c._count._all]));
+    return restaurants.map((r) => ({
+      id: r.id,
+      name: r.name,
+      code: r.code,
+      waitingCount: waitingByRestaurant.get(r.id) ?? 0,
+    }));
+  }
 
   async findByCode(code: string): Promise<RestaurantWithQueues | null> {
     const row = await this.prisma.restaurant.findUnique({

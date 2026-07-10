@@ -21,7 +21,9 @@ export function createServer(container: Container): Express {
   app.use(express.json());
 
   app.use('/health', healthRouter);
-  app.use(restaurantRouter(container.restaurants, container.restaurantConfig));
+  app.use(
+    restaurantRouter(container.restaurants, container.listRestaurants, container.restaurantConfig),
+  );
   app.use(
     waitlistRouter(
       container.joinWaitlist,
