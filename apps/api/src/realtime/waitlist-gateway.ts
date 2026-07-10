@@ -25,7 +25,8 @@ export function setupWaitlistGateway(io: IOServer): void {
       const role = (session?.user as { role?: string | null } | undefined)?.role ?? 'diner';
       if (!session?.user || !STAFF_ROLES.has(role)) return next(new Error('forbidden'));
       next();
-    } catch {
+    } catch (error) {
+      console.error('[ws-auth] session check failed', error);
       next(new Error('unauthorized'));
     }
   });

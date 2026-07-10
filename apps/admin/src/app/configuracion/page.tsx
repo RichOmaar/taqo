@@ -3,14 +3,21 @@
 import type { Queue } from '@nexa/types';
 import { Button, Card, Input } from '@nexa/ui';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { addQueue, getRestaurant, updateConfig, updateQueue } from '../../lib/api';
+import { getToken } from '../../lib/auth';
 
 const CODE = 'DEMO';
 
 export default function ConfigPage() {
+  const router = useRouter();
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!getToken()) router.replace('/login');
+  }, [router]);
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [etaBase, setEtaBase] = useState(10);

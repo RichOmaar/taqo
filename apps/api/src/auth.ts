@@ -17,6 +17,8 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
   emailAndPassword: { enabled: true },
+  // Rate limiting is a production concern; disabling it in dev avoids noisy 403s.
+  rateLimit: { enabled: env.NODE_ENV === 'production' },
   trustedOrigins: ['http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'],
   user: {
     additionalFields: {

@@ -4,6 +4,8 @@ import type {
   ListQueueEntriesResponse,
 } from '@nexa/types';
 
+import { authHeader } from './auth';
+
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export async function getRestaurant(code: string): Promise<GetRestaurantResponse> {
@@ -22,7 +24,10 @@ export async function listQueueEntries(
 }
 
 async function entryAction(entryId: string, action: string): Promise<EntryActionResponse> {
-  const res = await fetch(`${API_URL}/entries/${entryId}/${action}`, { method: 'POST' });
+  const res = await fetch(`${API_URL}/entries/${entryId}/${action}`, {
+    method: 'POST',
+    headers: authHeader(),
+  });
   if (!res.ok) throw new Error(`Action "${action}" failed (${res.status})`);
   return res.json() as Promise<EntryActionResponse>;
 }
