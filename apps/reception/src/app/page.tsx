@@ -1,12 +1,25 @@
 'use client';
 
-import type { EntryAddedPayload, Queue, WaitlistEntry } from '@nexa/types';
+import type {
+  EntryAddedPayload,
+  EntryRemovedPayload,
+  EntryUpdatedPayload,
+  Queue,
+  WaitlistEntry,
+} from '@nexa/types';
 import { WS_EVENTS } from '@nexa/types';
 import { Button, WaitCard, cn } from '@nexa/ui';
 import { useEffect, useState } from 'react';
 import { type Socket, io } from 'socket.io-client';
 
-import { API_URL, getRestaurant, listQueueEntries } from '../lib/api';
+import {
+  API_URL,
+  getRestaurant,
+  listQueueEntries,
+  noShowEntry,
+  notifyEntry,
+  seatEntry,
+} from '../lib/api';
 
 const RESTAURANT_CODE = 'DEMO';
 
@@ -45,6 +58,12 @@ export default function BoardPage() {
             : [...prev, payload.entry].sort((a, b) => a.position - b.position),
         );
       });
+      socket.on(WS_EVENTS.ENTRY_UPDATED, (payload: EntryUpdatedPayload) => {
+        setEntries((prev) => prev.map((e) => (e.id === payload.entry.id ? payload.entry : e)));
+      });
+      socket.on(WS_EVENTS.ENTRY_REMOVED, (payload: EntryRemovedPayload) => {
+        setEntries((prev) => prev.filter((e) => e.id !== payload.entryId));
+      });
     }
 
     void start().catch(() => setConnected(false));
@@ -54,6 +73,11 @@ export default function BoardPage() {
       socket?.close();
     };
   }, []);
+
+  // The board reflects the WebSocket events; action failures are ignored here.
+  const runAction = (fn: (id: string) => Promise<unknown>, id: string) => {
+    fn(id).catch(() => undefined);
+  };
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-8">
@@ -89,9 +113,16 @@ export default function BoardPage() {
               waitingLabel={`Lugar #${entry.position}`}
               etaLabel={entry.etaMinutes != null ? `~${entry.etaMinutes} min` : undefined}
             >
-              <Button size="sm">Avisar</Button>
-              <Button size="sm" variant="secondary">
+              {entry.status === 'waiting' && (
+                <Button size="sm" onClick={() => runAction(notifyEntry, entry.id)}>
+                  Avisar
+                </Button>
+              )}
+              <Button size="sm" variant="secondary" onClick={() => runAction(seatEntry, entry.id)}>
                 Sentar
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => runAction(noShowEntry, entry.id)}>
+                No-show
               </Button>
             </WaitCard>
           ))}

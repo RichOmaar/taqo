@@ -1,4 +1,8 @@
-import type { GetRestaurantResponse, ListQueueEntriesResponse } from '@nexa/types';
+import type {
+  EntryActionResponse,
+  GetRestaurantResponse,
+  ListQueueEntriesResponse,
+} from '@nexa/types';
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -16,3 +20,13 @@ export async function listQueueEntries(
   if (!res.ok) throw new Error(`Failed to load entries (${res.status})`);
   return res.json() as Promise<ListQueueEntriesResponse>;
 }
+
+async function entryAction(entryId: string, action: string): Promise<EntryActionResponse> {
+  const res = await fetch(`${API_URL}/entries/${entryId}/${action}`, { method: 'POST' });
+  if (!res.ok) throw new Error(`Action "${action}" failed (${res.status})`);
+  return res.json() as Promise<EntryActionResponse>;
+}
+
+export const notifyEntry = (id: string) => entryAction(id, 'notify');
+export const seatEntry = (id: string) => entryAction(id, 'seat');
+export const noShowEntry = (id: string) => entryAction(id, 'no-show');
