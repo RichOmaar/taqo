@@ -1,8 +1,19 @@
-import type { GetRestaurantResponse, JoinWaitlistRequest, JoinWaitlistResponse } from '@nexa/types';
+import type {
+  GetEntryResponse,
+  GetRestaurantResponse,
+  JoinWaitlistRequest,
+  JoinWaitlistResponse,
+} from '@nexa/types';
 
 import { authHeader } from './auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+
+export async function getEntry(id: string): Promise<GetEntryResponse> {
+  const res = await fetch(`${API_URL}/entries/${id}`);
+  if (!res.ok) throw new Error(`Failed to load entry (${res.status})`);
+  return res.json() as Promise<GetEntryResponse>;
+}
 
 export async function getRestaurant(code: string): Promise<GetRestaurantResponse> {
   const res = await fetch(`${API_URL}/restaurants/${code}`);

@@ -52,6 +52,11 @@ export interface EntryActionResponse {
   entry: WaitlistEntry;
 }
 
+/** GET /entries/:id — a single waitlist entry (the diner's live status). */
+export interface GetEntryResponse {
+  entry: WaitlistEntry;
+}
+
 /** GET /restaurants/:restaurantId/queues/:queueId/entries — live queue snapshot. */
 export interface ListQueueEntriesResponse {
   entries: WaitlistEntry[];

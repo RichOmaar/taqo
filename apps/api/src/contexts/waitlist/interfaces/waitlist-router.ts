@@ -1,5 +1,6 @@
 import type {
   EntryActionResponse,
+  GetEntryResponse,
   JoinWaitlistResponse,
   ListQueueEntriesResponse,
   WaitlistEntry,
@@ -13,6 +14,7 @@ import { auth } from '../../../auth';
 import { requireStaff } from '../../../http/middleware/require-staff';
 import { ValidationError } from '../../../shared/errors';
 import type { EntryActions } from '../application/entry-actions';
+import type { GetEntry } from '../application/get-entry';
 import type { JoinWaitlist } from '../application/join-waitlist';
 import type { ListQueueEntries } from '../application/list-queue-entries';
 
@@ -43,9 +45,22 @@ function actionRoute(action: (id: string) => Promise<WaitlistEntry>): RequestHan
 export function waitlistRouter(
   join: JoinWaitlist,
   list: ListQueueEntries,
+  getEntry: GetEntry,
   actions: EntryActions,
 ): Router {
   const router = Router();
+
+  router.get('/entries/:id', async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (!id) throw new ValidationError('Missing entry id');
+      const entry = await getEntry.execute(id);
+      const response: GetEntryResponse = { entry };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
 
   router.post('/restaurants/:code/waitlist', async (req, res, next) => {
     try {
