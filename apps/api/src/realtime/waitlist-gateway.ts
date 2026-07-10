@@ -1,4 +1,4 @@
-import type { EntryAddedPayload } from '@nexa/types';
+import type { EntryAddedPayload, EntryRemovedPayload, EntryUpdatedPayload } from '@nexa/types';
 import { WS_EVENTS, queueRoom } from '@nexa/types';
 import type { Server as IOServer, Socket } from 'socket.io';
 
@@ -26,6 +26,16 @@ export function createWaitlistPublisher(io: IOServer): WaitlistEventPublisher {
     entryAdded(payload: EntryAddedPayload) {
       const { restaurantId, queueId } = payload.entry;
       io.to(queueRoom(restaurantId, queueId)).emit(WS_EVENTS.ENTRY_ADDED, payload);
+    },
+    entryUpdated(payload: EntryUpdatedPayload) {
+      const { restaurantId, queueId } = payload.entry;
+      io.to(queueRoom(restaurantId, queueId)).emit(WS_EVENTS.ENTRY_UPDATED, payload);
+    },
+    entryRemoved(payload: EntryRemovedPayload) {
+      io.to(queueRoom(payload.restaurantId, payload.queueId)).emit(
+        WS_EVENTS.ENTRY_REMOVED,
+        payload,
+      );
     },
   };
 }

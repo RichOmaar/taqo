@@ -1,8 +1,12 @@
-import type { WaitlistEntry } from '@nexa/types';
+import type { WaitlistEntry, WaitlistStatus } from '@nexa/types';
 import { Prisma } from '@prisma/client';
 import type { PrismaClient, WaitlistEntry as PrismaWaitlistEntry } from '@prisma/client';
 
-import type { NewWaitlistEntry, WaitlistRepository } from '../domain/waitlist-repository';
+import type {
+  NewWaitlistEntry,
+  TransitionOptions,
+  WaitlistRepository,
+} from '../domain/waitlist-repository';
 
 const ACTIVE_STATUSES = ['waiting', 'notified'] as const;
 
@@ -59,5 +63,26 @@ export class PrismaWaitlistRepository implements WaitlistRepository {
       orderBy: { position: 'asc' },
     });
     return rows.map(toEntry);
+  }
+
+  async findById(id: string): Promise<WaitlistEntry | null> {
+    const row = await this.prisma.waitlistEntry.findUnique({ where: { id } });
+    return row ? toEntry(row) : null;
+  }
+
+  async transition(
+    id: string,
+    status: WaitlistStatus,
+    options?: TransitionOptions,
+  ): Promise<WaitlistEntry> {
+    const row = await this.prisma.waitlistEntry.update({
+      where: { id },
+      data: {
+        status,
+        ...(options?.notified ? { notifiedAt: new Date() } : {}),
+        ...(options?.seated ? { seatedAt: new Date() } : {}),
+      },
+    });
+    return toEntry(row);
   }
 }

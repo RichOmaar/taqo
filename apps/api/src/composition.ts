@@ -1,3 +1,4 @@
+import { EntryActions } from './contexts/waitlist/application/entry-actions';
 import { JoinWaitlist } from './contexts/waitlist/application/join-waitlist';
 import { ListQueueEntries } from './contexts/waitlist/application/list-queue-entries';
 import type { WaitlistEventPublisher } from './contexts/waitlist/application/ports';
@@ -10,6 +11,7 @@ export interface Container {
   restaurants: RestaurantRepository;
   joinWaitlist: JoinWaitlist;
   listQueueEntries: ListQueueEntries;
+  entryActions: EntryActions;
 }
 
 /** Composition root: wires repositories and use cases with the given publisher. */
@@ -20,5 +22,6 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
     restaurants,
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),
     listQueueEntries: new ListQueueEntries(waitlist),
+    entryActions: new EntryActions(waitlist, publisher),
   };
 }
