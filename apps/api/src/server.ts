@@ -23,7 +23,12 @@ export function createServer(container: Container): Express {
   app.use('/health', healthRouter);
   app.use(restaurantRouter(container.restaurants, container.restaurantConfig));
   app.use(
-    waitlistRouter(container.joinWaitlist, container.listQueueEntries, container.entryActions),
+    waitlistRouter(
+      container.joinWaitlist,
+      container.listQueueEntries,
+      container.getEntry,
+      container.entryActions,
+    ),
   );
 
   // 404 + centralized error handling — must be registered last.

@@ -2,6 +2,7 @@ import { RestaurantConfig } from './contexts/restaurant/application/restaurant-c
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
 import { PrismaRestaurantRepository } from './contexts/restaurant/infrastructure/prisma-restaurant-repository';
 import { EntryActions } from './contexts/waitlist/application/entry-actions';
+import { GetEntry } from './contexts/waitlist/application/get-entry';
 import { JoinWaitlist } from './contexts/waitlist/application/join-waitlist';
 import { ListQueueEntries } from './contexts/waitlist/application/list-queue-entries';
 import type { WaitlistEventPublisher } from './contexts/waitlist/application/ports';
@@ -13,6 +14,7 @@ export interface Container {
   restaurantConfig: RestaurantConfig;
   joinWaitlist: JoinWaitlist;
   listQueueEntries: ListQueueEntries;
+  getEntry: GetEntry;
   entryActions: EntryActions;
 }
 
@@ -25,6 +27,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
     restaurantConfig: new RestaurantConfig(restaurants),
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),
     listQueueEntries: new ListQueueEntries(waitlist),
+    getEntry: new GetEntry(waitlist),
     entryActions: new EntryActions(waitlist, publisher),
   };
 }
