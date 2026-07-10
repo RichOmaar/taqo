@@ -30,6 +30,7 @@ export function createServer(container: Container): Express {
       container.listQueueEntries,
       container.getEntry,
       container.entryActions,
+      container.submitReview,
     ),
   );
 

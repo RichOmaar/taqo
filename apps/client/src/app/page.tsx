@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-import { API_URL, getEntry, getRestaurant, joinWaitlist } from '../lib/api';
+import { API_URL, getEntry, getRestaurant, joinWaitlist, submitReview } from '../lib/api';
 
 export default function JoinPage() {
   const [code] = useState(() => {
@@ -177,6 +177,7 @@ function WaitingStatus({
         </div>
         <h1 className="font-display text-3xl font-bold text-foreground">¡Buen provecho!</h1>
         <p className="font-body text-muted">Gracias por visitar {restaurantName}.</p>
+        <ReviewForm entryId={entry.id} />
       </>
     );
   }
@@ -192,7 +193,66 @@ function WaitingStatus({
     );
   }
 
-  // waiting
+  return <WaitingCard entry={entry} restaurantName={restaurantName} />;
+}
+
+function ReviewForm({ entryId }: { entryId: string }) {
+  const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState('');
+  const [done, setDone] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  async function submit() {
+    if (rating === 0) return;
+    setBusy(true);
+    try {
+      await submitReview(entryId, { rating, feedback: feedback.trim() || null });
+      setDone(true);
+    } catch {
+      // ignore; keep the form so the diner can retry
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (done) {
+    return <p className="font-body text-sm text-secondary-dark">¡Gracias por tu opinión! 💚</p>;
+  }
+
+  return (
+    <Card className="flex w-full flex-col gap-4">
+      <p className="font-display text-lg font-semibold text-foreground">
+        ¿Cómo estuvo tu experiencia?
+      </p>
+      <div className="flex justify-center gap-2">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            aria-label={`${n} estrellas`}
+            onClick={() => setRating(n)}
+            className={cn(
+              'text-3xl transition-opacity',
+              n <= rating ? 'opacity-100' : 'opacity-30',
+            )}
+          >
+            ⭐
+          </button>
+        ))}
+      </div>
+      <Input
+        value={feedback}
+        onChange={(e) => setFeedback(e.target.value)}
+        placeholder="Cuéntanos más (opcional)"
+      />
+      <Button onClick={() => void submit()} disabled={rating === 0 || busy}>
+        {busy ? 'Enviando…' : 'Enviar'}
+      </Button>
+    </Card>
+  );
+}
+
+function WaitingCard({ entry, restaurantName }: { entry: WaitlistEntry; restaurantName: string }) {
   return (
     <>
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/15 font-display text-3xl font-bold text-secondary-dark">

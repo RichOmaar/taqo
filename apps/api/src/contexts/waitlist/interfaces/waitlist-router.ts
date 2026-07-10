@@ -3,6 +3,7 @@ import type {
   GetEntryResponse,
   JoinWaitlistResponse,
   ListQueueEntriesResponse,
+  SubmitReviewResponse,
   WaitlistEntry,
 } from '@nexa/types';
 import { fromNodeHeaders } from 'better-auth/node';
@@ -17,6 +18,7 @@ import type { EntryActions } from '../application/entry-actions';
 import type { GetEntry } from '../application/get-entry';
 import type { JoinWaitlist } from '../application/join-waitlist';
 import type { ListQueueEntries } from '../application/list-queue-entries';
+import type { SubmitReview } from '../application/submit-review';
 
 const joinSchema = z.object({
   queueId: z.string().uuid(),
@@ -24,6 +26,11 @@ const joinSchema = z.object({
   partySize: z.number().int().positive().max(50),
   phone: z.string().max(30).nullable().optional(),
   formData: z.record(z.unknown()).optional(),
+});
+
+const reviewSchema = z.object({
+  rating: z.number().int().min(1).max(5),
+  feedback: z.string().max(500).nullable().optional(),
 });
 
 /** Wrap an entry action into a route handler returning the updated entry. */
@@ -47,6 +54,7 @@ export function waitlistRouter(
   list: ListQueueEntries,
   getEntry: GetEntry,
   actions: EntryActions,
+  submitReview: SubmitReview,
 ): Router {
   const router = Router();
 
@@ -57,6 +65,22 @@ export function waitlistRouter(
       const entry = await getEntry.execute(id);
       const response: GetEntryResponse = { entry };
       res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post('/entries/:id/review', async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (!id) throw new ValidationError('Missing entry id');
+      const parsed = reviewSchema.safeParse(req.body);
+      if (!parsed.success) {
+        throw new ValidationError('Invalid review', { issues: parsed.error.issues });
+      }
+      const review = await submitReview.execute({ entryId: id, ...parsed.data });
+      const response: SubmitReviewResponse = { review };
+      res.status(201).json(response);
     } catch (error) {
       next(error);
     }

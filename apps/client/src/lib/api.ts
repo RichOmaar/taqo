@@ -4,11 +4,26 @@ import type {
   JoinWaitlistRequest,
   JoinWaitlistResponse,
   ListRestaurantsResponse,
+  SubmitReviewRequest,
+  SubmitReviewResponse,
 } from '@nexa/types';
 
 import { authHeader } from './auth';
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+
+export async function submitReview(
+  entryId: string,
+  body: SubmitReviewRequest,
+): Promise<SubmitReviewResponse> {
+  const res = await fetch(`${API_URL}/entries/${entryId}/review`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Failed to submit review (${res.status})`);
+  return res.json() as Promise<SubmitReviewResponse>;
+}
 
 export async function listRestaurants(): Promise<ListRestaurantsResponse> {
   const res = await fetch(`${API_URL}/restaurants`);
