@@ -23,6 +23,11 @@ pnpm-debug.log*
 # Test / coverage
 coverage/
 
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+
 # OS / editor
 .DS_Store
 *.swp

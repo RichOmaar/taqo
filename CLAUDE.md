@@ -216,8 +216,9 @@ compleja en el MVP).
   frontend deben tener tests. Cada `feat` que agregue lógica incluye sus tests en el mismo
   PR; el dominio y los casos de uso (que dependen de puertos, no de infraestructura) se
   testean de forma aislada con repos/publishers de prueba (sin DB). Script: `pnpm test`
-  (via Turbo). **E2E de backend** (Vitest + Postgres real, servidor levantado):
-  `pnpm --filter @nexa/api test:e2e`. E2E de frontend (Playwright) queda pendiente.
+  (via Turbo). **E2E de backend** (Vitest + Postgres real): `pnpm --filter @nexa/api test:e2e`.
+  **E2E de frontend** (Playwright, multi-app en tiempo real): `pnpm test:e2e:web` (requiere
+  Postgres en :5433). Los E2E corren aparte del CI rápido de PR.
 - **Variables de entorno:** nunca commitear secretos. Usar `.env` local y documentar
   las variables necesarias en el README.
 

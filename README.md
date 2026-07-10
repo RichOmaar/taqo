@@ -192,6 +192,24 @@ las reglas de arquitectura, las convenciones DDD y qué hacer / evitar.
 
 ---
 
+## Pruebas
+
+| Workspace        | Unitarios (Vitest) | E2E                         |
+| ---------------- | ------------------ | --------------------------- |
+| `apps/api`       | ✅                 | ✅ Vitest + Postgres real   |
+| `packages/types` | ✅                 | —                           |
+| `packages/ui`    | ✅ (Testing Lib)   | —                           |
+| `apps/client`    | ✅                 | ✅ Playwright (multi-app)   |
+| `apps/reception` | —                  | ✅ Playwright (tiempo real) |
+| `apps/admin`     | ✅                 | —                           |
+
+- `pnpm test` — unitarios en todo el monorepo (obligatorios, ver `CLAUDE.md`).
+- `pnpm --filter @nexa/api test:e2e` — E2E de backend (crea una DB aislada `nexa_e2e`).
+- `pnpm test:e2e:web` — E2E de frontend con Playwright (recepción ↔ comensal en vivo).
+  Requiere Postgres en `:5433` (`docker compose up -d postgres`).
+
+---
+
 ## Ramas y entornos
 
 Tres ramas de larga vida mapeadas a entornos: **`dev`** (default, base de tareas) →
