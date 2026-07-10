@@ -1,5 +1,5 @@
 import type { JsonObject, UUID } from './common';
-import type { Queue, Restaurant, WaitlistEntry } from './entities';
+import type { Queue, Restaurant, ServiceReview, WaitlistEntry } from './entities';
 
 // REST request/response contracts shared between the backend and the frontends.
 
@@ -69,6 +69,16 @@ export interface EntryActionResponse {
 /** GET /entries/:id — a single waitlist entry (the diner's live status). */
 export interface GetEntryResponse {
   entry: WaitlistEntry;
+}
+
+/** POST /entries/:id/review — post-service rating. */
+export interface SubmitReviewRequest {
+  rating: number;
+  feedback?: string | null;
+}
+
+export interface SubmitReviewResponse {
+  review: ServiceReview;
 }
 
 /** GET /restaurants/:restaurantId/queues/:queueId/entries — live queue snapshot. */
