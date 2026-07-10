@@ -146,7 +146,8 @@ DATABASE_URL=postgresql://user:password@localhost:5432/nexa
 API_PORT=[POR DEFINIR]
 
 # Auth (BetterAuth)
-[POR DEFINIR]
+BETTER_AUTH_SECRET=<secreto aleatorio de 32+ caracteres>
+BETTER_AUTH_URL=http://localhost:4000
 
 # Strapi
 [POR DEFINIR]
