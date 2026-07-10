@@ -1,9 +1,15 @@
-import type { GetRestaurantResponse, ListRestaurantsResponse, QueueResponse } from '@nexa/types';
+import type {
+  GetMetricsResponse,
+  GetRestaurantResponse,
+  ListRestaurantsResponse,
+  QueueResponse,
+} from '@nexa/types';
 import { Router } from 'express';
 import { z } from 'zod';
 
 import { requireStaff } from '../../../http/middleware/require-staff';
 import { NotFoundError, ValidationError } from '../../../shared/errors';
+import type { GetMetrics } from '../application/get-metrics';
 import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
@@ -29,6 +35,7 @@ const updateQueueSchema = z.object({
 export function restaurantRouter(
   restaurants: RestaurantRepository,
   list: ListRestaurants,
+  metrics: GetMetrics,
   config: RestaurantConfig,
 ): Router {
   const router = Router();
@@ -48,6 +55,18 @@ export function restaurantRouter(
       const found = await restaurants.findByCode(req.params.code);
       if (!found) throw new NotFoundError('Restaurant not found');
       res.json(found);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.get('/restaurants/:code/metrics', requireStaff, async (req, res, next) => {
+    try {
+      const code = req.params.code;
+      if (!code) throw new ValidationError('Missing restaurant code');
+      const data = await metrics.execute(code);
+      const response: GetMetricsResponse = { metrics: data };
+      res.json(response);
     } catch (error) {
       next(error);
     }

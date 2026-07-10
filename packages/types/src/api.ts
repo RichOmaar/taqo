@@ -23,6 +23,25 @@ export interface ListRestaurantsResponse {
   restaurants: RestaurantSummary[];
 }
 
+/** Owner dashboard KPIs. */
+export interface RestaurantMetrics {
+  /** Average wait (join → seated), in minutes; null with no data. */
+  averageWaitMinutes: number | null;
+  /** Diners who joined today. */
+  peopleToday: number;
+  /** no_show / resolved entries (0–1). */
+  noShowRate: number;
+  /** seated / resolved entries (0–1). */
+  seatedConversion: number;
+  /** Average service rating (1–5); null with no reviews. */
+  averageRating: number | null;
+}
+
+/** GET /restaurants/:code/metrics (staff). */
+export interface GetMetricsResponse {
+  metrics: RestaurantMetrics;
+}
+
 /** PATCH /restaurants/:code — update editable restaurant config. */
 export interface UpdateRestaurantConfigRequest {
   name?: string;

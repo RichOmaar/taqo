@@ -22,7 +22,12 @@ export function createServer(container: Container): Express {
 
   app.use('/health', healthRouter);
   app.use(
-    restaurantRouter(container.restaurants, container.listRestaurants, container.restaurantConfig),
+    restaurantRouter(
+      container.restaurants,
+      container.listRestaurants,
+      container.getMetrics,
+      container.restaurantConfig,
+    ),
   );
   app.use(
     waitlistRouter(

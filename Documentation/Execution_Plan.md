@@ -138,7 +138,7 @@ Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
       estado en espera en vivo (posición/ETA/mesa lista) · [x] **NEXA-015** ✅ client: catálogo (/explorar + join por código) ·
       [x] **NEXA-016** ✅ client: evaluación post-servicio (rating + comentario en estado sentado).
 - [x] **NEXA-017** ✅ reception: cola en vivo multi-cola (tabs) · [x] **NEXA-018** ✅ reception: alta manual (walk-in).
-- **NEXA-019** admin: dashboard · [x] **NEXA-020** ✅ admin: UI de configuración _(NEXA-007)_.
+- [x] **NEXA-019** ✅ admin: dashboard de métricas real · [x] **NEXA-020** ✅ admin: UI de configuración _(NEXA-007)_.
 - **NEXA-021** notifications: web push · [x] **NEXA-023** ✅ expiración & no-show (barrido periódico notified→no_show).
 - **NEXA-022** landing page (implementa los 6 mocks de landing).
 - **NEXA-024** CI · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.

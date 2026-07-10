@@ -1,6 +1,8 @@
+import { GetMetrics } from './contexts/restaurant/application/get-metrics';
 import { ListRestaurants } from './contexts/restaurant/application/list-restaurants';
 import { RestaurantConfig } from './contexts/restaurant/application/restaurant-config';
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
+import { PrismaMetricsRepository } from './contexts/restaurant/infrastructure/prisma-metrics-repository';
 import { PrismaRestaurantRepository } from './contexts/restaurant/infrastructure/prisma-restaurant-repository';
 import { EntryActions } from './contexts/waitlist/application/entry-actions';
 import { ExpireNoShows } from './contexts/waitlist/application/expire-no-shows';
@@ -16,6 +18,7 @@ import { prisma } from './db/prisma';
 export interface Container {
   restaurants: RestaurantRepository;
   listRestaurants: ListRestaurants;
+  getMetrics: GetMetrics;
   restaurantConfig: RestaurantConfig;
   joinWaitlist: JoinWaitlist;
   listQueueEntries: ListQueueEntries;
@@ -33,6 +36,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
   return {
     restaurants,
     listRestaurants: new ListRestaurants(restaurants),
+    getMetrics: new GetMetrics(restaurants, new PrismaMetricsRepository(prisma)),
     restaurantConfig: new RestaurantConfig(restaurants),
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),
     listQueueEntries: new ListQueueEntries(waitlist),
