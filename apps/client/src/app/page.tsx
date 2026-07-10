@@ -9,9 +9,11 @@ import { io } from 'socket.io-client';
 
 import { API_URL, getEntry, getRestaurant, joinWaitlist } from '../lib/api';
 
-const RESTAURANT_CODE = 'DEMO';
-
 export default function JoinPage() {
+  const [code] = useState(() => {
+    if (typeof window === 'undefined') return 'DEMO';
+    return new URLSearchParams(window.location.search).get('code')?.toUpperCase() ?? 'DEMO';
+  });
   const [restaurantName, setRestaurantName] = useState('');
   const [queues, setQueues] = useState<Queue[]>([]);
   const [queueId, setQueueId] = useState('');
@@ -22,14 +24,14 @@ export default function JoinPage() {
   const [entry, setEntry] = useState<WaitlistEntry | null>(null);
 
   useEffect(() => {
-    getRestaurant(RESTAURANT_CODE)
+    getRestaurant(code)
       .then((data) => {
         setRestaurantName(data.restaurant.name);
         setQueues(data.queues);
         setQueueId(data.queues[0]?.id ?? '');
       })
       .catch(() => setError('No pudimos cargar el restaurante.'));
-  }, []);
+  }, [code]);
 
   // Live status: subscribe to this entry's room once we have joined.
   const entryId = entry?.id;
@@ -60,7 +62,7 @@ export default function JoinPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await joinWaitlist(RESTAURANT_CODE, {
+      const res = await joinWaitlist(code, {
         queueId,
         displayName: displayName.trim(),
         partySize,
@@ -133,9 +135,14 @@ export default function JoinPage() {
         </Button>
       </Card>
 
-      <Link href="/cuenta" className="text-center font-body text-sm text-primary-dark">
-        Crea tu cuenta para guardar tu historial
-      </Link>
+      <div className="flex flex-col items-center gap-2">
+        <Link href="/explorar" className="font-body text-sm text-foreground">
+          Explorar otros restaurantes
+        </Link>
+        <Link href="/cuenta" className="font-body text-sm text-primary-dark">
+          Crea tu cuenta para guardar tu historial
+        </Link>
+      </div>
     </main>
   );
 }
