@@ -107,15 +107,15 @@ Fase 3  Engordar ─────────────────►  007 res
 - [x] **S3.** `apps/reception` (board starter). → `feat(reception): scaffold next.js app`
 - [x] **S4.** `apps/admin` (dashboard starter). → `feat(admin): scaffold next.js app`
 
-### Fase 2 — Rebanada vertical (walking skeleton demoable)
+### Fase 2 — Rebanada vertical (walking skeleton demoable) — ✅ HECHO
 
 Flujo objetivo: _el comensal se une a la fila → aparece en el board de recepción en
-tiempo real._ Arranca con **guest-only** (stub de identity).
+tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-end.
 
-- [ ] **NEXA-008 (parcial).** Waitlist core: `WaitlistEntry` + estados + `JoinWaitlist` + endpoint REST. → `feat(api): add waitlist join and entry domain`
-- [ ] **NEXA-010 (parcial).** WebSockets: server con rooms + emitir `entry_added`. → `feat(api): add websocket server and emit entry_added`
-- [ ] **client.** Pantalla de alta (mock `unirse_a_la_fila`) → POST al API. → `feat(client): add join waitlist screen`
-- [ ] **reception.** Board (mock `tablero_de_control`) suscrito al WS. → `feat(reception): add live queue board`
+- [x] **NEXA-008 (parcial).** Waitlist core: `WaitlistEntry` + `JoinWaitlist` + endpoints REST. → `feat(api): add waitlist join and entry domain`
+- [x] **NEXA-010 (parcial).** WebSockets: socket.io con rooms + emitir `entry_added`. → `feat(api): add websocket server and emit entry_added`
+- [x] **client.** Pantalla de alta → POST al API + confirmación (lugar/ETA). → `feat(client): add join waitlist screen`
+- [x] **reception.** Board suscrito al WS que refleja altas en vivo. → `feat(reception): add live queue board`
 
 ### Fase 3 — Engordar
 
@@ -157,10 +157,10 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   reglas de `CLAUDE.md` actualizadas.
 - **Hecho:** Fase 0 completa — NEXA-002 (config: tsconfig/eslint/prettier) y NEXA-003
   (types: DTOs, enums, eventos WS y contratos REST).
-- **Hecho:** Fase 1 completa — 🔵 backend (NEXA-004/005/006) y 🟠 frontend (NEXA-012 ui +
-  NEXA-011 scaffold de las 4 apps Next.js, build y smoke verificados).
-- **Siguiente:** Fase 2 — rebanada vertical (join → board en tiempo real):
-  NEXA-008 (parcial) + NEXA-010 (parcial) + pantalla de alta client + board reception.
+- **Hecho:** Fases 0, 1 y **2** completas. La rebanada vertical funciona end-to-end:
+  el comensal se une (client → API) y aparece en el board de recepción en vivo (WS).
+- **Siguiente:** Fase 3 — engordar: NEXA-007 (restaurant config + UI admin), NEXA-008
+  resto (Notify/Seat/NoShow/Cancel + `entry_updated`/`entry_removed`), NEXA-009 (identity/BetterAuth).
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
 
