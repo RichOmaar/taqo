@@ -31,16 +31,17 @@ export function StepCard({
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-4 rounded-2xl border border-border bg-surface p-6 text-center',
+        'group flex flex-col items-center gap-4 rounded-2xl border border-border bg-surface p-6 text-center',
+        'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-secondary/50',
         className,
       )}
       {...props}
     >
       <div className="relative">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-white">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-white transition-transform duration-300 group-hover:scale-110">
           {icon}
         </div>
-        <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+        <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white transition-transform duration-300 group-hover:scale-110">
           {step}
         </span>
       </div>
@@ -48,7 +49,7 @@ export function StepCard({
       <p className="font-body text-sm leading-relaxed text-muted">{description}</p>
       {image && (
         <div className="mt-2 overflow-hidden rounded-xl">
-          <img src={image} alt={imageAlt} className="h-auto w-full object-cover" />
+          <img src={image} alt={imageAlt} className="h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105" />
         </div>
       )}
     </div>

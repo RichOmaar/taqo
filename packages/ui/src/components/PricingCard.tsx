@@ -45,8 +45,10 @@ export function PricingCard({
   return (
     <div
       className={cn(
-        'relative flex flex-col gap-6 rounded-2xl p-8',
-        recommended ? 'border-2 border-primary bg-surface' : 'bg-background',
+        'relative flex flex-col gap-6 rounded-2xl p-8 transition-all duration-300',
+        recommended
+          ? 'border-2 border-primary bg-surface shadow-lg hover:shadow-xl hover:-translate-y-1'
+          : 'bg-background hover:bg-surface hover:shadow-soft',
         className,
       )}
       {...props}

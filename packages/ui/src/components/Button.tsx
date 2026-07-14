@@ -35,8 +35,9 @@ export function Button({
       type={type}
       className={cn(
         'inline-flex items-center justify-center rounded-full font-display font-semibold',
-        'transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary',
+        'transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary',
         'disabled:pointer-events-none disabled:opacity-50',
+        'active:scale-[0.98]',
         variantClasses[variant],
         sizeClasses[size],
         className,

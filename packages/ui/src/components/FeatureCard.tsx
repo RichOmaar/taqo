@@ -25,17 +25,17 @@ export function FeatureCard({
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 rounded-2xl p-6',
+        'group flex flex-col gap-4 rounded-2xl p-6 transition-all duration-300',
         highlighted
-          ? 'bg-primary text-primary-foreground'
-          : 'bg-surface text-foreground',
+          ? 'bg-primary text-primary-foreground hover:bg-primary-dark'
+          : 'bg-surface text-foreground hover:-translate-y-1 hover:shadow-lg',
         className,
       )}
       {...props}
     >
       <div
         className={cn(
-          'flex h-12 w-12 items-center justify-center rounded-full',
+          'flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110',
           highlighted ? 'bg-white/20' : 'bg-primary/10',
         )}
       >
