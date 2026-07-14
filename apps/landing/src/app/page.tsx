@@ -146,8 +146,8 @@ const FOOTER_COLUMNS = [
   {
     title: 'Contacto',
     links: [
-      { label: 'Soporte', href: '#soporte' },
-      { label: 'Prensa', href: '#prensa' },
+      { label: 'Soporte', href: '/soporte' },
+      { label: 'Prensa', href: '/prensa' },
     ],
   },
 ];
