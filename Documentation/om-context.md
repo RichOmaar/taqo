@@ -86,3 +86,28 @@
 - Commits en inglés (Conventional Commits)
 - Un commit por feature/fix lógico
 - Co-authored con Claude
+
+---
+
+## Historial de Sesiones
+
+### Sesión 2026-07-13
+**Rama:** `landing-page`
+
+**Commits realizados:**
+1. `ca4bebf` — feat(landing): implement complete landing page with all sections
+2. `5aef211` — feat(landing): add legal and support pages with smooth scrolling
+3. `64e7784` — feat(ui): add micro-interactions and animated header transformation
+
+**Trabajo completado:**
+- Landing page completa con 6 secciones
+- 4 páginas adicionales (privacidad, términos, soporte, prensa)
+- Header con transformación animada (full → pill on scroll)
+- Micro-interacciones en componentes (hover, active states)
+- Glass effect estilo iOS
+
+**Para continuar:**
+- Revisar y aprobar cambios de UI/UX (commit marcado como opcional)
+- Agregar assets reales (mockup teléfono, logo, fotos)
+- Considerar scroll-triggered animations
+- Merge a main cuando esté listo
