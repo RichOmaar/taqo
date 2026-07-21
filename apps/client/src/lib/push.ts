@@ -1,6 +1,6 @@
 import type { VapidKeyResponse } from '@nexa/types';
 
-import { API_URL } from './api';
+import { API_URL } from './nexa';
 
 export function urlBase64ToUint8Array(base64: string): Uint8Array {
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);

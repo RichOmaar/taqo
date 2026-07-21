@@ -1,20 +1,12 @@
 'use client';
 
-import type { EntryRemovedPayload, EntryUpdatedPayload, Queue, WaitlistEntry } from '@nexa/types';
-import { WS_EVENTS } from '@nexa/types';
+import { isApiRequestError } from '@nexa/api-client';
+import type { Queue, WaitlistEntry } from '@nexa/types';
 import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 
-import {
-  API_URL,
-  getEntry,
-  getRestaurant,
-  joinWaitlist,
-  leaveWaitlist,
-  submitReview,
-} from '../lib/api';
+import { api, createEntrySocket } from '../lib/nexa';
 import { subscribeToPush } from '../lib/push';
 
 export default function JoinPage() {
@@ -32,7 +24,8 @@ export default function JoinPage() {
   const [entry, setEntry] = useState<WaitlistEntry | null>(null);
 
   useEffect(() => {
-    getRestaurant(code)
+    api.restaurants
+      .get(code)
       .then((data) => {
         setRestaurantName(data.restaurant.name);
         setQueues(data.queues);
@@ -45,20 +38,28 @@ export default function JoinPage() {
   const entryId = entry?.id;
   useEffect(() => {
     if (!entryId) return;
-    const socket = io(API_URL, { transports: ['websocket'] });
-    socket.on('connect', () => socket.emit('subscribe-entry', { entryId }));
-    socket.on(WS_EVENTS.ENTRY_UPDATED, (p: EntryUpdatedPayload) => {
-      if (p.entry.id === entryId) setEntry(p.entry);
-    });
-    socket.on(WS_EVENTS.ENTRY_REMOVED, (p: EntryRemovedPayload) => {
-      if (p.entryId === entryId) {
-        getEntry(entryId)
-          .then((r) => setEntry(r.entry))
+    const socket = createEntrySocket();
+
+    const stop = socket.listen({
+      onEntryUpdated: ({ entry: updated }) => {
+        if (updated.id === entryId) setEntry(updated);
+      },
+      onEntryRemoved: (payload) => {
+        // Removed from the queue room, but the entry still exists (cancelled,
+        // no-show); refetch so the screen reflects the final status.
+        if (payload.entryId !== entryId) return;
+        api.entries
+          .get(entryId)
+          .then((res) => setEntry(res.entry))
           .catch(() => undefined);
-      }
+      },
     });
+
+    socket.subscribeToEntry(entryId);
+
     return () => {
-      socket.close();
+      stop();
+      socket.disconnect();
     };
   }, [entryId]);
 
@@ -76,14 +77,16 @@ export default function JoinPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await joinWaitlist(code, {
+      const res = await api.restaurants.joinWaitlist(code, {
         queueId,
         displayName: displayName.trim(),
         partySize,
       });
       setEntry(res.entry);
-    } catch {
-      setError('No pudimos unirte a la fila. Intenta de nuevo.');
+    } catch (cause) {
+      setError(
+        isApiRequestError(cause) ? cause.message : 'No pudimos unirte a la fila. Intenta de nuevo.',
+      );
     } finally {
       setSubmitting(false);
     }
@@ -221,7 +224,7 @@ function ReviewForm({ entryId }: { entryId: string }) {
     if (rating === 0) return;
     setBusy(true);
     try {
-      await submitReview(entryId, { rating, feedback: feedback.trim() || null });
+      await api.entries.submitReview(entryId, { rating, feedback: feedback.trim() || null });
       setDone(true);
     } catch {
       // ignore; keep the form so the diner can retry
@@ -303,7 +306,7 @@ function CancelButton({ entryId }: { entryId: string }) {
       disabled={busy}
       onClick={() => {
         setBusy(true);
-        leaveWaitlist(entryId).catch(() => setBusy(false));
+        api.entries.leave(entryId).catch(() => setBusy(false));
       }}
       className="font-body text-sm text-muted underline disabled:opacity-50"
     >
