@@ -83,6 +83,11 @@ export class PrismaRestaurantRepository implements RestaurantRepository {
     return row?.id ?? null;
   }
 
+  async findQueueById(queueId: string): Promise<Queue | null> {
+    const row = await this.prisma.queue.findUnique({ where: { id: queueId } });
+    return row ? toQueue(row) : null;
+  }
+
   async updateConfig(id: string, data: RestaurantConfigUpdate): Promise<void> {
     await this.prisma.restaurant.update({
       where: { id },

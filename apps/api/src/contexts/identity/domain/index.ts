@@ -1,2 +1,2 @@
 // identity context — domain layer.
-export {};
+export type { Staff, StaffRepository } from './staff-repository';

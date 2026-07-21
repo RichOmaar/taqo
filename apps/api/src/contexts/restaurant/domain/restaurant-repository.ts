@@ -28,6 +28,7 @@ export interface RestaurantRepository {
   findByCode(code: string): Promise<RestaurantWithQueues | null>;
   findById(id: string): Promise<Restaurant | null>;
   findIdByCode(code: string): Promise<string | null>;
+  findQueueById(queueId: string): Promise<Queue | null>;
   updateConfig(id: string, data: RestaurantConfigUpdate): Promise<void>;
   addQueue(restaurantId: string, data: NewQueue): Promise<Queue>;
   updateQueue(queueId: string, data: QueueUpdate): Promise<Queue | null>;
