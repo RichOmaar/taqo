@@ -26,6 +26,18 @@ export interface HttpClient {
   request<T>(path: string, options?: RequestOptions): Promise<T>;
 }
 
+/**
+ * Drops trailing slashes so `baseUrl + path` never doubles up.
+ *
+ * A character walk rather than /\/+$/, which backtracks super-linearly on a
+ * long run of slashes.
+ */
+export function normalizeBaseUrl(url: string): string {
+  let end = url.length;
+  while (end > 0 && url.charAt(end - 1) === '/') end -= 1;
+  return url.slice(0, end);
+}
+
 /** Reads the standard `ApiError` envelope, falling back for non-JSON bodies. */
 async function toRequestError(response: Response): Promise<ApiRequestError> {
   let code = 'unknown_error';
@@ -47,7 +59,7 @@ async function toRequestError(response: Response): Promise<ApiRequestError> {
 }
 
 export function createHttpClient(options: HttpClientOptions): HttpClient {
-  const baseUrl = options.baseUrl.replace(/\/+$/, '');
+  const baseUrl = normalizeBaseUrl(options.baseUrl);
   const fetchImpl = options.fetch ?? globalThis.fetch;
 
   async function request<T>(path: string, requestOptions: RequestOptions = {}): Promise<T> {

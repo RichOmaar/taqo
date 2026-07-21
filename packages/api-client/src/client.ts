@@ -1,6 +1,7 @@
 import type {
   AddQueueRequest,
   EntryActionResponse,
+  GetCurrentStaffResponse,
   GetEntryResponse,
   GetMetricsResponse,
   GetRestaurantResponse,
@@ -19,7 +20,7 @@ import type {
 } from '@nexa/types';
 
 import { ApiRequestError } from './errors';
-import { createHttpClient, type HttpClientOptions } from './http';
+import { createHttpClient, normalizeBaseUrl, type HttpClientOptions } from './http';
 
 export type ApiClientOptions = HttpClientOptions;
 
@@ -35,7 +36,7 @@ const seg = encodeURIComponent;
  */
 export function createApiClient(options: ApiClientOptions) {
   const http = createHttpClient(options);
-  const baseUrl = options.baseUrl.replace(/\/+$/, '');
+  const baseUrl = normalizeBaseUrl(options.baseUrl);
   const fetchImpl = options.fetch ?? globalThis.fetch;
 
   return {
@@ -71,6 +72,11 @@ export function createApiClient(options: ApiClientOptions) {
         }
 
         return token;
+      },
+
+      /** The signed-in staff user and the restaurant they manage. */
+      me(): Promise<GetCurrentStaffResponse> {
+        return http.request('/me', { auth: true });
       },
     },
 
