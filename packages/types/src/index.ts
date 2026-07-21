@@ -4,5 +4,6 @@ export * from './common';
 export * from './enums';
 export * from './entities';
 export * from './memberships';
+export * from './surveys';
 export * from './websocket';
 export * from './api';
