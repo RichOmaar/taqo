@@ -1,18 +1,15 @@
-import type { EntryAddedPayload, EntryRemovedPayload, EntryUpdatedPayload } from '@nexa/types';
-import { WS_EVENTS, entryRoom, queueRoom } from '@nexa/types';
+import type {
+  EntryAddedPayload,
+  EntryRemovedPayload,
+  EntryUpdatedPayload,
+  SubscribeEntryPayload,
+  SubscribeQueuePayload,
+} from '@nexa/types';
+import { WS_CLIENT_EVENTS, WS_EVENTS, entryRoom, queueRoom } from '@nexa/types';
 import type { Server as IOServer, Socket } from 'socket.io';
 
 import { auth } from '../auth';
 import type { WaitlistEventPublisher } from '../contexts/waitlist/application/ports';
-
-interface QueueSubscribePayload {
-  restaurantId: string;
-  queueId: string;
-}
-
-interface EntrySubscribePayload {
-  entryId: string;
-}
 
 const STAFF_ROLES = new Set(['admin', 'hostess']);
 
@@ -37,7 +34,7 @@ async function isStaff(socket: Socket): Promise<boolean> {
  */
 export function setupWaitlistGateway(io: IOServer): void {
   io.on('connection', (socket: Socket) => {
-    socket.on('subscribe', (payload: QueueSubscribePayload) => {
+    socket.on(WS_CLIENT_EVENTS.SUBSCRIBE_QUEUE, (payload: SubscribeQueuePayload) => {
       void (async () => {
         if (!payload?.restaurantId || !payload?.queueId) return;
         if (await isStaff(socket)) {
@@ -46,7 +43,7 @@ export function setupWaitlistGateway(io: IOServer): void {
       })();
     });
 
-    socket.on('subscribe-entry', (payload: EntrySubscribePayload) => {
+    socket.on(WS_CLIENT_EVENTS.SUBSCRIBE_ENTRY, (payload: SubscribeEntryPayload) => {
       if (payload?.entryId) void socket.join(entryRoom(payload.entryId));
     });
   });

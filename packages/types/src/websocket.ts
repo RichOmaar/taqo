@@ -23,6 +23,25 @@ export interface EntryRemovedPayload {
   restaurantId: UUID;
 }
 
+// Client -> server subscription events. Both the gateway and the clients must
+// use these names; they are the other half of the realtime contract.
+export const WS_CLIENT_EVENTS = {
+  SUBSCRIBE_QUEUE: 'subscribe',
+  SUBSCRIBE_ENTRY: 'subscribe-entry',
+} as const;
+export type WsClientEventName = (typeof WS_CLIENT_EVENTS)[keyof typeof WS_CLIENT_EVENTS];
+
+/** Payload for `subscribe` — staff joining a queue room. */
+export interface SubscribeQueuePayload {
+  restaurantId: UUID;
+  queueId: UUID;
+}
+
+/** Payload for `subscribe-entry` — a diner joining their own entry room. */
+export interface SubscribeEntryPayload {
+  entryId: UUID;
+}
+
 /** Discriminated union of all server-emitted waitlist events. */
 export type WaitlistServerEvent =
   | { event: typeof WS_EVENTS.ENTRY_ADDED; data: EntryAddedPayload }

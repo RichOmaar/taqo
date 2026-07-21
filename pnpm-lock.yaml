@@ -343,6 +343,9 @@ importers:
       '@nexa/types':
         specifier: workspace:*
         version: link:../types
+      socket.io-client:
+        specifier: ^4.8.1
+        version: 4.8.3
     devDependencies:
       '@nexa/config':
         specifier: workspace:*
