@@ -49,6 +49,10 @@ bundle completo.
 | **Strapi**            | **Se pospone, no se descarta.** Todo en DDD ahora; se incorpora cuando haya razón — ver §6.1. |
 | **Design tokens**     | `packages/ui/src/tokens.ts` es canónico. Se **extiende**, no se reescribe — ver §4.3. |
 | **Membresías**        | **En alcance.** Contexto `memberships` propio: niveles, visitas, recompensas — ver §7. |
+| **Multi-sede**        | **Un dueño = un restaurante.** Sin selector; el modelo queda compatible con cadenas.    |
+| **Scope de staff**    | **Se arregla en Fase A** (NEXA-064), no se difiere — ver §11.                            |
+| **Día de métricas**   | **Zona horaria del restaurante, medianoche de calendario.** Sin corte de jornada.        |
+| **Orden de trabajo**  | Fundaciones → Panel → métricas reales → membresías → encuestas → resto (§9).            |
 
 ---
 
@@ -449,7 +453,11 @@ canjeadas y retención por cohorte de inscripción.
 
 ## 8. Tareas y steps
 
-### Fase A — Fundaciones (desbloquea todo; frontend puro)
+> **Modo de trabajo (XP).** Cada step deja el repo verde y desplegable: compila, pasa lint y
+> tests. Los cambios de `packages/*` se integran a `dev` en cuanto están verdes, sin esperar
+> a que la fase termine. Nunca se queda una fase a medias en la rama.
+
+### Fase A — Fundaciones (desbloquea todo)
 
 **NEXA-047 · `packages/api-client`**
 
@@ -464,10 +472,16 @@ canjeadas y retención por cohorte de inscripción.
 - [ ] **S2.** `StatCard`, `EmptyState`, `DataTable`. → `feat(ui): add data display components`
 - [ ] **S3.** `Toggle`, `Slider`, `RangePicker`. → `feat(ui): add form control components`
 
+**NEXA-064 · api: acotar staff a su restaurante** _(hueco de seguridad, §11)_
+
+- [ ] **S1.** Relación `StaffUser → Restaurant` en el schema + migración + seed. → `feat(api): scope staff users to a restaurant`
+- [ ] **S2.** `requireStaff` valida restaurante además de rol (con tests). → `fix(api): enforce restaurant scope on staff routes`
+- [ ] **S3.** Misma validación en la suscripción WebSocket. → `fix(api): enforce restaurant scope on socket subscribe`
+
 **NEXA-053 · admin: shell y navegación**
 
 - [ ] **S1.** Layout con `AppShell` + rutas de la IA de §3. → `feat(admin): add navigation shell`
-- [ ] **S2.** Guard de sesión + selector de restaurante activo. → `feat(admin): add session guard and restaurant context`
+- [ ] **S2.** Guard de sesión; el restaurante se resuelve del staff autenticado. → `feat(admin): add session guard and restaurant context`
 
 ### Fase B — Victorias rápidas (respaldadas por datos existentes)
 
@@ -587,23 +601,33 @@ canjeadas y retención por cohorte de inscripción.
 
 ## 9. Orden de ejecución
 
+Orden acordado: **fundaciones → Panel → métricas reales → membresías → encuestas → resto.**
+
 ```
-Fase A  Fundaciones ─────────► 047 api-client → 048 ui shell → 053 admin shell
+Fase A  Fundaciones ─────────► 047 api-client → 064 auth scope → 048 ui shell → 053 admin shell
                                       │
-Fase B  Victorias rápidas ───► 051 reviews api → 056 reseñas · 055 lista de espera
+Fase B  Panel (quick win) ───► 054·S1 KPIs con los escalares que ya existen
+                                      │   (panel navegable y usable de inmediato)
+Fase C  Métricas reales ─────► 050 métricas api → 049 charts d3 → 054 resto · 051 reviews api
                                       │
-Fase C  Panel ───────────────► 050 métricas api → 049 charts → 054 panel
+Fase D  Membresías ──────────► 061 contexto memberships → 062 admin · 063 client/reception
                                       │
-Fase D  Encuestas ───────────► 052 contexto surveys → 057 builder · 060 docs
+Fase E  Encuestas ───────────► 052 contexto surveys → 057 builder · 060 docs
                                       │
-Fase E  Completar ───────────► 058 configuración · 059 plan
-                                      │
-Fase F  Membresías ──────────► 061 contexto memberships → 062 admin · 063 client/reception
+Fase F  Resto ───────────────► 056 reseñas · 055 lista de espera · 058 configuración · 059 plan
 ```
 
-**E y F son intercambiables.** Fase E es pulido corto; Fase F es el bloque más grande del
-plan y no depende de `surveys`. Si membresías es prioridad comercial, se adelanta — lo único
-que ambas necesitan es la Fase A.
+**Por qué el Panel va antes que las métricas reales:** la Fase B usa los escalares que ya
+devuelve el backend, así que el panel queda navegable y demoable en cuanto existe el shell.
+La Fase C lo llena de datos correctos sin volver a tocar el layout.
+
+`051` (lectura de reseñas) sube a la Fase C porque el bloque "Reseñas recientes" del mock del
+panel lo necesita; la página completa de reseñas (`056`) se queda al final.
+
+> **Nota de estimación honesta.** Son 18 tareas / ~73 commits. El código puede ir rápido,
+> pero cada fase implica revisión y PR: no es un bloque de 1–2 días. Lo que sí garantiza el
+> orden es que **hay algo funcionando y mergeable desde la Fase B**, y que ninguna fase
+> depende de que la siguiente exista.
 
 **Nota de integración:** siguiendo lo aprendido con `landing-page`, los cambios de
 `packages/*` (047, 048, 049, 052) se integran a `dev` **en cuanto estén verdes**, sin
@@ -639,8 +663,9 @@ depende de un proveedor de pagos, que tampoco existe (ver arriba).
 - 🔴 **`requireStaff` no valida restaurante.** `require-staff.ts:10-19` solo comprueba que
   el rol sea `admin` o `hostess`; **cualquier staff puede leer métricas y mutar cualquier
   restaurante por código**. `StaffUser.restaurantId` existe en los tipos sin contraparte en
-  la base. El panel de admin expone más esta superficie. Se difiere con gestión de staff,
-  pero es un bug vivo, no deuda cosmética.
+  la base. **Resuelto en el plan:** se arregla en la Fase A como NEXA-064, no se difiere con
+  gestión de staff. Ahora es barato porque ya estamos construyendo el contexto de restaurante
+  en la sesión; después sería una migración sobre datos vivos.
 - 🟡 **Aplazar Strapi toca un documento rector.** `CLAUDE.md` lista la frontera
   Strapi ↔ backend como principio #6. No lo contradecimos —la frontera sigue siendo el
   destino— pero sí hay que redactarlo como diferido (NEXA-060) para que nadie lea el
