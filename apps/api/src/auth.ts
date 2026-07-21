@@ -19,7 +19,7 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true },
   // Rate limiting is a production concern; disabling it in dev avoids noisy 403s.
   rateLimit: { enabled: env.NODE_ENV === 'production' },
-  trustedOrigins: ['http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'],
+  trustedOrigins: env.TRUSTED_ORIGINS,
   user: {
     additionalFields: {
       // Not settable at sign-up (input: false); staff roles are assigned by seed/admin.

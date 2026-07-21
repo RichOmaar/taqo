@@ -148,6 +148,10 @@ API_PORT=[POR DEFINIR]
 # Auth (BetterAuth)
 BETTER_AUTH_SECRET=<secreto aleatorio de 32+ caracteres>
 BETTER_AUTH_URL=http://localhost:4000
+# Orígenes que pueden autenticarse, separados por coma. Por defecto los puertos
+# locales de client/reception/admin; los E2E y cada entorno desplegado corren en
+# otros puertos y deben declarar los suyos.
+TRUSTED_ORIGINS=http://localhost:3002,http://localhost:3003,http://localhost:3004
 
 # Strapi
 [POR DEFINIR]
