@@ -135,6 +135,18 @@ describe('createWaitlistSocket', () => {
     expect(fake.listenerCount(WS_EVENTS.ENTRY_ADDED)).toBe(0);
   });
 
+  it('reports connection changes for a live indicator', () => {
+    const { fake, client } = build();
+    const onConnectionChange = vi.fn();
+
+    client.listen({ onConnectionChange });
+    fake.fire('connect', undefined);
+    fake.fire('disconnect', 'transport close');
+
+    expect(onConnectionChange).toHaveBeenNthCalledWith(1, true);
+    expect(onConnectionChange).toHaveBeenNthCalledWith(2, false);
+  });
+
   it('drops remembered subscriptions on disconnect so they are not replayed', () => {
     const { fake, client } = build();
 

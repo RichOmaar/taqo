@@ -74,10 +74,17 @@ export function useApi(): NexaApiClient {
  * fixed at handshake time. Listeners are read through a ref so callers can
  * pass inline objects without tearing down the connection every render.
  */
-export function useWaitlistSocket(listeners: WaitlistSocketListeners): WaitlistSocket | null {
+export interface UseWaitlistSocket {
+  /** Null until the effect has run; subscribe once it is available. */
+  socket: WaitlistSocket | null;
+  connected: boolean;
+}
+
+export function useWaitlistSocket(listeners: WaitlistSocketListeners): UseWaitlistSocket {
   const session = useNexaSession();
   const userId = useStore(session.store, (state) => state.user?.id ?? null);
   const [socket, setSocket] = useState<WaitlistSocket | null>(null);
+  const [connected, setConnected] = useState(false);
 
   const listenersRef = useRef(listeners);
   listenersRef.current = listeners;
@@ -92,6 +99,10 @@ export function useWaitlistSocket(listeners: WaitlistSocketListeners): WaitlistS
       onEntryAdded: (payload) => listenersRef.current.onEntryAdded?.(payload),
       onEntryUpdated: (payload) => listenersRef.current.onEntryUpdated?.(payload),
       onEntryRemoved: (payload) => listenersRef.current.onEntryRemoved?.(payload),
+      onConnectionChange: (value) => {
+        setConnected(value);
+        listenersRef.current.onConnectionChange?.(value);
+      },
     });
 
     setSocket(created);
@@ -100,8 +111,9 @@ export function useWaitlistSocket(listeners: WaitlistSocketListeners): WaitlistS
       stop();
       created.disconnect();
       setSocket(null);
+      setConnected(false);
     };
   }, [session, userId]);
 
-  return socket;
+  return { socket, connected };
 }

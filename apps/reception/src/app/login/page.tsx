@@ -1,26 +1,28 @@
 'use client';
 
+import { useSession } from '@nexa/api-client/react';
 import { Button, Card, Input } from '@nexa/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { signIn } from '../../lib/auth';
-
 export default function LoginPage() {
   const router = useRouter();
+  const session = useSession();
   const [email, setEmail] = useState('owner@demo.nexa');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  // The store already distinguishes bad credentials from a failing API, so the
+  // page shows its message instead of flattening everything to "invalid".
+  const error = session.error;
 
   async function submit() {
     setBusy(true);
-    setError(null);
     try {
-      await signIn(email, password);
+      await session.signIn(email, password);
       router.replace('/');
     } catch {
-      setError('Credenciales inválidas.');
+      // Already recorded on the session; nothing to add here.
     } finally {
       setBusy(false);
     }

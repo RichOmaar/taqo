@@ -34,6 +34,8 @@ export interface WaitlistSocketListeners {
   onEntryAdded?: (payload: EntryAddedPayload) => void;
   onEntryUpdated?: (payload: EntryUpdatedPayload) => void;
   onEntryRemoved?: (payload: EntryRemovedPayload) => void;
+  /** Fires on connect and disconnect, for a live/offline indicator. */
+  onConnectionChange?: (connected: boolean) => void;
 }
 
 export interface WaitlistSocket {
@@ -111,6 +113,13 @@ export function createWaitlistSocket(options: WaitlistSocketOptions): WaitlistSo
       }
       if (listeners.onEntryRemoved) {
         bound.push([WS_EVENTS.ENTRY_REMOVED, listeners.onEntryRemoved as (p: never) => void]);
+      }
+      if (listeners.onConnectionChange) {
+        const notify = listeners.onConnectionChange;
+        bound.push(
+          ['connect', (() => notify(true)) as (p: never) => void],
+          ['disconnect', (() => notify(false)) as (p: never) => void],
+        );
       }
 
       for (const [event, handler] of bound) socket.on(event, handler);
