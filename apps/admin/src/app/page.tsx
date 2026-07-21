@@ -3,11 +3,11 @@
 import { isApiRequestError } from '@nexa/api-client';
 import { useApi, useSession } from '@nexa/api-client/react';
 import type { RestaurantMetrics } from '@nexa/types';
-import { StatCard, TopBar } from '@nexa/ui';
+import { EmptyState, StatCard, TopBar } from '@nexa/ui';
 import { useEffect, useState } from 'react';
 
 import { AdminShell } from '../components/admin-shell';
-import { formatPercent, formatRating, formatWaitMinutes } from '../lib/format';
+import { hasNoActivity, toMetricViews } from '../lib/metrics-view';
 
 export default function DashboardPage() {
   return (
@@ -33,16 +33,6 @@ function Dashboard() {
       });
   }, [api, restaurant]);
 
-  const stats = metrics
-    ? [
-        { label: 'Espera promedio', value: formatWaitMinutes(metrics.averageWaitMinutes) },
-        { label: 'Personas hoy', value: String(metrics.peopleToday) },
-        { label: 'Tasa de no-show', value: formatPercent(metrics.noShowRate) },
-        { label: 'Conversión anotado → sentado', value: formatPercent(metrics.seatedConversion) },
-        { label: 'Rating promedio', value: formatRating(metrics.averageRating) },
-      ]
-    : [];
-
   return (
     <>
       <TopBar title={greeting()} subtitle={`${restaurant?.name ?? ''} · resumen de hoy`} />
@@ -52,11 +42,21 @@ function Dashboard() {
       {!error && !metrics && <p className="font-body text-muted">Cargando métricas…</p>}
 
       {metrics && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {stats.map((stat) => (
-            <StatCard key={stat.label} label={stat.label} value={stat.value} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {toMetricViews(metrics).map((stat) => (
+              <StatCard key={stat.label} label={stat.label} value={stat.value} hint={stat.hint} />
+            ))}
+          </div>
+
+          {hasNoActivity(metrics) && (
+            <EmptyState
+              className="mt-6"
+              title="Todavía no hay actividad"
+              description="Cuando tus comensales empiecen a anotarse, aquí verás sus tiempos de espera, la conversión y sus reseñas."
+            />
+          )}
+        </>
       )}
     </>
   );
