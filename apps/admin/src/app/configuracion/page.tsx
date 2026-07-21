@@ -3,17 +3,16 @@
 import { isApiRequestError } from '@nexa/api-client';
 import { useApi, useSession } from '@nexa/api-client/react';
 import type { Queue } from '@nexa/types';
-import { Button, Card, Input } from '@nexa/ui';
-import Link from 'next/link';
+import { Button, Card, Input, TopBar } from '@nexa/ui';
 import { useEffect, useState } from 'react';
 
-import { RequireSession } from '../../components/require-session';
+import { AdminShell } from '../../components/admin-shell';
 
 export default function ConfigPage() {
   return (
-    <RequireSession>
+    <AdminShell>
       <Config />
-    </RequireSession>
+    </AdminShell>
   );
 }
 
@@ -92,21 +91,15 @@ function Config() {
   }
 
   if (!loaded) {
-    return (
-      <main className="mx-auto max-w-3xl px-6 py-8">
-        <p className="font-body text-muted">Cargando…</p>
-      </main>
-    );
+    return <p className="font-body text-muted">Cargando…</p>;
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-foreground">Configuración</h1>
-        <Link href="/" className="font-body text-sm font-semibold text-primary-dark">
-          ← Panel
-        </Link>
-      </div>
+    <>
+      <TopBar
+        title="Configuración"
+        subtitle="Personaliza la experiencia de tus comensales y el flujo de tu local."
+      />
 
       <Card className="mb-4 flex flex-col gap-4">
         <h2 className="font-display text-lg font-semibold text-foreground">
@@ -168,6 +161,6 @@ function Config() {
       </Card>
 
       {status && <p className="mt-4 font-body text-sm text-secondary-dark">{status}</p>}
-    </main>
+    </>
   );
 }
