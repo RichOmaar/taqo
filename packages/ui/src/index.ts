@@ -2,6 +2,9 @@
 // reusable React components derived from the Nexa mocks.
 export * from './tokens';
 export * from './utils/cn';
+export * from './charts/GroupedBarChart';
+export * from './charts/Heatmap';
+export * from './charts/primitives';
 export * from './components/AppShell';
 export * from './components/Button';
 export * from './components/Card';

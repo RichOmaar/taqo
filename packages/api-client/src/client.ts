@@ -4,7 +4,10 @@ import type {
   GetCurrentStaffResponse,
   GetEntryResponse,
   GetMetricsResponse,
+  GetMetricsSeriesResponse,
+  GetPeakHoursResponse,
   GetRestaurantResponse,
+  MetricsBucket,
   JoinWaitlistRequest,
   JoinWaitlistResponse,
   ListQueueEntriesResponse,
@@ -26,6 +29,23 @@ export type ApiClientOptions = HttpClientOptions;
 
 /** Path segments may contain user-supplied codes; always encode them. */
 const seg = encodeURIComponent;
+
+/** Window for a metrics request. Omitted ends fall back to the server default. */
+export interface MetricsRangeQuery {
+  from?: Date;
+  to?: Date;
+}
+
+/** Builds a query string, omitting absent values so defaults stay server-side. */
+function query(params?: MetricsRangeQuery & { bucket?: string }): string {
+  if (!params) return '';
+  const search = new URLSearchParams();
+  if (params.from) search.set('from', params.from.toISOString());
+  if (params.to) search.set('to', params.to.toISOString());
+  if (params.bucket) search.set('bucket', params.bucket);
+  const encoded = search.toString();
+  return encoded ? `?${encoded}` : '';
+}
 
 /**
  * Typed client for the Nexa API.
@@ -104,8 +124,23 @@ export function createApiClient(options: ApiClientOptions) {
       get(code: string): Promise<GetRestaurantResponse> {
         return http.request(`/restaurants/${seg(code)}`);
       },
-      metrics(code: string): Promise<GetMetricsResponse> {
-        return http.request(`/restaurants/${seg(code)}/metrics`, { auth: true });
+      metrics(code: string, range?: MetricsRangeQuery): Promise<GetMetricsResponse> {
+        return http.request(`/restaurants/${seg(code)}/metrics${query(range)}`, { auth: true });
+      },
+      /** Volume over time, for the dashboard's queue-volume chart. */
+      metricsSeries(
+        code: string,
+        options?: MetricsRangeQuery & { bucket?: MetricsBucket },
+      ): Promise<GetMetricsSeriesResponse> {
+        return http.request(`/restaurants/${seg(code)}/metrics/timeseries${query(options)}`, {
+          auth: true,
+        });
+      },
+      /** Volume by weekday and hour, for the peak-hours heatmap. */
+      peakHours(code: string, range?: MetricsRangeQuery): Promise<GetPeakHoursResponse> {
+        return http.request(`/restaurants/${seg(code)}/metrics/peak-hours${query(range)}`, {
+          auth: true,
+        });
       },
       updateConfig(
         code: string,

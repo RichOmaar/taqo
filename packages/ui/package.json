@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@nexa/types": "workspace:*",
-    "@tailwindcss/forms": "^0.5.9"
+    "@tailwindcss/forms": "^0.5.9",
+    "d3-array": "^3.2.4",
+    "d3-scale": "^4.0.2"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -28,6 +30,8 @@
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "catalog:",
+    "@types/d3-array": "^3.2.1",
+    "@types/d3-scale": "^4.0.8",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "catalog:",
