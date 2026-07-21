@@ -196,6 +196,7 @@ function WaitingStatus({
         <h1 className="font-display text-3xl font-bold text-foreground">¡Buen provecho!</h1>
         <p className="font-body text-muted">Gracias por visitar {restaurantName}.</p>
         <ReviewForm entryId={entry.id} />
+        <MembershipPrompt />
       </>
     );
   }
@@ -212,6 +213,24 @@ function WaitingStatus({
   }
 
   return <WaitingCard entry={entry} restaurantName={restaurantName} />;
+}
+
+/**
+ * Offered once the diner has been seated.
+ *
+ * This is the moment a loyalty programme is worth anything to them: they have
+ * just eaten here, so "this visit counts" is a concrete offer rather than an
+ * abstract one. Shown quietly beneath the review, not as a gate.
+ */
+function MembershipPrompt() {
+  return (
+    <Link
+      href="/membresia"
+      className="font-body text-sm font-semibold text-primary-dark underline-offset-4 hover:underline"
+    >
+      Acumula esta visita en tu membresía →
+    </Link>
+  );
 }
 
 function ReviewForm({ entryId }: { entryId: string }) {

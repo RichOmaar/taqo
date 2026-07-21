@@ -98,6 +98,7 @@ function Board() {
             <span className={cn('h-2 w-2 rounded-full', connected ? 'bg-secondary' : 'bg-muted')} />
             {connected ? 'En vivo' : 'Conectando…'}
           </span>
+          <RedemptionValidator />
           <Button size="sm" onClick={() => setShowAdd(true)}>
             + Agregar
           </Button>
@@ -170,6 +171,100 @@ function Board() {
         />
       </BottomSheet>
     </main>
+  );
+}
+
+/**
+ * Redeeming a reward at the counter.
+ *
+ * The hostess is reading a code off a diner's phone, so the field accepts it
+ * however they type it and the outcome is stated plainly: a code that was
+ * already used has to say so, or a reward gets given away twice.
+ */
+function RedemptionValidator() {
+  const api = useApi();
+  const [open, setOpen] = useState(false);
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  async function submit() {
+    if (!code.trim()) return;
+    setBusy(true);
+    setResult(null);
+    try {
+      await api.membership.validateCode(code);
+      setResult({ ok: true, message: '¡Código válido! Entrega el premio.' });
+      setCode('');
+    } catch (cause) {
+      setResult({
+        ok: false,
+        message: isApiRequestError(cause) ? cause.message : 'No pudimos validar el código.',
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <>
+      <Button size="sm" variant="secondary" onClick={() => setOpen(true)}>
+        Canjear premio
+      </Button>
+
+      <BottomSheet
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setResult(null);
+        }}
+      >
+        <div className="flex flex-col gap-4">
+          <h2 className="font-display text-xl font-bold text-foreground">Canjear un premio</h2>
+          <p className="font-body text-sm text-muted">
+            Escribe el código que el comensal tiene en su teléfono.
+          </p>
+
+          <Input
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            placeholder="NX-ABC234"
+            autoFocus
+            className="text-center font-display text-lg tracking-widest"
+          />
+
+          {result && (
+            <p
+              className={cn(
+                'font-body text-sm font-semibold',
+                result.ok ? 'text-secondary-dark' : 'text-error',
+              )}
+            >
+              {result.message}
+            </p>
+          )}
+
+          <div className="flex gap-2">
+            <Button
+              className="flex-1"
+              onClick={() => void submit()}
+              disabled={busy || !code.trim()}
+            >
+              {busy ? 'Validando…' : 'Validar'}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setOpen(false);
+                setResult(null);
+              }}
+            >
+              Cerrar
+            </Button>
+          </div>
+        </div>
+      </BottomSheet>
+    </>
   );
 }
 
