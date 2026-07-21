@@ -2,52 +2,10 @@ import type {
   GetMetricsResponse,
   GetMetricsSeriesResponse,
   GetPeakHoursResponse,
-  GetRestaurantResponse,
-  JoinWaitlistResponse,
 } from '@nexa/types';
-import { describe, expect, inject, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-const base = inject('baseUrl');
-const ORIGIN = 'http://localhost:3003';
-
-/** Signed in once and reused: a sign-in per test trips the auth rate limit. */
-let cachedToken: Promise<string> | null = null;
-
-function staffToken(): Promise<string> {
-  cachedToken ??= (async () => {
-    const res = await fetch(`${base}/api/auth/sign-in/email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Origin: ORIGIN },
-      body: JSON.stringify({ email: 'owner@demo.nexa', password: 'ownerpass123' }),
-    });
-    const token = res.headers.get('set-auth-token');
-    if (!token) throw new Error(`no staff token (${res.status})`);
-    return token;
-  })();
-  return cachedToken;
-}
-
-async function generalQueueId(): Promise<string> {
-  const data = (await (await fetch(`${base}/restaurants/DEMO`)).json()) as GetRestaurantResponse;
-  const general = data.queues.find((queue) => queue.name === 'General');
-  if (!general) throw new Error('no General queue');
-  return general.id;
-}
-
-async function join(queueId: string, displayName: string): Promise<string> {
-  const res = await fetch(`${base}/restaurants/DEMO/waitlist`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ queueId, displayName, partySize: 2 }),
-  });
-  return ((await res.json()) as JoinWaitlistResponse).entry.id;
-}
-
-async function getJson<T>(path: string, token: string): Promise<T> {
-  const res = await fetch(`${base}${path}`, { headers: { Authorization: `Bearer ${token}` } });
-  if (!res.ok) throw new Error(`${path} failed (${res.status})`);
-  return (await res.json()) as T;
-}
+import { base, generalQueueId, getJson, join, staffToken } from './helpers';
 
 /**
  * These exercise the SQL itself. The aggregation is raw and timezone-aware, so

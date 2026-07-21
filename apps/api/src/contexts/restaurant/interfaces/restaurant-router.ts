@@ -2,9 +2,11 @@ import type {
   GetMetricsResponse,
   GetMetricsSeriesResponse,
   GetPeakHoursResponse,
+  ListReviewsResponse,
   GetRestaurantResponse,
   ListRestaurantsResponse,
   QueueResponse,
+  ReviewSummaryResponse,
 } from '@nexa/types';
 import { METRICS_BUCKETS } from '@nexa/types';
 import { Router } from 'express';
@@ -16,6 +18,8 @@ import { NotFoundError, ValidationError } from '../../../shared/errors';
 import type { GetMetrics } from '../application/get-metrics';
 import type { GetMetricsSeries } from '../application/get-metrics-series';
 import type { GetPeakHours } from '../application/get-peak-hours';
+import type { GetReviewSummary } from '../application/get-review-summary';
+import type { ListReviews } from '../application/list-reviews';
 import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
@@ -33,6 +37,12 @@ const metricsQuerySchema = z.object({
 
 const metricsSeriesQuerySchema = metricsQuerySchema.extend({
   bucket: z.enum(METRICS_BUCKETS).optional(),
+});
+
+const listReviewsQuerySchema = metricsQuerySchema.extend({
+  rating: z.coerce.number().int().min(1).max(5).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  cursor: z.string().min(1).optional(),
 });
 
 const updateConfigSchema = z.object({
@@ -59,6 +69,8 @@ export function restaurantRouter(
   metrics: GetMetrics,
   metricsSeries: GetMetricsSeries,
   peakHours: GetPeakHours,
+  listReviews: ListReviews,
+  reviewSummary: GetReviewSummary,
   config: RestaurantConfig,
 ): Router {
   const router = Router();
@@ -175,6 +187,54 @@ export function restaurantRouter(
             to: result.range.to.toISOString(),
           },
           timezone: result.timezone,
+        };
+        res.json(response);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.get('/restaurants/:code/reviews', requireStaff, scopeByCode, async (req, res, next) => {
+    try {
+      const code = req.params.code;
+      if (!code) throw new ValidationError('Missing restaurant code');
+
+      const parsed = listReviewsQuerySchema.safeParse(req.query);
+      if (!parsed.success) {
+        throw new ValidationError('Invalid review query', { issues: parsed.error.issues });
+      }
+
+      const response: ListReviewsResponse = await listReviews.execute(code, parsed.data);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.get(
+    '/restaurants/:code/reviews/summary',
+    requireStaff,
+    scopeByCode,
+    async (req, res, next) => {
+      try {
+        const code = req.params.code;
+        if (!code) throw new ValidationError('Missing restaurant code');
+
+        const parsed = metricsQuerySchema.safeParse(req.query);
+        if (!parsed.success) {
+          throw new ValidationError('Invalid range', { issues: parsed.error.issues });
+        }
+
+        const result = await reviewSummary.execute(code, parsed.data);
+        const response: ReviewSummaryResponse = {
+          average: result.average,
+          total: result.total,
+          distribution: result.distribution,
+          range: {
+            from: result.range.from.toISOString(),
+            to: result.range.to.toISOString(),
+          },
         };
         res.json(response);
       } catch (error) {

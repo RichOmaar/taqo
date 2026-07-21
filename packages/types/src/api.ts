@@ -123,6 +123,46 @@ export interface GetPeakHoursResponse {
   timezone: string;
 }
 
+/**
+ * A review as the owner reads it.
+ *
+ * Carries the diner's display name, which lives on the entry rather than the
+ * review, so the dashboard does not have to fetch entries separately.
+ */
+export interface RestaurantReview {
+  id: UUID;
+  entryId: UUID;
+  displayName: string;
+  /** 1–5. */
+  rating: number;
+  feedback: string | null;
+  createdAt: ISODateString;
+}
+
+/** GET /restaurants/:code/reviews?from=&to=&rating=&limit=&cursor= (staff). */
+export interface ListReviewsResponse {
+  /** Newest first. */
+  reviews: RestaurantReview[];
+  /** Pass back as `cursor` for the next page; null when the list is exhausted. */
+  nextCursor: string | null;
+}
+
+/** How many reviews gave each rating. */
+export interface RatingCount {
+  rating: number;
+  count: number;
+}
+
+/** GET /restaurants/:code/reviews/summary?from=&to= (staff). */
+export interface ReviewSummaryResponse {
+  /** Null when there are no reviews in the window. */
+  average: number | null;
+  total: number;
+  /** Always all five ratings, so the bars have no holes. */
+  distribution: RatingCount[];
+  range: MetricsRange;
+}
+
 /** PATCH /restaurants/:code — update editable restaurant config. */
 export interface UpdateRestaurantConfigRequest {
   name?: string;
