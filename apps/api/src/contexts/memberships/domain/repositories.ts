@@ -41,6 +41,26 @@ export interface LedgerRepository {
 export interface RewardRepository {
   findById(rewardId: string): Promise<Reward | null>;
   listByProgram(programId: string, onlyActive?: boolean): Promise<Reward[]>;
-  countRedemptions(rewardId: string, membershipId: string): Promise<number>;
-  issue(reward: Reward, membershipId: string, code: string): Promise<Redemption>;
+}
+
+/** A redemption about to be issued; the store assigns its timestamps. */
+export interface NewRedemption {
+  rewardId: string;
+  membershipId: string;
+  code: string;
+  expiresAt: Date | null;
+}
+
+export interface RedemptionRepository {
+  /** How many times this member has already taken this reward. */
+  countForMember(rewardId: string, membershipId: string): Promise<number>;
+  /**
+   * Persists the debit and the redemption together, or neither.
+   *
+   * Atomicity is the point: a redemption without its debit is a free reward,
+   * and a debit without its redemption is points taken for nothing.
+   */
+  issue(debit: NewLedgerEntry, redemption: NewRedemption): Promise<Redemption>;
+  findByCode(code: string): Promise<Redemption | null>;
+  markRedeemed(redemptionId: string, at: Date): Promise<Redemption>;
 }
