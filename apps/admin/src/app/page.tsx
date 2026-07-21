@@ -2,11 +2,22 @@
 
 import { isApiRequestError } from '@nexa/api-client';
 import { useApi, useSession } from '@nexa/api-client/react';
-import type { RestaurantMetrics } from '@nexa/types';
-import { EmptyState, StatCard, TopBar } from '@nexa/ui';
+import type {
+  GetMetricsSeriesResponse,
+  GetPeakHoursResponse,
+  RestaurantMetrics,
+} from '@nexa/types';
+import { Card, EmptyState, GroupedBarChart, Heatmap, StatCard, TopBar } from '@nexa/ui';
 import { useEffect, useState } from 'react';
 
 import { AdminShell } from '../components/admin-shell';
+import {
+  HOUR_LABELS,
+  WEEKDAY_LABELS,
+  hourLabels,
+  strideFor,
+  toHeatmapCells,
+} from '../lib/chart-view';
 import { hasNoActivity, toMetricViews } from '../lib/metrics-view';
 
 export default function DashboardPage() {
@@ -22,12 +33,18 @@ function Dashboard() {
   const { restaurant } = useSession();
   const [metrics, setMetrics] = useState<RestaurantMetrics | null>(null);
   const [previous, setPrevious] = useState<RestaurantMetrics | undefined>();
+  const [series, setSeries] = useState<GetMetricsSeriesResponse | null>(null);
+  const [peak, setPeak] = useState<GetPeakHoursResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!restaurant) return;
+    const code = restaurant.code;
+
+    // One failure should not blank the whole panel, so the three requests are
+    // independent and only the KPI row reports an error.
     api.restaurants
-      .metrics(restaurant.code)
+      .metrics(code)
       .then((data) => {
         setMetrics(data.metrics);
         setPrevious(data.previous);
@@ -35,6 +52,16 @@ function Dashboard() {
       .catch((cause: unknown) => {
         setError(isApiRequestError(cause) ? cause.message : 'No se pudieron cargar las métricas.');
       });
+
+    api.restaurants
+      .metricsSeries(code, { bucket: 'hour' })
+      .then(setSeries)
+      .catch(() => setSeries(null));
+
+    api.restaurants
+      .peakHours(code)
+      .then(setPeak)
+      .catch(() => setPeak(null));
   }, [api, restaurant]);
 
   return (
@@ -61,12 +88,53 @@ function Dashboard() {
             ))}
           </div>
 
-          {hasNoActivity(metrics) && (
+          {hasNoActivity(metrics) ? (
             <EmptyState
               className="mt-6"
               title="Todavía no hay actividad"
               description="Cuando tus comensales empiecen a anotarse, aquí verás sus tiempos de espera, la conversión y sus reseñas."
             />
+          ) : (
+            <div className="mt-6 grid gap-4">
+              {series && (
+                <Card>
+                  <GroupedBarChart
+                    title="Volumen de fila por hora"
+                    categories={hourLabels(series.points, series.timezone)}
+                    series={[
+                      {
+                        key: 'joined',
+                        label: 'Se anotaron',
+                        values: series.points.map((point) => point.joined),
+                      },
+                      {
+                        key: 'seated',
+                        label: 'Se sentaron',
+                        values: series.points.map((point) => point.seated),
+                      },
+                    ]}
+                    labelStride={strideFor(series.points.length)}
+                    formatValue={(value) => `${value} ${value === 1 ? 'persona' : 'personas'}`}
+                  />
+                </Card>
+              )}
+
+              {peak && (
+                <Card>
+                  <Heatmap
+                    title="Horas pico"
+                    rowLabels={WEEKDAY_LABELS}
+                    columnLabels={HOUR_LABELS}
+                    cells={toHeatmapCells(peak.cells)}
+                    highest={peak.busiest}
+                    labelStride={3}
+                    describeCell={(day, hour, value) =>
+                      `${day} ${hour}:00 · ${value} ${value === 1 ? 'persona' : 'personas'}`
+                    }
+                  />
+                </Card>
+              )}
+            </div>
           )}
         </>
       )}
