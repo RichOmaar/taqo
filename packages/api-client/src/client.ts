@@ -39,39 +39,56 @@ export function createApiClient(options: ApiClientOptions) {
   const baseUrl = normalizeBaseUrl(options.baseUrl);
   const fetchImpl = options.fetch ?? globalThis.fetch;
 
+  /**
+   * BetterAuth returns the bearer token in the `set-auth-token` response
+   * header rather than the body, so credential exchanges bypass the JSON
+   * request helper.
+   */
+  async function tokenRequest(
+    path: string,
+    body: Record<string, string>,
+    failure: { code: string; message: string },
+  ): Promise<string> {
+    const response = await fetchImpl(`${baseUrl}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new ApiRequestError(response.status, failure.code, failure.message);
+    }
+
+    const token = response.headers.get('set-auth-token');
+    if (!token) {
+      throw new ApiRequestError(
+        response.status,
+        'missing_token',
+        'La respuesta no incluyó un token',
+      );
+    }
+
+    return token;
+  }
+
   return {
     auth: {
-      /**
-       * Signs a staff user in and returns the bearer token.
-       *
-       * BetterAuth returns the token in the `set-auth-token` response header
-       * rather than the body, so this bypasses the JSON request helper.
-       */
-      async signInWithEmail(email: string, password: string): Promise<string> {
-        const response = await fetchImpl(`${baseUrl}/api/auth/sign-in/email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
+      /** Signs a user in and returns the bearer token. */
+      signInWithEmail(email: string, password: string): Promise<string> {
+        return tokenRequest(
+          '/api/auth/sign-in/email',
+          { email, password },
+          { code: 'invalid_credentials', message: 'Credenciales inválidas' },
+        );
+      },
 
-        if (!response.ok) {
-          throw new ApiRequestError(
-            response.status,
-            'invalid_credentials',
-            'Credenciales inválidas',
-          );
-        }
-
-        const token = response.headers.get('set-auth-token');
-        if (!token) {
-          throw new ApiRequestError(
-            response.status,
-            'missing_token',
-            'La respuesta no incluyó un token',
-          );
-        }
-
-        return token;
+      /** Registers a diner. Staff accounts are assigned, never self-served. */
+      signUpWithEmail(name: string, email: string, password: string): Promise<string> {
+        return tokenRequest(
+          '/api/auth/sign-up/email',
+          { name, email, password },
+          { code: 'signup_failed', message: 'No se pudo crear la cuenta' },
+        );
       },
 
       /** The signed-in staff user and the restaurant they manage. */

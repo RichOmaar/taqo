@@ -38,8 +38,8 @@ interface WebStorageLike {
 /**
  * Uses localStorage when the runtime has it, memory otherwise.
  *
- * Feature-detected off globalThis rather than typeof window, so the package
- * type-checks without the DOM lib — it runs server-side too.
+ * Feature-detected rather than assumed: these modules also run during SSR,
+ * where there is no localStorage to read and a bare access would throw.
  */
 function defaultStorage(): SessionStorage {
   const storage = (globalThis as { localStorage?: WebStorageLike }).localStorage;
@@ -79,6 +79,13 @@ export interface NexaSession {
   store: StoreApi<SessionState>;
   /** Client bound to this session; authenticated calls carry its token. */
   api: NexaApiClient;
+  /** API origin, so sockets can be opened against the same backend. */
+  baseUrl: string;
+  /**
+   * Current bearer token. Deliberately a function and not store state: the
+   * token is a credential, not something the UI renders.
+   */
+  getToken(): string | null;
 }
 
 /**
@@ -163,5 +170,5 @@ export function createNexaSession(options: SessionOptions): NexaSession {
     };
   });
 
-  return { store, api };
+  return { store, api, baseUrl: options.baseUrl, getToken: () => token };
 }
