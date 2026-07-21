@@ -106,6 +106,39 @@ describe('GetMetrics', () => {
     expect(result.metrics).toEqual(METRICS);
   });
 
+  describe('period-over-period comparison', () => {
+    it('also computes the equally long window immediately before', async () => {
+      const { compute, useCase } = build();
+
+      const result = await useCase.execute('DEMO');
+
+      expect(result.previousRange.to.toISOString()).toBe('2026-03-10T06:00:00.000Z');
+      expect(result.previousRange.from.toISOString()).toBe('2026-03-09T06:00:00.000Z');
+      expect(compute).toHaveBeenCalledTimes(2);
+    });
+
+    it('mirrors the length of an explicit window', async () => {
+      // A week selected means the week before, not yesterday.
+      const { useCase } = build();
+
+      const result = await useCase.execute('DEMO', {
+        from: new Date('2026-03-08T06:00:00Z'),
+        to: new Date('2026-03-15T06:00:00Z'),
+      });
+
+      expect(result.previousRange.from.toISOString()).toBe('2026-03-01T06:00:00.000Z');
+      expect(result.previousRange.to.toISOString()).toBe('2026-03-08T06:00:00.000Z');
+    });
+
+    it('leaves the comparison abutting the range, with no gap', async () => {
+      const { useCase } = build();
+
+      const result = await useCase.execute('DEMO');
+
+      expect(result.previousRange.to.getTime()).toBe(result.range.from.getTime());
+    });
+  });
+
   it('rejects a window that ends before it starts', async () => {
     const { compute, useCase } = build();
 

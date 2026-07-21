@@ -1,7 +1,7 @@
 import type { RestaurantMetrics } from '@nexa/types';
 
 import { NotFoundError, ValidationError } from '../../../shared/errors';
-import { localDayRange, type TimeRange } from '../../../shared/time-range';
+import { localDayRange, previousRange, type TimeRange } from '../../../shared/time-range';
 import type { MetricsRepository } from '../domain/metrics-repository';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
 
@@ -14,6 +14,9 @@ export interface MetricsRangeInput {
 export interface MetricsResult {
   metrics: RestaurantMetrics;
   range: TimeRange;
+  /** Same metrics over the equally long window immediately before. */
+  previous: RestaurantMetrics;
+  previousRange: TimeRange;
 }
 
 /** Query: compute a restaurant's dashboard KPIs by code, over a window. */
@@ -30,7 +33,16 @@ export class GetMetrics {
     if (!found) throw new NotFoundError('Restaurant not found');
 
     const range = this.resolveRange(input, found.restaurant.timezone);
-    return { metrics: await this.metrics.compute(found.restaurant.id, range), range };
+    const comparison = previousRange(range);
+
+    // Both windows in parallel: the comparison is useless on its own, so there
+    // is nothing to gain by fetching it lazily.
+    const [metrics, previous] = await Promise.all([
+      this.metrics.compute(found.restaurant.id, range),
+      this.metrics.compute(found.restaurant.id, comparison),
+    ]);
+
+    return { metrics, range, previous, previousRange: comparison };
   }
 
   /**

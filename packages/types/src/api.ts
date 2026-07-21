@@ -71,6 +71,13 @@ export interface GetMetricsResponse {
   metrics: RestaurantMetrics;
   /** Echoes the resolved window, since the default is server-side. */
   range: MetricsRange;
+  /**
+   * The same metrics over the equally long window immediately before, for
+   * period-over-period comparison. The UI computes the deltas: it knows which
+   * direction is good news for each metric, which the API does not.
+   */
+  previous: RestaurantMetrics;
+  previousRange: MetricsRange;
 }
 
 /** PATCH /restaurants/:code — update editable restaurant config. */

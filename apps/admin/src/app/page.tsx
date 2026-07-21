@@ -21,13 +21,17 @@ function Dashboard() {
   const api = useApi();
   const { restaurant } = useSession();
   const [metrics, setMetrics] = useState<RestaurantMetrics | null>(null);
+  const [previous, setPrevious] = useState<RestaurantMetrics | undefined>();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!restaurant) return;
     api.restaurants
       .metrics(restaurant.code)
-      .then((data) => setMetrics(data.metrics))
+      .then((data) => {
+        setMetrics(data.metrics);
+        setPrevious(data.previous);
+      })
       .catch((cause: unknown) => {
         setError(isApiRequestError(cause) ? cause.message : 'No se pudieron cargar las métricas.');
       });
@@ -44,8 +48,16 @@ function Dashboard() {
       {metrics && (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {toMetricViews(metrics).map((stat) => (
-              <StatCard key={stat.label} label={stat.label} value={stat.value} hint={stat.hint} />
+            {toMetricViews(metrics, previous).map((stat) => (
+              <StatCard
+                key={stat.label}
+                label={stat.label}
+                value={stat.value}
+                hint={stat.hint}
+                delta={stat.delta}
+                trend={stat.trend}
+                tone={stat.tone}
+              />
             ))}
           </div>
 

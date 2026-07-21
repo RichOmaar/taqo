@@ -92,10 +92,17 @@ export function restaurantRouter(
         throw new ValidationError('Invalid range', { issues: parsed.error.issues });
       }
 
-      const { metrics: data, range } = await metrics.execute(code, parsed.data);
+      const result = await metrics.execute(code, parsed.data);
+      const asIso = (range: { from: Date; to: Date }) => ({
+        from: range.from.toISOString(),
+        to: range.to.toISOString(),
+      });
+
       const response: GetMetricsResponse = {
-        metrics: data,
-        range: { from: range.from.toISOString(), to: range.to.toISOString() },
+        metrics: result.metrics,
+        range: asIso(result.range),
+        previous: result.previous,
+        previousRange: asIso(result.previousRange),
       };
       res.json(response);
     } catch (error) {

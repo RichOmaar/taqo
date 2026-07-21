@@ -77,6 +77,72 @@ describe('toMetricViews', () => {
   });
 });
 
+describe('comparison against the previous window', () => {
+  it('reads a shorter wait as an improvement', () => {
+    const slower = { ...BUSY, averageWaitMinutes: 25 };
+
+    const now = toMetricViews(BUSY, slower).find((m) => m.label === 'Espera promedio');
+
+    expect(now).toMatchObject({ trend: 'down', tone: 'positive' });
+    expect(now?.delta).toContain('7 min');
+  });
+
+  it('reads a longer wait as a regression', () => {
+    const faster = { ...BUSY, averageWaitMinutes: 12 };
+
+    expect(toMetricViews(BUSY, faster).find((m) => m.label === 'Espera promedio')).toMatchObject({
+      trend: 'up',
+      tone: 'negative',
+    });
+  });
+
+  it('reads the same rise oppositely for a metric where up is good', () => {
+    // The direction of change is identical; only the verdict differs.
+    const fewer = { ...BUSY, peopleJoined: 5 };
+
+    expect(toMetricViews(BUSY, fewer).find((m) => m.label === 'Personas hoy')).toMatchObject({
+      trend: 'up',
+      tone: 'positive',
+    });
+  });
+
+  it('treats more no-shows as bad news', () => {
+    const cleaner = { ...BUSY, noShowRate: 0.01 };
+
+    expect(toMetricViews(BUSY, cleaner).find((m) => m.label === 'Tasa de no-show')).toMatchObject({
+      trend: 'up',
+      tone: 'negative',
+    });
+  });
+
+  it('says so plainly when nothing moved', () => {
+    expect(toMetricViews(BUSY, BUSY).find((m) => m.label === 'Espera promedio')).toMatchObject({
+      delta: 'Sin cambio',
+      tone: 'neutral',
+    });
+  });
+
+  it('omits the comparison when there is no previous window', () => {
+    expect(toMetricViews(BUSY).every((m) => m.delta === undefined)).toBe(true);
+  });
+
+  it('omits it when the previous window was empty', () => {
+    // "+18 min vs. nothing" is arithmetic, not information.
+    const view = toMetricViews(BUSY, EMPTY).find((m) => m.label === 'Espera promedio');
+
+    expect(view?.delta).toBeUndefined();
+  });
+
+  it('compares each metric against its own previous denominator', () => {
+    // Plenty of covers before, no reviews: only the rating lacks a comparison.
+    const previous = { ...BUSY, reviewCount: 0, averageRating: null };
+    const views = toMetricViews(BUSY, previous);
+
+    expect(views.find((m) => m.label === 'Rating promedio')?.delta).toBeUndefined();
+    expect(views.find((m) => m.label === 'Tasa de no-show')?.delta).toBeDefined();
+  });
+});
+
 describe('hasNoActivity', () => {
   it('is true for a restaurant with nothing recorded', () => {
     expect(hasNoActivity(EMPTY)).toBe(true);
