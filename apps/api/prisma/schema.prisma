@@ -53,6 +53,7 @@ model Restaurant {
   queues  Queue[]
   entries WaitlistEntry[]
   reviews ServiceReview[]
+  staff   User[]
 
   @@map("restaurants")
 }
@@ -107,13 +108,18 @@ model User {
   image         String?
   // diner (default) | hostess | admin
   role          String?  @default("diner")
+  // Staff (hostess/admin) belong to exactly one restaurant and may only act on
+  // it. Null for diners, who are not scoped to any restaurant.
+  restaurantId  String?  @map("restaurant_id") @db.Uuid
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt
 
-  entries  WaitlistEntry[]
-  sessions Session[]
-  accounts Account[]
+  restaurant Restaurant?     @relation(fields: [restaurantId], references: [id], onDelete: SetNull)
+  entries    WaitlistEntry[]
+  sessions   Session[]
+  accounts   Account[]
 
+  @@index([restaurantId])
   @@map("users")
 }
 
