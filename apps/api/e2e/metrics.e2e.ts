@@ -1,6 +1,7 @@
 import type {
   GetMetricsResponse,
   GetMetricsSeriesResponse,
+  GetPeakHoursResponse,
   GetRestaurantResponse,
   JoinWaitlistResponse,
 } from '@nexa/types';
@@ -144,6 +145,80 @@ describe('metrics end-to-end', () => {
       const token = await staffToken();
 
       const res = await fetch(`${base}/restaurants/DEMO/metrics/timeseries?bucket=week`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe('peak hours', () => {
+    it('returns the whole 7 x 24 grid so the heatmap has no holes', async () => {
+      const token = await staffToken();
+
+      const result = await getJson<GetPeakHoursResponse>(
+        '/restaurants/DEMO/metrics/peak-hours',
+        token,
+      );
+
+      expect(result.cells).toHaveLength(168);
+      expect(result.cells[0]).toMatchObject({ dayOfWeek: 0, hour: 0 });
+    });
+
+    it('places a join in the weekday and hour of the restaurant local clock', async () => {
+      const token = await staffToken();
+      await join(await generalQueueId(), 'E2E Peak');
+
+      const result = await getJson<GetPeakHoursResponse>(
+        '/restaurants/DEMO/metrics/peak-hours',
+        token,
+      );
+
+      // Where the entry should land, read in the restaurant's zone.
+      const local = new Intl.DateTimeFormat('en-GB', {
+        timeZone: result.timezone,
+        weekday: 'short',
+        hour: '2-digit',
+        hour12: false,
+      }).formatToParts(new Date());
+      const hour = Number(local.find((part) => part.type === 'hour')?.value);
+      const weekday = local.find((part) => part.type === 'weekday')?.value ?? '';
+      const dayOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(weekday);
+
+      const target = result.cells.find(
+        (cell) => cell.dayOfWeek === dayOfWeek && cell.hour === hour % 24,
+      );
+      expect(target?.joined).toBeGreaterThan(0);
+    });
+
+    it('reports the busiest cell for scaling the colour ramp', async () => {
+      const token = await staffToken();
+
+      const result = await getJson<GetPeakHoursResponse>(
+        '/restaurants/DEMO/metrics/peak-hours',
+        token,
+      );
+      const highest = Math.max(...result.cells.map((cell) => cell.joined));
+
+      expect(result.busiest).toBe(highest);
+    });
+
+    it('looks back several weeks by default, since one day is not a heatmap', async () => {
+      const token = await staffToken();
+
+      const result = await getJson<GetPeakHoursResponse>(
+        '/restaurants/DEMO/metrics/peak-hours',
+        token,
+      );
+      const days = (Date.parse(result.range.to) - Date.parse(result.range.from)) / 86_400_000;
+
+      expect(days).toBe(28);
+    });
+
+    it('rejects a malformed range', async () => {
+      const token = await staffToken();
+
+      const res = await fetch(`${base}/restaurants/DEMO/metrics/peak-hours?from=not-a-date`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

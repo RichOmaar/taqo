@@ -1,6 +1,7 @@
 import type {
   GetMetricsResponse,
   GetMetricsSeriesResponse,
+  GetPeakHoursResponse,
   GetRestaurantResponse,
   ListRestaurantsResponse,
   QueueResponse,
@@ -14,6 +15,7 @@ import { requireRestaurantScope } from '../../../http/middleware/restaurant-scop
 import { NotFoundError, ValidationError } from '../../../shared/errors';
 import type { GetMetrics } from '../application/get-metrics';
 import type { GetMetricsSeries } from '../application/get-metrics-series';
+import type { GetPeakHours } from '../application/get-peak-hours';
 import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
@@ -56,6 +58,7 @@ export function restaurantRouter(
   list: ListRestaurants,
   metrics: GetMetrics,
   metricsSeries: GetMetricsSeries,
+  peakHours: GetPeakHours,
   config: RestaurantConfig,
 ): Router {
   const router = Router();
@@ -136,6 +139,37 @@ export function restaurantRouter(
         const response: GetMetricsSeriesResponse = {
           points: result.points,
           bucket: result.bucket,
+          range: {
+            from: result.range.from.toISOString(),
+            to: result.range.to.toISOString(),
+          },
+          timezone: result.timezone,
+        };
+        res.json(response);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.get(
+    '/restaurants/:code/metrics/peak-hours',
+    requireStaff,
+    scopeByCode,
+    async (req, res, next) => {
+      try {
+        const code = req.params.code;
+        if (!code) throw new ValidationError('Missing restaurant code');
+
+        const parsed = metricsQuerySchema.safeParse(req.query);
+        if (!parsed.success) {
+          throw new ValidationError('Invalid range', { issues: parsed.error.issues });
+        }
+
+        const result = await peakHours.execute(code, parsed.data);
+        const response: GetPeakHoursResponse = {
+          cells: result.cells,
+          busiest: result.busiest,
           range: {
             from: result.range.from.toISOString(),
             to: result.range.to.toISOString(),

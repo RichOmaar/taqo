@@ -1,8 +1,8 @@
-import type { MetricsSeriesPoint, RestaurantMetrics } from '@nexa/types';
+import type { MetricsSeriesPoint, PeakHourCell, RestaurantMetrics } from '@nexa/types';
 import { Prisma, type PrismaClient } from '@prisma/client';
 
 import type { TimeRange } from '../../../shared/time-range';
-import type { MetricsRepository, SeriesQuery } from '../domain/metrics-repository';
+import type { MetricsRepository, PeakHoursQuery, SeriesQuery } from '../domain/metrics-repository';
 
 /**
  * Postgres returns numerics as strings and COUNT as bigint; both come back
@@ -25,6 +25,13 @@ interface SeriesRow {
   bucket_at: Date;
   joined: number;
   seated: number;
+}
+
+interface PeakHourRow {
+  /** Postgres ISODOW: Monday 1 … Sunday 7. */
+  iso_dow: number;
+  hour: number;
+  joined: number;
 }
 
 /**
@@ -130,6 +137,38 @@ export class PrismaMetricsRepository implements MetricsRepository {
       at: row.bucket_at.toISOString(),
       joined: row.joined,
       seated: row.seated,
+    }));
+  }
+
+  /**
+   * Volume by weekday and hour, read in the restaurant's zone.
+   *
+   * Same `AT TIME ZONE 'UTC'` caveat as `series`: without it the weekday of a
+   * late-evening cover lands on the wrong day.
+   *
+   * ISODOW numbers Monday 1 … Sunday 7; the mapper shifts it to 0-indexed so
+   * the grid starts on Monday, matching the Lun–Dom order of the mock.
+   */
+  async peakHours(restaurantId: string, query: PeakHoursQuery): Promise<PeakHourCell[]> {
+    const rows = await this.prisma.$queryRaw<PeakHourRow[]>`
+      SELECT
+        EXTRACT(ISODOW FROM local_at)::int AS iso_dow,
+        EXTRACT(HOUR FROM local_at)::int AS hour,
+        COUNT(*)::int AS joined
+      FROM (
+        SELECT joined_at AT TIME ZONE 'UTC' AT TIME ZONE ${query.timezone} AS local_at
+        FROM waitlist_entries
+        WHERE restaurant_id = ${restaurantId}::uuid
+          AND joined_at >= ${query.range.from}
+          AND joined_at < ${query.range.to}
+      ) AS local_entries
+      GROUP BY iso_dow, hour
+    `;
+
+    return rows.map((row) => ({
+      dayOfWeek: row.iso_dow - 1,
+      hour: row.hour,
+      joined: row.joined,
     }));
   }
 }

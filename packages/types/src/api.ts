@@ -104,6 +104,25 @@ export interface GetMetricsSeriesResponse {
   timezone: string;
 }
 
+/** One cell of the peak-hours heatmap. */
+export interface PeakHourCell {
+  /** 0 = Monday … 6 = Sunday, in the restaurant's zone. */
+  dayOfWeek: number;
+  /** 0–23, local hour. */
+  hour: number;
+  joined: number;
+}
+
+/** GET /restaurants/:code/metrics/peak-hours?from=&to= (staff). */
+export interface GetPeakHoursResponse {
+  /** The full 7 × 24 grid, Monday 00:00 first, so the UI never has holes. */
+  cells: PeakHourCell[];
+  /** Busiest cell in the grid, for scaling the colour ramp. */
+  busiest: number;
+  range: MetricsRange;
+  timezone: string;
+}
+
 /** PATCH /restaurants/:code — update editable restaurant config. */
 export interface UpdateRestaurantConfigRequest {
   name?: string;

@@ -34,7 +34,11 @@ function build(options: { timezone?: string; observed?: MetricsSeriesPoint[]; no
 
   return {
     series,
-    useCase: new GetMetricsSeries(restaurants, { compute: vi.fn(), series }, () => new Date(now)),
+    useCase: new GetMetricsSeries(
+      restaurants,
+      { compute: vi.fn(), series, peakHours: vi.fn() },
+      () => new Date(now),
+    ),
   };
 }
 
@@ -166,7 +170,11 @@ describe('GetMetricsSeries', () => {
     const restaurants = {
       findByCode: () => Promise.resolve(null),
     } as unknown as RestaurantRepository;
-    const useCase = new GetMetricsSeries(restaurants, { compute: vi.fn(), series: vi.fn() });
+    const useCase = new GetMetricsSeries(restaurants, {
+      compute: vi.fn(),
+      series: vi.fn(),
+      peakHours: vi.fn(),
+    });
 
     await expect(useCase.execute('NOPE')).rejects.toBeInstanceOf(NotFoundError);
   });
