@@ -34,6 +34,11 @@ import {
   PrismaStatsRepository,
   type StatsRepository,
 } from './contexts/memberships/infrastructure/prisma-stats-repository';
+import { ManageSurvey } from './contexts/surveys/application/manage-survey';
+import { SubmitResponse } from './contexts/surveys/application/submit-response';
+import type { ResponseRepository, SurveyRepository } from './contexts/surveys/domain/repositories';
+import { PrismaResponseRepository } from './contexts/surveys/infrastructure/prisma-response-repository';
+import { PrismaSurveyRepository } from './contexts/surveys/infrastructure/prisma-survey-repository';
 import { loadEnv } from './config/env';
 import type { PushSubscriptionRepository } from './contexts/notifications/domain/push-subscription-repository';
 import { PrismaPushSubscriptionRepository } from './contexts/notifications/infrastructure/prisma-push-subscription-repository';
@@ -76,6 +81,10 @@ export interface Container {
   enrollMember: EnrollMember;
   redeemReward: RedeemReward;
   validateRedemption: ValidateRedemption;
+  surveys: SurveyRepository;
+  surveyResponses: ResponseRepository;
+  manageSurvey: ManageSurvey;
+  submitSurveyResponse: SubmitResponse;
 }
 
 /** Composition root: wires repositories and use cases with the given publisher. */
@@ -93,8 +102,13 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
   // Seating credits loyalty through waitlist's VisitRecorder port; the mapping
   // from an entry to a visit lives at this seam, not inside either context.
   const recordVisit = new RecordVisit(membershipPrograms, membershipsRepo, membershipLedger);
+
+  const surveys = new PrismaSurveyRepository(prisma);
+  const surveyResponses = new PrismaResponseRepository(prisma);
+
   const waitlist = new PrismaWaitlistRepository(prisma);
   const reviews = new PrismaReviewRepository(prisma);
+  const submitReview = new SubmitReview(waitlist, reviews);
   const pushSubscriptions = new PrismaPushSubscriptionRepository(prisma);
   const notifier = new WebPushNotifier(pushSubscriptions, {
     publicKey: env.VAPID_PUBLIC_KEY,
@@ -127,7 +141,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
           .catch(() => undefined);
       },
     }),
-    submitReview: new SubmitReview(waitlist, reviews),
+    submitReview,
     expireNoShows: new ExpireNoShows(waitlist, publisher),
     pushSubscriptions,
     vapidPublicKey: env.VAPID_PUBLIC_KEY,
@@ -146,5 +160,18 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
       membershipRedemptions,
     ),
     validateRedemption: new ValidateRedemption(membershipRedemptions),
+    surveys,
+    surveyResponses,
+    manageSurvey: new ManageSurvey(surveys),
+    // A completed feedback survey mirrors into ServiceReview through the
+    // existing use case, so its guards on status and duplicates still apply.
+    submitSurveyResponse: new SubmitResponse(surveys, surveyResponses, {
+      recorded: (subjectRef, rating, comment) => {
+        if (rating === null) return;
+        void submitReview
+          .execute({ entryId: subjectRef, rating, feedback: comment })
+          .catch(() => undefined);
+      },
+    }),
   };
 }
