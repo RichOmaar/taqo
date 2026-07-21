@@ -33,18 +33,31 @@ export interface GetCurrentStaffResponse {
   restaurant: Restaurant;
 }
 
-/** Owner dashboard KPIs. */
+/**
+ * Owner dashboard KPIs.
+ *
+ * Each ratio ships with the count it was computed from. Without them a rate of
+ * 0 is ambiguous — no no-shows out of two hundred covers reads identically to
+ * no data at all — and the dashboard cannot tell a real figure from an empty
+ * one.
+ */
 export interface RestaurantMetrics {
   /** Average wait (join → seated), in minutes; null with no data. */
   averageWaitMinutes: number | null;
+  /** Seated entries the average wait was computed from. */
+  seatedCount: number;
   /** Diners who joined today. */
   peopleToday: number;
   /** no_show / resolved entries (0–1). */
   noShowRate: number;
   /** seated / resolved entries (0–1). */
   seatedConversion: number;
+  /** Resolved entries (seated + no-show + cancelled) behind both ratios. */
+  resolvedCount: number;
   /** Average service rating (1–5); null with no reviews. */
   averageRating: number | null;
+  /** Reviews the average rating was computed from. */
+  reviewCount: number;
 }
 
 /** GET /restaurants/:code/metrics (staff). */

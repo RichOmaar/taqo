@@ -26,6 +26,7 @@ export class PrismaMetricsRepository implements MetricsRepository {
       this.prisma.serviceReview.aggregate({
         where: { restaurantId },
         _avg: { rating: true },
+        _count: { _all: true },
       }),
     ]);
 
@@ -45,10 +46,13 @@ export class PrismaMetricsRepository implements MetricsRepository {
 
     return {
       averageWaitMinutes,
+      seatedCount: durations.length,
       peopleToday,
       noShowRate: resolved ? countOf('no_show') / resolved : 0,
       seatedConversion: resolved ? seatedCount / resolved : 0,
+      resolvedCount: resolved,
       averageRating,
+      reviewCount: ratingAgg._count._all,
     };
   }
 }
