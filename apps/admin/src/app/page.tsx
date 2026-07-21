@@ -6,8 +6,9 @@ import type {
   GetMetricsSeriesResponse,
   GetPeakHoursResponse,
   RestaurantMetrics,
+  RestaurantReview,
 } from '@nexa/types';
-import { Card, EmptyState, GroupedBarChart, Heatmap, StatCard, TopBar } from '@nexa/ui';
+import { Card, EmptyState, GroupedBarChart, Heatmap, ReviewCard, StatCard, TopBar } from '@nexa/ui';
 import { useEffect, useState } from 'react';
 
 import { AdminShell } from '../components/admin-shell';
@@ -15,6 +16,7 @@ import {
   HOUR_LABELS,
   WEEKDAY_LABELS,
   hourLabels,
+  relativeTime,
   strideFor,
   toHeatmapCells,
 } from '../lib/chart-view';
@@ -35,6 +37,7 @@ function Dashboard() {
   const [previous, setPrevious] = useState<RestaurantMetrics | undefined>();
   const [series, setSeries] = useState<GetMetricsSeriesResponse | null>(null);
   const [peak, setPeak] = useState<GetPeakHoursResponse | null>(null);
+  const [reviews, setReviews] = useState<RestaurantReview[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -62,6 +65,11 @@ function Dashboard() {
       .peakHours(code)
       .then(setPeak)
       .catch(() => setPeak(null));
+
+    api.restaurants
+      .reviews(code, { limit: 3 })
+      .then((data) => setReviews(data.reviews))
+      .catch(() => setReviews([]));
   }, [api, restaurant]);
 
   return (
@@ -116,6 +124,26 @@ function Dashboard() {
                     labelStride={strideFor(series.points.length)}
                     formatValue={(value) => `${value} ${value === 1 ? 'persona' : 'personas'}`}
                   />
+                </Card>
+              )}
+
+              {reviews.length > 0 && (
+                <Card className="flex flex-col gap-4">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h2 className="font-display text-base font-semibold text-foreground">
+                      Reseñas recientes
+                    </h2>
+                    <span className="font-body text-xs text-muted">Últimas {reviews.length}</span>
+                  </div>
+                  {reviews.map((review) => (
+                    <ReviewCard
+                      key={review.id}
+                      name={review.displayName}
+                      rating={review.rating}
+                      feedback={review.feedback}
+                      timeLabel={relativeTime(review.createdAt)}
+                    />
+                  ))}
                 </Card>
               )}
 

@@ -7,7 +7,9 @@ import type {
   GetMetricsSeriesResponse,
   GetPeakHoursResponse,
   GetRestaurantResponse,
+  ListReviewsResponse,
   MetricsBucket,
+  ReviewSummaryResponse,
   JoinWaitlistRequest,
   JoinWaitlistResponse,
   ListQueueEntriesResponse,
@@ -36,13 +38,27 @@ export interface MetricsRangeQuery {
   to?: Date;
 }
 
+/** Filters for the review list. */
+export interface ReviewListQuery extends MetricsRangeQuery {
+  /** 1–5; omit for every rating. */
+  rating?: number;
+  limit?: number;
+  /** `nextCursor` from a previous page. */
+  cursor?: string;
+}
+
+type Query = ReviewListQuery & { bucket?: string };
+
 /** Builds a query string, omitting absent values so defaults stay server-side. */
-function query(params?: MetricsRangeQuery & { bucket?: string }): string {
+function query(params?: Query): string {
   if (!params) return '';
   const search = new URLSearchParams();
   if (params.from) search.set('from', params.from.toISOString());
   if (params.to) search.set('to', params.to.toISOString());
   if (params.bucket) search.set('bucket', params.bucket);
+  if (params.rating !== undefined) search.set('rating', String(params.rating));
+  if (params.limit !== undefined) search.set('limit', String(params.limit));
+  if (params.cursor) search.set('cursor', params.cursor);
   const encoded = search.toString();
   return encoded ? `?${encoded}` : '';
 }
@@ -139,6 +155,16 @@ export function createApiClient(options: ApiClientOptions) {
       /** Volume by weekday and hour, for the peak-hours heatmap. */
       peakHours(code: string, range?: MetricsRangeQuery): Promise<GetPeakHoursResponse> {
         return http.request(`/restaurants/${seg(code)}/metrics/peak-hours${query(range)}`, {
+          auth: true,
+        });
+      },
+      /** Reviews, newest first. Pass `nextCursor` back to page. */
+      reviews(code: string, options?: ReviewListQuery): Promise<ListReviewsResponse> {
+        return http.request(`/restaurants/${seg(code)}/reviews${query(options)}`, { auth: true });
+      },
+      /** Average and rating distribution. */
+      reviewSummary(code: string, range?: MetricsRangeQuery): Promise<ReviewSummaryResponse> {
+        return http.request(`/restaurants/${seg(code)}/reviews/summary${query(range)}`, {
           auth: true,
         });
       },
