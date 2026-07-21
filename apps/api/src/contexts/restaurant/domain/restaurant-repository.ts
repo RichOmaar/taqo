@@ -26,6 +26,7 @@ export interface QueueUpdate {
 export interface RestaurantRepository {
   listSummaries(): Promise<RestaurantSummary[]>;
   findByCode(code: string): Promise<RestaurantWithQueues | null>;
+  findById(id: string): Promise<Restaurant | null>;
   findIdByCode(code: string): Promise<string | null>;
   updateConfig(id: string, data: RestaurantConfigUpdate): Promise<void>;
   addQueue(restaurantId: string, data: NewQueue): Promise<Queue>;

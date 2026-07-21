@@ -1,5 +1,5 @@
 import type { JsonObject, UUID } from './common';
-import type { Queue, Restaurant, ServiceReview, WaitlistEntry } from './entities';
+import type { Queue, Restaurant, ServiceReview, StaffUser, WaitlistEntry } from './entities';
 
 // REST request/response contracts shared between the backend and the frontends.
 
@@ -21,6 +21,16 @@ export interface RestaurantSummary {
 /** GET /restaurants — public catalog. */
 export interface ListRestaurantsResponse {
   restaurants: RestaurantSummary[];
+}
+
+/**
+ * GET /me (staff) — the signed-in staff user and the restaurant they manage.
+ * Lets a frontend resolve its restaurant from the session instead of
+ * hardcoding a code.
+ */
+export interface GetCurrentStaffResponse {
+  user: StaffUser;
+  restaurant: Restaurant;
 }
 
 /** Owner dashboard KPIs. */

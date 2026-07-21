@@ -4,6 +4,8 @@ import { RestaurantConfig } from './contexts/restaurant/application/restaurant-c
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
 import { PrismaMetricsRepository } from './contexts/restaurant/infrastructure/prisma-metrics-repository';
 import { PrismaRestaurantRepository } from './contexts/restaurant/infrastructure/prisma-restaurant-repository';
+import { GetCurrentStaff } from './contexts/identity/application/get-current-staff';
+import { PrismaStaffRepository } from './contexts/identity/infrastructure/prisma-staff-repository';
 import { loadEnv } from './config/env';
 import type { PushSubscriptionRepository } from './contexts/notifications/domain/push-subscription-repository';
 import { PrismaPushSubscriptionRepository } from './contexts/notifications/infrastructure/prisma-push-subscription-repository';
@@ -21,6 +23,7 @@ import { prisma } from './db/prisma';
 
 export interface Container {
   restaurants: RestaurantRepository;
+  getCurrentStaff: GetCurrentStaff;
   listRestaurants: ListRestaurants;
   getMetrics: GetMetrics;
   restaurantConfig: RestaurantConfig;
@@ -48,6 +51,8 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
   });
   return {
     restaurants,
+    // The restaurant repository satisfies identity's RestaurantLookup port.
+    getCurrentStaff: new GetCurrentStaff(new PrismaStaffRepository(prisma), restaurants),
     listRestaurants: new ListRestaurants(restaurants),
     getMetrics: new GetMetrics(restaurants, new PrismaMetricsRepository(prisma)),
     restaurantConfig: new RestaurantConfig(restaurants),

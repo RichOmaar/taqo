@@ -4,6 +4,7 @@ import express, { type Express } from 'express';
 
 import { auth } from './auth';
 import type { Container } from './composition';
+import { identityRouter } from './contexts/identity/interfaces/identity-router';
 import { pushRouter } from './contexts/notifications/interfaces/push-router';
 import { restaurantRouter } from './contexts/restaurant/interfaces/restaurant-router';
 import { waitlistRouter } from './contexts/waitlist/interfaces/waitlist-router';
@@ -22,6 +23,7 @@ export function createServer(container: Container): Express {
   app.use(express.json());
 
   app.use('/health', healthRouter);
+  app.use(identityRouter(container.getCurrentStaff));
   app.use(
     restaurantRouter(
       container.restaurants,

@@ -24,6 +24,9 @@ export const auth = betterAuth({
     additionalFields: {
       // Not settable at sign-up (input: false); staff roles are assigned by seed/admin.
       role: { type: 'string', required: false, defaultValue: 'diner', input: false },
+      // Restaurant a staff user is scoped to; null for diners. Carried on the
+      // session so authorization does not need a database round trip.
+      restaurantId: { type: 'string', required: false, input: false },
     },
   },
   plugins: [bearer()],

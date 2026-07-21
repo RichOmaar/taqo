@@ -70,6 +70,11 @@ export class PrismaRestaurantRepository implements RestaurantRepository {
     };
   }
 
+  async findById(id: string): Promise<Restaurant | null> {
+    const row = await this.prisma.restaurant.findUnique({ where: { id } });
+    return row ? toRestaurant(row) : null;
+  }
+
   async findIdByCode(code: string): Promise<string | null> {
     const row = await this.prisma.restaurant.findUnique({
       where: { code },

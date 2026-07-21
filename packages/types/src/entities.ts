@@ -64,8 +64,10 @@ export interface User {
 
 export interface StaffUser {
   id: UUID;
+  /** Staff act on exactly one restaurant; the API enforces this scope. */
   restaurantId: UUID;
   email: string;
+  name: string | null;
   role: StaffRole;
 }
 
