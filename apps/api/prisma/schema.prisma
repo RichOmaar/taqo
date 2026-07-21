@@ -48,6 +48,8 @@ model Restaurant {
   etaBaseMinutes    Int            @map("eta_base_minutes")
   expirationMinutes Int            @map("expiration_minutes")
   plan              RestaurantPlan @default(free)
+  /// IANA zone used to bucket metrics by local day; "today" is meaningless without it.
+  timezone          String         @default("America/Mexico_City")
   createdAt         DateTime       @default(now()) @map("created_at")
 
   queues  Queue[]

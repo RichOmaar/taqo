@@ -15,6 +15,17 @@ import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
 
+/** ISO-8601 instant, e.g. 2026-07-21T06:00:00.000Z. */
+const isoDate = z
+  .string()
+  .datetime()
+  .transform((value) => new Date(value));
+
+const metricsQuerySchema = z.object({
+  from: isoDate.optional(),
+  to: isoDate.optional(),
+});
+
 const updateConfigSchema = z.object({
   name: z.string().min(1).max(120).optional(),
   etaBaseMinutes: z.number().int().positive().max(600).optional(),
@@ -75,8 +86,17 @@ export function restaurantRouter(
     try {
       const code = req.params.code;
       if (!code) throw new ValidationError('Missing restaurant code');
-      const data = await metrics.execute(code);
-      const response: GetMetricsResponse = { metrics: data };
+
+      const parsed = metricsQuerySchema.safeParse(req.query);
+      if (!parsed.success) {
+        throw new ValidationError('Invalid range', { issues: parsed.error.issues });
+      }
+
+      const { metrics: data, range } = await metrics.execute(code, parsed.data);
+      const response: GetMetricsResponse = {
+        metrics: data,
+        range: { from: range.from.toISOString(), to: range.to.toISOString() },
+      };
       res.json(response);
     } catch (error) {
       next(error);

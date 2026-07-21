@@ -1,4 +1,4 @@
-import type { JsonObject, UUID } from './common';
+import type { ISODateString, JsonObject, UUID } from './common';
 import type { Queue, Restaurant, ServiceReview, StaffUser, WaitlistEntry } from './entities';
 
 // REST request/response contracts shared between the backend and the frontends.
@@ -46,8 +46,8 @@ export interface RestaurantMetrics {
   averageWaitMinutes: number | null;
   /** Seated entries the average wait was computed from. */
   seatedCount: number;
-  /** Diners who joined today. */
-  peopleToday: number;
+  /** Diners who joined within the requested range. */
+  peopleJoined: number;
   /** no_show / resolved entries (0–1). */
   noShowRate: number;
   /** seated / resolved entries (0–1). */
@@ -60,9 +60,17 @@ export interface RestaurantMetrics {
   reviewCount: number;
 }
 
-/** GET /restaurants/:code/metrics (staff). */
+/** The window a metric was computed over. `to` is exclusive. */
+export interface MetricsRange {
+  from: ISODateString;
+  to: ISODateString;
+}
+
+/** GET /restaurants/:code/metrics?from=&to= (staff). */
 export interface GetMetricsResponse {
   metrics: RestaurantMetrics;
+  /** Echoes the resolved window, since the default is server-side. */
+  range: MetricsRange;
 }
 
 /** PATCH /restaurants/:code — update editable restaurant config. */

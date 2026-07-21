@@ -20,6 +20,8 @@ export interface Restaurant {
   /** Minutes after being notified before an entry can be marked no-show. */
   expirationMinutes: number;
   plan: RestaurantPlan;
+  /** IANA zone the restaurant's day is measured in, e.g. `America/Mexico_City`. */
+  timezone: string;
   createdAt: ISODateString;
 }
 

@@ -21,6 +21,7 @@ const RESTAURANT: Restaurant = {
   etaBaseMinutes: 10,
   expirationMinutes: 10,
   plan: 'free',
+  timezone: 'America/Mexico_City',
   createdAt: '2026-07-01T00:00:00.000Z',
 };
 

@@ -39,7 +39,7 @@ export function toMetricViews(metrics: RestaurantMetrics): MetricView[] {
     {
       // A count, not a ratio: zero today is a fact, not missing data.
       label: 'Personas hoy',
-      value: String(metrics.peopleToday),
+      value: String(metrics.peopleJoined),
     },
     {
       label: 'Tasa de no-show',
@@ -61,5 +61,5 @@ export function toMetricViews(metrics: RestaurantMetrics): MetricView[] {
 
 /** True when nothing has happened yet, so the panel can explain itself. */
 export function hasNoActivity(metrics: RestaurantMetrics): boolean {
-  return metrics.resolvedCount === 0 && metrics.peopleToday === 0;
+  return metrics.resolvedCount === 0 && metrics.peopleJoined === 0;
 }

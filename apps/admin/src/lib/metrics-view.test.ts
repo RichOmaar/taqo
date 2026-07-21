@@ -6,7 +6,7 @@ import { hasNoActivity, toMetricViews } from './metrics-view';
 const BUSY: RestaurantMetrics = {
   averageWaitMinutes: 18,
   seatedCount: 42,
-  peopleToday: 12,
+  peopleJoined: 12,
   noShowRate: 0.04,
   seatedConversion: 0.92,
   resolvedCount: 50,
@@ -17,7 +17,7 @@ const BUSY: RestaurantMetrics = {
 const EMPTY: RestaurantMetrics = {
   averageWaitMinutes: null,
   seatedCount: 0,
-  peopleToday: 0,
+  peopleJoined: 0,
   noShowRate: 0,
   seatedConversion: 0,
   resolvedCount: 0,
@@ -83,7 +83,7 @@ describe('hasNoActivity', () => {
   });
 
   it('is false once anyone has joined today', () => {
-    expect(hasNoActivity({ ...EMPTY, peopleToday: 1 })).toBe(false);
+    expect(hasNoActivity({ ...EMPTY, peopleJoined: 1 })).toBe(false);
   });
 
   it('is false when history exists even on a quiet day', () => {

@@ -1,5 +1,8 @@
 import type { RestaurantMetrics } from '@nexa/types';
 
+import type { TimeRange } from '../../../shared/time-range';
+
 export interface MetricsRepository {
-  compute(restaurantId: string): Promise<RestaurantMetrics>;
+  /** KPIs for entries that joined within `range` (`to` exclusive). */
+  compute(restaurantId: string, range: TimeRange): Promise<RestaurantMetrics>;
 }

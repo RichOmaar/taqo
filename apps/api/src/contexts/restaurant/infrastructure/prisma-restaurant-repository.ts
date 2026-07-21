@@ -22,6 +22,7 @@ function toRestaurant(row: PrismaRestaurant): Restaurant {
     etaBaseMinutes: row.etaBaseMinutes,
     expirationMinutes: row.expirationMinutes,
     plan: row.plan,
+    timezone: row.timezone,
     createdAt: row.createdAt.toISOString(),
   };
 }
