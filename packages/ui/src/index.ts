@@ -2,8 +2,12 @@
 // reusable React components derived from the Nexa mocks.
 export * from './tokens';
 export * from './utils/cn';
+export * from './components/AppShell';
 export * from './components/Button';
 export * from './components/Card';
+export * from './components/NavItem';
+export * from './components/Sidebar';
+export * from './components/TopBar';
 export * from './components/Input';
 export * from './components/StatusBadge';
 export * from './components/Stepper';
