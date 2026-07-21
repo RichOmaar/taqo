@@ -23,6 +23,52 @@ enum WaitlistStatus {
   cancelled
 }
 
+enum ProgramStatus {
+  draft
+  active
+  paused
+}
+
+enum AccrualMode {
+  visits
+  points
+  both
+}
+
+enum TierMetric {
+  visits
+  points
+}
+
+enum TierPeriod {
+  lifetime
+  rolling
+}
+
+enum DowngradePolicy {
+  never
+  on_period_exit
+}
+
+enum MembershipStatus {
+  active
+  cancelled
+}
+
+enum LedgerKind {
+  accrual
+  redemption
+  expiry
+  adjustment
+}
+
+enum RedemptionStatus {
+  issued
+  redeemed
+  expired
+  cancelled
+}
+
 enum NotificationChannel {
   web_push
   sms
@@ -116,10 +162,11 @@ model User {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt
 
-  restaurant Restaurant?     @relation(fields: [restaurantId], references: [id], onDelete: SetNull)
-  entries    WaitlistEntry[]
-  sessions   Session[]
-  accounts   Account[]
+  restaurant  Restaurant?     @relation(fields: [restaurantId], references: [id], onDelete: SetNull)
+  entries     WaitlistEntry[]
+  sessions    Session[]
+  accounts    Account[]
+  memberships Membership[]
 
   @@index([restaurantId])
   @@map("users")
@@ -135,6 +182,128 @@ model PushSubscription {
 
   @@index([entryId])
   @@map("push_subscriptions")
+}
+
+// Memberships — loyalty programs, their members, and an append-only ledger.
+
+model MembershipProgram {
+  id       String        @id @default(uuid()) @db.Uuid
+  /// Opaque owner reference, deliberately not a Restaurant FK: it keeps this
+  /// context independent and leaves room for a Nexa-wide program later.
+  ownerRef String        @map("owner_ref")
+  name     String
+  status   ProgramStatus @default(draft)
+
+  accrualMode     AccrualMode     @default(visits) @map("accrual_mode")
+  pointsPerVisit  Int             @default(10) @map("points_per_visit")
+  tierMetric      TierMetric      @default(visits) @map("tier_metric")
+  tierPeriod      TierPeriod      @default(lifetime) @map("tier_period")
+  /// Null when the period is lifetime.
+  tierWindowDays  Int?            @map("tier_window_days")
+  downgradePolicy DowngradePolicy @default(never) @map("downgrade_policy")
+
+  /// Bumped when the tier scheme changes, so an awarded tier stays readable
+  /// against the rules in force when it was granted.
+  version   Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tiers       MembershipTier[]
+  memberships Membership[]
+  rewards     Reward[]
+
+  @@index([ownerRef])
+  @@map("membership_programs")
+}
+
+model MembershipTier {
+  id        String   @id @default(uuid()) @db.Uuid
+  programId String   @map("program_id") @db.Uuid
+  name      String
+  threshold Int
+  benefits  String[]
+  /// Ascending from 0 for the entry level.
+  position  Int
+
+  program MembershipProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, position])
+  @@map("membership_tiers")
+}
+
+model Membership {
+  id               String           @id @default(uuid()) @db.Uuid
+  programId        String           @map("program_id") @db.Uuid
+  /// Membership requires a registered diner; guests have no durable identity.
+  userId           String           @map("user_id")
+  status           MembershipStatus @default(active)
+  /// Highest tier position ever awarded, so a "never demote" policy can honour
+  /// a level the ledger alone no longer supports.
+  heldTierPosition Int?             @map("held_tier_position")
+  enrolledAt       DateTime         @default(now()) @map("enrolled_at")
+
+  program     MembershipProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ledger      LedgerEntry[]
+  redemptions Redemption[]
+
+  @@unique([programId, userId])
+  @@map("memberships")
+}
+
+model LedgerEntry {
+  id           String     @id @default(uuid()) @db.Uuid
+  membershipId String     @map("membership_id") @db.Uuid
+  kind         LedgerKind
+  /// Signed: positive on accrual, negative on redemption or expiry.
+  points       Int        @default(0)
+  visits       Int        @default(0)
+  /// What caused the movement. Unique per membership, which is what makes
+  /// re-processing the same seating idempotent.
+  sourceRef    String     @map("source_ref")
+  note         String?
+  occurredAt   DateTime   @default(now()) @map("occurred_at")
+
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@unique([membershipId, sourceRef])
+  @@index([membershipId, occurredAt])
+  @@map("membership_ledger_entries")
+}
+
+model Reward {
+  id              String  @id @default(uuid()) @db.Uuid
+  programId       String  @map("program_id") @db.Uuid
+  name            String
+  description     String?
+  costPoints      Int     @default(0) @map("cost_points")
+  /// Lowest tier position allowed to redeem; null for any member.
+  minTierPosition Int?    @map("min_tier_position")
+  /// Redemptions allowed per member; null for unlimited.
+  limitPerMember  Int?    @map("limit_per_member")
+  isActive        Boolean @default(true) @map("is_active")
+
+  program     MembershipProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  redemptions Redemption[]
+
+  @@map("membership_rewards")
+}
+
+model Redemption {
+  id           String           @id @default(uuid()) @db.Uuid
+  rewardId     String           @map("reward_id") @db.Uuid
+  membershipId String           @map("membership_id") @db.Uuid
+  /// Shown to the diner and read back by the hostess in the restaurant.
+  code         String           @unique
+  status       RedemptionStatus @default(issued)
+  issuedAt     DateTime         @default(now()) @map("issued_at")
+  redeemedAt   DateTime?        @map("redeemed_at")
+  expiresAt    DateTime?        @map("expires_at")
+
+  reward     Reward     @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId])
+  @@map("membership_redemptions")
 }
 
 model Notification {
