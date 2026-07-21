@@ -29,6 +29,7 @@ export function createServer(container: Container): Express {
       container.restaurants,
       container.listRestaurants,
       container.getMetrics,
+      container.getMetricsSeries,
       container.restaurantConfig,
     ),
   );

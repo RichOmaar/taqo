@@ -80,6 +80,30 @@ export interface GetMetricsResponse {
   previousRange: MetricsRange;
 }
 
+/** Bucket size for a metrics time series. */
+export const METRICS_BUCKETS = ['hour', 'day'] as const;
+export type MetricsBucket = (typeof METRICS_BUCKETS)[number];
+
+/** One bucket of the volume series. */
+export interface MetricsSeriesPoint {
+  /** Start of the bucket, as an instant. */
+  at: ISODateString;
+  /** Diners who joined during the bucket. */
+  joined: number;
+  /** Of those, how many were seated. */
+  seated: number;
+}
+
+/** GET /restaurants/:code/metrics/timeseries?from=&to=&bucket= (staff). */
+export interface GetMetricsSeriesResponse {
+  /** Every bucket in the range, including empty ones, oldest first. */
+  points: MetricsSeriesPoint[];
+  bucket: MetricsBucket;
+  range: MetricsRange;
+  /** Zone the buckets are aligned to, so the UI labels them consistently. */
+  timezone: string;
+}
+
 /** PATCH /restaurants/:code — update editable restaurant config. */
 export interface UpdateRestaurantConfigRequest {
   name?: string;

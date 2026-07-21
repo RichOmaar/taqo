@@ -1,8 +1,8 @@
-import type { RestaurantMetrics } from '@nexa/types';
-import type { PrismaClient } from '@prisma/client';
+import type { MetricsSeriesPoint, RestaurantMetrics } from '@nexa/types';
+import { Prisma, type PrismaClient } from '@prisma/client';
 
 import type { TimeRange } from '../../../shared/time-range';
-import type { MetricsRepository } from '../domain/metrics-repository';
+import type { MetricsRepository, SeriesQuery } from '../domain/metrics-repository';
 
 /**
  * Postgres returns numerics as strings and COUNT as bigint; both come back
@@ -19,6 +19,12 @@ interface EntryAggregate {
 interface ReviewAggregate {
   review_count: number;
   avg_rating: number | null;
+}
+
+interface SeriesRow {
+  bucket_at: Date;
+  joined: number;
+  seated: number;
 }
 
 /**
@@ -80,5 +86,50 @@ export class PrismaMetricsRepository implements MetricsRepository {
       averageRating: review.avg_rating != null ? Number(review.avg_rating.toFixed(1)) : null,
       reviewCount: review.review_count,
     };
+  }
+
+  /**
+   * Volume per bucket, aligned to the restaurant's local clock.
+   *
+   * `date_trunc` over `AT TIME ZONE` is why this is raw SQL: an hour bucket
+   * must start on the restaurant's hour and a day bucket on its midnight, and
+   * Postgres already knows every zone's DST history. Truncating in JS would
+   * mean reimplementing that.
+   *
+   * The zone is interpolated as a parameter, never concatenated, so an invalid
+   * one is a database error rather than an injection point.
+   *
+   * `AT TIME ZONE 'UTC'` first is load-bearing. Prisma maps DateTime to
+   * `timestamp without time zone`, so the column carries UTC wall-clock with no
+   * zone attached; without that clause Postgres reads the stored value as
+   * already being local and shifts it the wrong way, which silently collapsed
+   * every day into a single bucket.
+   */
+  async series(restaurantId: string, query: SeriesQuery): Promise<MetricsSeriesPoint[]> {
+    // The unit is a SQL keyword, not a value, so it cannot be a bind parameter.
+    // It is constrained to a two-value union upstream and re-checked here.
+    const unit = query.bucket === 'day' ? 'day' : 'hour';
+
+    const rows = await this.prisma.$queryRaw<SeriesRow[]>`
+      SELECT
+        (date_trunc(
+            ${Prisma.raw(`'${unit}'`)},
+            joined_at AT TIME ZONE 'UTC' AT TIME ZONE ${query.timezone}
+          ) AT TIME ZONE ${query.timezone}) AS bucket_at,
+        COUNT(*)::int AS joined,
+        COUNT(*) FILTER (WHERE status = 'seated')::int AS seated
+      FROM waitlist_entries
+      WHERE restaurant_id = ${restaurantId}::uuid
+        AND joined_at >= ${query.range.from}
+        AND joined_at < ${query.range.to}
+      GROUP BY bucket_at
+      ORDER BY bucket_at ASC
+    `;
+
+    return rows.map((row) => ({
+      at: row.bucket_at.toISOString(),
+      joined: row.joined,
+      seated: row.seated,
+    }));
   }
 }

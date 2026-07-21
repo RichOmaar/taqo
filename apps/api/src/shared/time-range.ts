@@ -42,24 +42,45 @@ function offsetMs(instant: Date, timeZone: string): number {
   return asUtc - Math.floor(instant.getTime() / 1000) * 1000;
 }
 
-/** The instant at which the local day containing `instant` began. */
-export function startOfLocalDay(instant: Date, timeZone: string): Date {
+export type TimeUnit = 'hour' | 'day';
+
+/** The instant at which the local hour or day containing `instant` began. */
+export function startOfLocal(instant: Date, timeZone: string, unit: TimeUnit): Date {
   const offset = offsetMs(instant, timeZone);
   const local = new Date(instant.getTime() + offset);
 
-  const localMidnight = Date.UTC(
-    local.getUTCFullYear(),
-    local.getUTCMonth(),
-    local.getUTCDate(),
-    0,
-    0,
-    0,
-  );
+  const truncated =
+    unit === 'day'
+      ? Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate())
+      : Date.UTC(
+          local.getUTCFullYear(),
+          local.getUTCMonth(),
+          local.getUTCDate(),
+          local.getUTCHours(),
+        );
 
-  // Convert back with the offset in effect at that midnight, not at `instant`:
-  // on a DST changeover day the two differ by an hour.
-  const approximate = new Date(localMidnight - offset);
-  return new Date(localMidnight - offsetMs(approximate, timeZone));
+  // Convert back with the offset in effect at the truncated instant, not at
+  // `instant`: on a DST changeover day the two differ by an hour.
+  const approximate = new Date(truncated - offset);
+  return new Date(truncated - offsetMs(approximate, timeZone));
+}
+
+/** The instant at which the local day containing `instant` began. */
+export function startOfLocalDay(instant: Date, timeZone: string): Date {
+  return startOfLocal(instant, timeZone, 'day');
+}
+
+/**
+ * Start of the bucket after the one beginning at `start`.
+ *
+ * Days are re-truncated after advancing, so a DST changeover produces a 23 or
+ * 25 hour day. Hours advance by a fixed hour and are deliberately not
+ * re-truncated: when the clocks go back the same local hour occurs twice, and
+ * snapping would return the same instant and never terminate.
+ */
+export function nextBucketStart(start: Date, timeZone: string, unit: TimeUnit): Date {
+  if (unit === 'hour') return new Date(start.getTime() + 3_600_000);
+  return startOfLocal(new Date(start.getTime() + 86_400_000), timeZone, 'day');
 }
 
 /** Adds whole days to an instant. */

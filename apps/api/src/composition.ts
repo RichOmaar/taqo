@@ -1,4 +1,5 @@
 import { GetMetrics } from './contexts/restaurant/application/get-metrics';
+import { GetMetricsSeries } from './contexts/restaurant/application/get-metrics-series';
 import { ListRestaurants } from './contexts/restaurant/application/list-restaurants';
 import { RestaurantConfig } from './contexts/restaurant/application/restaurant-config';
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
@@ -26,6 +27,7 @@ export interface Container {
   getCurrentStaff: GetCurrentStaff;
   listRestaurants: ListRestaurants;
   getMetrics: GetMetrics;
+  getMetricsSeries: GetMetricsSeries;
   restaurantConfig: RestaurantConfig;
   joinWaitlist: JoinWaitlist;
   listQueueEntries: ListQueueEntries;
@@ -41,6 +43,7 @@ export interface Container {
 export function buildContainer(publisher: WaitlistEventPublisher): Container {
   const env = loadEnv();
   const restaurants = new PrismaRestaurantRepository(prisma);
+  const metricsRepository = new PrismaMetricsRepository(prisma);
   const waitlist = new PrismaWaitlistRepository(prisma);
   const reviews = new PrismaReviewRepository(prisma);
   const pushSubscriptions = new PrismaPushSubscriptionRepository(prisma);
@@ -54,7 +57,8 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
     // The restaurant repository satisfies identity's RestaurantLookup port.
     getCurrentStaff: new GetCurrentStaff(new PrismaStaffRepository(prisma), restaurants),
     listRestaurants: new ListRestaurants(restaurants),
-    getMetrics: new GetMetrics(restaurants, new PrismaMetricsRepository(prisma)),
+    getMetrics: new GetMetrics(restaurants, metricsRepository),
+    getMetricsSeries: new GetMetricsSeries(restaurants, metricsRepository),
     restaurantConfig: new RestaurantConfig(restaurants),
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),
     listQueueEntries: new ListQueueEntries(waitlist),

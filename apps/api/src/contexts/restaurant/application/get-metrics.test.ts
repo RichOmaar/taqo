@@ -46,7 +46,7 @@ function build(options: { timezone?: string; found?: boolean; now?: string } = {
 
   return {
     compute,
-    useCase: new GetMetrics(restaurants, { compute }, () => new Date(now)),
+    useCase: new GetMetrics(restaurants, { compute, series: vi.fn() }, () => new Date(now)),
   };
 }
 
