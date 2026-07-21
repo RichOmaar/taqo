@@ -1,30 +1,40 @@
 'use client';
 
+import { isApiRequestError } from '@nexa/api-client';
+import { useApi, useSession } from '@nexa/api-client/react';
 import type { RestaurantMetrics } from '@nexa/types';
 import { Card } from '@nexa/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { getMetrics } from '../lib/api';
-import { getToken, signOut } from '../lib/auth';
+import { RequireSession } from '../components/require-session';
 import { formatPercent, formatRating, formatWaitMinutes } from '../lib/format';
 
-const CODE = 'DEMO';
-
 export default function DashboardPage() {
+  return (
+    <RequireSession>
+      <Dashboard />
+    </RequireSession>
+  );
+}
+
+function Dashboard() {
   const router = useRouter();
+  const api = useApi();
+  const { restaurant, signOut } = useSession();
   const [metrics, setMetrics] = useState<RestaurantMetrics | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!getToken()) {
-      router.replace('/login');
-      return;
-    }
-    getMetrics(CODE)
+    if (!restaurant) return;
+    api.restaurants
+      .metrics(restaurant.code)
       .then((data) => setMetrics(data.metrics))
-      .catch(() => undefined);
-  }, [router]);
+      .catch((cause: unknown) => {
+        setError(isApiRequestError(cause) ? cause.message : 'No se pudieron cargar las métricas.');
+      });
+  }, [api, restaurant]);
 
   function logout() {
     signOut();
@@ -46,7 +56,7 @@ export default function DashboardPage() {
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-foreground">Buenas tardes</h1>
-          <p className="font-body text-sm text-muted">Bistro Moderno · resumen de hoy</p>
+          <p className="font-body text-sm text-muted">{restaurant?.name} · resumen de hoy</p>
         </div>
         <div className="flex items-center gap-4">
           <Link href="/configuracion" className="font-body text-sm font-semibold text-primary-dark">
@@ -58,7 +68,11 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {metrics ? (
+      {error && <p className="font-body text-sm text-error">{error}</p>}
+
+      {!error && !metrics && <p className="font-body text-muted">Cargando métricas…</p>}
+
+      {metrics && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {stats.map((stat) => (
             <Card key={stat.label} className="flex flex-col gap-1">
@@ -69,8 +83,6 @@ export default function DashboardPage() {
             </Card>
           ))}
         </div>
-      ) : (
-        <p className="font-body text-muted">Cargando métricas…</p>
       )}
     </main>
   );

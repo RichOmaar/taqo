@@ -74,6 +74,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@nexa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -193,6 +196,9 @@ importers:
 
   apps/client:
     dependencies:
+      '@nexa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -291,6 +297,9 @@ importers:
 
   apps/reception:
     dependencies:
+      '@nexa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types

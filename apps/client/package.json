@@ -12,6 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@nexa/api-client": "workspace:*",
     "@nexa/types": "workspace:*",
     "@nexa/ui": "workspace:*",
     "next": "^15.1.3",

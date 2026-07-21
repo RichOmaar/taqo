@@ -1,23 +1,31 @@
 'use client';
 
+import { isApiRequestError } from '@nexa/api-client';
+import { useApi, useSession } from '@nexa/api-client/react';
 import type { Queue } from '@nexa/types';
 import { Button, Card, Input } from '@nexa/ui';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { addQueue, getRestaurant, updateConfig, updateQueue } from '../../lib/api';
-import { getToken } from '../../lib/auth';
-
-const CODE = 'DEMO';
+import { RequireSession } from '../../components/require-session';
 
 export default function ConfigPage() {
-  const router = useRouter();
-  const [loaded, setLoaded] = useState(false);
+  return (
+    <RequireSession>
+      <Config />
+    </RequireSession>
+  );
+}
 
-  useEffect(() => {
-    if (!getToken()) router.replace('/login');
-  }, [router]);
+/** Turns a failure into the API's message when it has one. */
+function message(cause: unknown, fallback: string): string {
+  return isApiRequestError(cause) ? cause.message : fallback;
+}
+
+function Config() {
+  const api = useApi();
+  const { restaurant } = useSession();
+  const [loaded, setLoaded] = useState(false);
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [etaBase, setEtaBase] = useState(10);
@@ -26,39 +34,45 @@ export default function ConfigPage() {
   const [newQueue, setNewQueue] = useState('');
   const [status, setStatus] = useState<string | null>(null);
 
-  async function refresh() {
-    const data = await getRestaurant(CODE);
-    setName(data.restaurant.name);
-    setCode(data.restaurant.code);
-    setEtaBase(data.restaurant.etaBaseMinutes);
-    setExpiration(data.restaurant.expirationMinutes);
-    setQueues(data.queues);
-    setLoaded(true);
-  }
-
   useEffect(() => {
-    refresh().catch(() => setStatus('No se pudo cargar la configuración.'));
-  }, []);
+    if (!restaurant) return;
+    api.restaurants
+      .get(restaurant.code)
+      .then((data) => {
+        setName(data.restaurant.name);
+        setCode(data.restaurant.code);
+        setEtaBase(data.restaurant.etaBaseMinutes);
+        setExpiration(data.restaurant.expirationMinutes);
+        setQueues(data.queues);
+        setLoaded(true);
+      })
+      .catch((cause: unknown) => setStatus(message(cause, 'No se pudo cargar la configuración.')));
+  }, [api, restaurant]);
 
   async function saveConfig() {
+    if (!restaurant) return;
     setStatus(null);
     try {
-      await updateConfig(CODE, { name, etaBaseMinutes: etaBase, expirationMinutes: expiration });
+      await api.restaurants.updateConfig(restaurant.code, {
+        name,
+        etaBaseMinutes: etaBase,
+        expirationMinutes: expiration,
+      });
       setStatus('Configuración guardada.');
-    } catch {
-      setStatus('Error al guardar la configuración.');
+    } catch (cause) {
+      setStatus(message(cause, 'Error al guardar la configuración.'));
     }
   }
 
   async function handleAddQueue() {
-    if (!newQueue.trim()) return;
+    if (!restaurant || !newQueue.trim()) return;
     try {
-      const data = await addQueue(CODE, { name: newQueue.trim() });
+      const data = await api.restaurants.addQueue(restaurant.code, { name: newQueue.trim() });
       setQueues(data.queues);
       setNewQueue('');
       setStatus('Cola agregada.');
-    } catch {
-      setStatus('Error al agregar la cola.');
+    } catch (cause) {
+      setStatus(message(cause, 'Error al agregar la cola.'));
     }
   }
 
@@ -70,10 +84,10 @@ export default function ConfigPage() {
     const queue = queues.find((q) => q.id === id);
     if (!queue) return;
     try {
-      await updateQueue(id, { name: queue.name });
+      await api.queues.update(id, { name: queue.name });
       setStatus('Cola actualizada.');
-    } catch {
-      setStatus('Error al actualizar la cola.');
+    } catch (cause) {
+      setStatus(message(cause, 'Error al actualizar la cola.'));
     }
   }
 
