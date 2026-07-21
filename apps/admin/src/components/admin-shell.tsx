@@ -21,7 +21,7 @@ const NAV = [
   { href: '/lista-de-espera', label: 'Lista de espera', enabled: false },
   { href: '/resenas', label: 'Reseñas', enabled: false },
   { href: '/encuestas', label: 'Encuestas', enabled: false },
-  { href: '/membresias', label: 'Membresías', enabled: false },
+  { href: '/membresias', label: 'Membresías', enabled: true },
   { href: '/configuracion', label: 'Configuración', enabled: true },
   { href: '/plan', label: 'Plan', enabled: false },
 ] as const;

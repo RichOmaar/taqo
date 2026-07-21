@@ -1,4 +1,5 @@
 import type {
+  AccrualMode,
   AddQueueRequest,
   EntryActionResponse,
   GetCurrentStaffResponse,
@@ -6,10 +7,20 @@ import type {
   GetMetricsResponse,
   GetMetricsSeriesResponse,
   GetPeakHoursResponse,
+  DowngradePolicy,
+  GetMembershipProgramResponse,
   GetRestaurantResponse,
+  JoinMembershipResponse,
   ListReviewsResponse,
+  MembershipCardResponse,
+  MembershipProgramResponse,
+  MembershipStatsResponse,
   MetricsBucket,
+  RedemptionResponse,
   ReviewSummaryResponse,
+  RewardResponse,
+  TierMetric,
+  TierPeriod,
   JoinWaitlistRequest,
   JoinWaitlistResponse,
   ListQueueEntriesResponse,
@@ -36,6 +47,35 @@ const seg = encodeURIComponent;
 export interface MetricsRangeQuery {
   from?: Date;
   to?: Date;
+}
+
+/** Programme settings the owner controls. */
+export interface ProgramSettings {
+  name: string;
+  accrualMode: AccrualMode;
+  pointsPerVisit: number;
+  tierMetric: TierMetric;
+  tierPeriod: TierPeriod;
+  /** Required when the period is rolling. */
+  tierWindowDays: number | null;
+  downgradePolicy: DowngradePolicy;
+}
+
+/** A level as the owner defines it; the server assigns the id. */
+export interface TierInput {
+  name: string;
+  threshold: number;
+  benefits: string[];
+  position: number;
+}
+
+export interface RewardInput {
+  name: string;
+  description: string | null;
+  costPoints: number;
+  minTierPosition: number | null;
+  limitPerMember: number | null;
+  isActive: boolean;
 }
 
 /** Filters for the review list. */
@@ -197,6 +237,96 @@ export function createApiClient(options: ApiClientOptions) {
     queues: {
       update(id: UUID, body: UpdateQueueRequest): Promise<QueueResponse> {
         return http.request(`/queues/${seg(id)}`, { method: 'PATCH', body, auth: true });
+      },
+    },
+
+    /** Loyalty programme: owner configuration and analytics. */
+    membership: {
+      get(code: string): Promise<GetMembershipProgramResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership`, { auth: true });
+      },
+      create(code: string, body: ProgramSettings): Promise<MembershipProgramResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership`, {
+          method: 'POST',
+          body,
+          auth: true,
+        });
+      },
+      update(code: string, body: Partial<ProgramSettings>): Promise<MembershipProgramResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership`, {
+          method: 'PATCH',
+          body,
+          auth: true,
+        });
+      },
+      /** Replaces the whole scheme; thresholds must rise with position. */
+      replaceTiers(code: string, tiers: TierInput[]): Promise<MembershipProgramResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/tiers`, {
+          method: 'PUT',
+          body: { tiers },
+          auth: true,
+        });
+      },
+      publish(code: string): Promise<MembershipProgramResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/publish`, {
+          method: 'POST',
+          auth: true,
+        });
+      },
+      pause(code: string): Promise<MembershipProgramResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/pause`, {
+          method: 'POST',
+          auth: true,
+        });
+      },
+      createReward(code: string, body: RewardInput): Promise<RewardResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/rewards`, {
+          method: 'POST',
+          body,
+          auth: true,
+        });
+      },
+      updateReward(
+        code: string,
+        rewardId: UUID,
+        body: Partial<RewardInput>,
+      ): Promise<RewardResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/rewards/${seg(rewardId)}`, {
+          method: 'PATCH',
+          body,
+          auth: true,
+        });
+      },
+      stats(code: string): Promise<MembershipStatsResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/stats`, { auth: true });
+      },
+      /** Reception: marks a code as used at the counter. */
+      validateCode(code: string): Promise<RedemptionResponse> {
+        return http.request('/memberships/redemptions/validate', {
+          method: 'POST',
+          body: { code },
+          auth: true,
+        });
+      },
+    },
+
+    /** Loyalty programme, from the diner's side. */
+    myMembership: {
+      get(code: string): Promise<MembershipCardResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/me`, { auth: true });
+      },
+      join(code: string): Promise<JoinMembershipResponse> {
+        return http.request(`/restaurants/${seg(code)}/membership/join`, {
+          method: 'POST',
+          auth: true,
+        });
+      },
+      redeem(membershipId: UUID, rewardId: UUID): Promise<RedemptionResponse> {
+        return http.request(`/memberships/${seg(membershipId)}/redeem`, {
+          method: 'POST',
+          body: { rewardId },
+          auth: true,
+        });
       },
     },
 

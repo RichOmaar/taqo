@@ -131,6 +131,43 @@ export interface TierHeadcount {
   members: number;
 }
 
+// API responses.
+
+/** GET /restaurants/:code/membership — null until the owner creates one. */
+export interface GetMembershipProgramResponse {
+  program: MembershipProgram | null;
+  rewards: Reward[];
+}
+
+export interface MembershipProgramResponse {
+  program: MembershipProgram;
+}
+
+export interface RewardResponse {
+  reward: Reward;
+}
+
+export interface MembershipStatsResponse {
+  stats: MembershipStats;
+}
+
+/** GET /restaurants/:code/membership/me — the diner's own standing. */
+export interface MembershipCardResponse {
+  /** Null when the diner has not joined yet. */
+  membership: Membership | null;
+  balance: MembershipBalance | null;
+  program: MembershipProgram;
+  rewards: Reward[];
+}
+
+export interface JoinMembershipResponse {
+  membership: Membership;
+}
+
+export interface RedemptionResponse {
+  redemption: Redemption;
+}
+
 /** Program health, for the owner's analytics panel. */
 export interface MembershipStats {
   totalMembers: number;
