@@ -11,6 +11,29 @@ import { PrismaRestaurantRepository } from './contexts/restaurant/infrastructure
 import { PrismaReviewReadRepository } from './contexts/restaurant/infrastructure/prisma-review-read-repository';
 import { GetCurrentStaff } from './contexts/identity/application/get-current-staff';
 import { PrismaStaffRepository } from './contexts/identity/infrastructure/prisma-staff-repository';
+import { EnrollMember } from './contexts/memberships/application/enroll-member';
+import { ManageProgram } from './contexts/memberships/application/manage-program';
+import { RecordVisit } from './contexts/memberships/application/record-visit';
+import { RedeemReward } from './contexts/memberships/application/redeem-reward';
+import { ValidateRedemption } from './contexts/memberships/application/validate-redemption';
+import type {
+  LedgerRepository,
+  MembershipRepository,
+  ProgramRepository,
+  RewardRepository,
+} from './contexts/memberships/domain/repositories';
+import { PrismaProgramWriteRepository } from './contexts/memberships/infrastructure/prisma-program-write-repository';
+import {
+  PrismaLedgerRepository,
+  PrismaMembershipRepository,
+  PrismaProgramRepository,
+  PrismaRedemptionRepository,
+  PrismaRewardRepository,
+} from './contexts/memberships/infrastructure/prisma-repositories';
+import {
+  PrismaStatsRepository,
+  type StatsRepository,
+} from './contexts/memberships/infrastructure/prisma-stats-repository';
 import { loadEnv } from './config/env';
 import type { PushSubscriptionRepository } from './contexts/notifications/domain/push-subscription-repository';
 import { PrismaPushSubscriptionRepository } from './contexts/notifications/infrastructure/prisma-push-subscription-repository';
@@ -44,6 +67,15 @@ export interface Container {
   expireNoShows: ExpireNoShows;
   pushSubscriptions: PushSubscriptionRepository;
   vapidPublicKey: string | undefined;
+  membershipPrograms: ProgramRepository;
+  memberships: MembershipRepository;
+  membershipLedger: LedgerRepository;
+  membershipRewards: RewardRepository;
+  membershipStats: StatsRepository;
+  manageProgram: ManageProgram;
+  enrollMember: EnrollMember;
+  redeemReward: RedeemReward;
+  validateRedemption: ValidateRedemption;
 }
 
 /** Composition root: wires repositories and use cases with the given publisher. */
@@ -52,6 +84,15 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
   const restaurants = new PrismaRestaurantRepository(prisma);
   const metricsRepository = new PrismaMetricsRepository(prisma);
   const reviewReads = new PrismaReviewReadRepository(prisma);
+
+  const membershipPrograms = new PrismaProgramRepository(prisma);
+  const membershipsRepo = new PrismaMembershipRepository(prisma);
+  const membershipLedger = new PrismaLedgerRepository(prisma);
+  const membershipRewards = new PrismaRewardRepository(prisma);
+  const membershipRedemptions = new PrismaRedemptionRepository(prisma);
+  // Seating credits loyalty through waitlist's VisitRecorder port; the mapping
+  // from an entry to a visit lives at this seam, not inside either context.
+  const recordVisit = new RecordVisit(membershipPrograms, membershipsRepo, membershipLedger);
   const waitlist = new PrismaWaitlistRepository(prisma);
   const reviews = new PrismaReviewRepository(prisma);
   const pushSubscriptions = new PrismaPushSubscriptionRepository(prisma);
@@ -74,10 +115,36 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),
     listQueueEntries: new ListQueueEntries(waitlist),
     getEntry: new GetEntry(waitlist),
-    entryActions: new EntryActions(waitlist, publisher, notifier),
+    entryActions: new EntryActions(waitlist, publisher, notifier, {
+      dinerSeated: (entry) => {
+        void recordVisit
+          .execute({
+            sourceRef: `entry:${entry.id}`,
+            userId: entry.userId,
+            ownerRef: entry.restaurantId,
+            occurredAt: entry.seatedAt ? new Date(entry.seatedAt) : new Date(),
+          })
+          .catch(() => undefined);
+      },
+    }),
     submitReview: new SubmitReview(waitlist, reviews),
     expireNoShows: new ExpireNoShows(waitlist, publisher),
     pushSubscriptions,
     vapidPublicKey: env.VAPID_PUBLIC_KEY,
+    membershipPrograms,
+    memberships: membershipsRepo,
+    membershipLedger,
+    membershipRewards,
+    membershipStats: new PrismaStatsRepository(prisma),
+    manageProgram: new ManageProgram(membershipPrograms, new PrismaProgramWriteRepository(prisma)),
+    enrollMember: new EnrollMember(membershipPrograms, membershipsRepo),
+    redeemReward: new RedeemReward(
+      membershipPrograms,
+      membershipsRepo,
+      membershipLedger,
+      membershipRewards,
+      membershipRedemptions,
+    ),
+    validateRedemption: new ValidateRedemption(membershipRedemptions),
   };
 }

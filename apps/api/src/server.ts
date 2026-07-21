@@ -5,6 +5,7 @@ import express, { type Express } from 'express';
 import { auth } from './auth';
 import type { Container } from './composition';
 import { identityRouter } from './contexts/identity/interfaces/identity-router';
+import { membershipRouter } from './contexts/memberships/interfaces/membership-router';
 import { pushRouter } from './contexts/notifications/interfaces/push-router';
 import { restaurantRouter } from './contexts/restaurant/interfaces/restaurant-router';
 import { waitlistRouter } from './contexts/waitlist/interfaces/waitlist-router';
@@ -43,6 +44,20 @@ export function createServer(container: Container): Express {
       container.getEntry,
       container.entryActions,
       container.submitReview,
+    ),
+  );
+  app.use(
+    membershipRouter(
+      container.restaurants,
+      container.membershipPrograms,
+      container.memberships,
+      container.membershipLedger,
+      container.membershipRewards,
+      container.manageProgram,
+      container.enrollMember,
+      container.redeemReward,
+      container.validateRedemption,
+      container.membershipStats,
     ),
   );
   app.use(pushRouter(container.pushSubscriptions, container.vapidPublicKey));
