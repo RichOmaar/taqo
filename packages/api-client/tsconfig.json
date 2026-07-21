@@ -1,0 +1,4 @@
+{
+  "extends": "@nexa/config/tsconfig.base.json",
+  "include": ["src"]
+}
