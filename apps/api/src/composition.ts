@@ -3,12 +3,14 @@ import { GetMetricsSeries } from './contexts/restaurant/application/get-metrics-
 import { GetPeakHours } from './contexts/restaurant/application/get-peak-hours';
 import { GetReviewSummary } from './contexts/restaurant/application/get-review-summary';
 import { ListReviews } from './contexts/restaurant/application/list-reviews';
+import { ListWaitlistHistory } from './contexts/restaurant/application/list-waitlist-history';
 import { ListRestaurants } from './contexts/restaurant/application/list-restaurants';
 import { RestaurantConfig } from './contexts/restaurant/application/restaurant-config';
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
 import { PrismaMetricsRepository } from './contexts/restaurant/infrastructure/prisma-metrics-repository';
 import { PrismaRestaurantRepository } from './contexts/restaurant/infrastructure/prisma-restaurant-repository';
 import { PrismaReviewReadRepository } from './contexts/restaurant/infrastructure/prisma-review-read-repository';
+import { PrismaWaitlistHistoryReadRepository } from './contexts/restaurant/infrastructure/prisma-waitlist-history-read-repository';
 import { GetCurrentStaff } from './contexts/identity/application/get-current-staff';
 import { PrismaStaffRepository } from './contexts/identity/infrastructure/prisma-staff-repository';
 import { EnrollMember } from './contexts/memberships/application/enroll-member';
@@ -62,6 +64,7 @@ export interface Container {
   getMetricsSeries: GetMetricsSeries;
   getPeakHours: GetPeakHours;
   listReviews: ListReviews;
+  listWaitlistHistory: ListWaitlistHistory;
   getReviewSummary: GetReviewSummary;
   restaurantConfig: RestaurantConfig;
   joinWaitlist: JoinWaitlist;
@@ -93,6 +96,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
   const restaurants = new PrismaRestaurantRepository(prisma);
   const metricsRepository = new PrismaMetricsRepository(prisma);
   const reviewReads = new PrismaReviewReadRepository(prisma);
+  const historyReads = new PrismaWaitlistHistoryReadRepository(prisma);
 
   const membershipPrograms = new PrismaProgramRepository(prisma);
   const membershipsRepo = new PrismaMembershipRepository(prisma);
@@ -124,6 +128,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
     getMetricsSeries: new GetMetricsSeries(restaurants, metricsRepository),
     getPeakHours: new GetPeakHours(restaurants, metricsRepository),
     listReviews: new ListReviews(restaurants, reviewReads),
+    listWaitlistHistory: new ListWaitlistHistory(restaurants, historyReads),
     getReviewSummary: new GetReviewSummary(restaurants, reviewReads),
     restaurantConfig: new RestaurantConfig(restaurants),
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),

@@ -50,7 +50,7 @@ export interface WaitlistEntry {
   etaMinutes: number | null;
   /** True when the hostess pinned the ETA manually. */
   etaIsManual: boolean;
-  /** Answers to the restaurant's configurable form (defined in Strapi). */
+  /** Answers to the restaurant's configurable intake form (the `surveys` context). */
   formData: JsonObject;
   joinedAt: ISODateString;
   notifiedAt: ISODateString | null;

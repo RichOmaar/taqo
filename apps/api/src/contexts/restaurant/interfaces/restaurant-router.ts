@@ -3,6 +3,7 @@ import type {
   GetMetricsSeriesResponse,
   GetPeakHoursResponse,
   ListReviewsResponse,
+  ListWaitlistHistoryResponse,
   GetRestaurantResponse,
   ListRestaurantsResponse,
   QueueResponse,
@@ -20,6 +21,7 @@ import type { GetMetricsSeries } from '../application/get-metrics-series';
 import type { GetPeakHours } from '../application/get-peak-hours';
 import type { GetReviewSummary } from '../application/get-review-summary';
 import type { ListReviews } from '../application/list-reviews';
+import type { ListWaitlistHistory } from '../application/list-waitlist-history';
 import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
@@ -41,6 +43,14 @@ const metricsSeriesQuerySchema = metricsQuerySchema.extend({
 
 const listReviewsQuerySchema = metricsQuerySchema.extend({
   rating: z.coerce.number().int().min(1).max(5).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  cursor: z.string().min(1).optional(),
+});
+
+const waitlistHistoryQuerySchema = metricsQuerySchema.extend({
+  status: z.string().min(1).optional(),
+  queueId: z.string().uuid().optional(),
+  search: z.string().max(100).optional(),
   limit: z.coerce.number().int().min(1).max(100).optional(),
   cursor: z.string().min(1).optional(),
 });
@@ -71,6 +81,7 @@ export function restaurantRouter(
   peakHours: GetPeakHours,
   listReviews: ListReviews,
   reviewSummary: GetReviewSummary,
+  waitlistHistory: ListWaitlistHistory,
   config: RestaurantConfig,
 ): Router {
   const router = Router();
@@ -188,6 +199,31 @@ export function restaurantRouter(
           },
           timezone: result.timezone,
         };
+        res.json(response);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.get(
+    '/restaurants/:code/waitlist/history',
+    requireStaff,
+    scopeByCode,
+    async (req, res, next) => {
+      try {
+        const code = req.params.code;
+        if (!code) throw new ValidationError('Missing restaurant code');
+
+        const parsed = waitlistHistoryQuerySchema.safeParse(req.query);
+        if (!parsed.success) {
+          throw new ValidationError('Invalid history query', { issues: parsed.error.issues });
+        }
+
+        const response: ListWaitlistHistoryResponse = await waitlistHistory.execute(
+          code,
+          parsed.data,
+        );
         res.json(response);
       } catch (error) {
         next(error);

@@ -1,5 +1,6 @@
 import type { ISODateString, JsonObject, UUID } from './common';
 import type { Queue, Restaurant, ServiceReview, StaffUser, WaitlistEntry } from './entities';
+import type { WaitlistStatus } from './enums';
 
 // REST request/response contracts shared between the backend and the frontends.
 
@@ -144,6 +145,42 @@ export interface ListReviewsResponse {
   /** Newest first. */
   reviews: RestaurantReview[];
   /** Pass back as `cursor` for the next page; null when the list is exhausted. */
+  nextCursor: string | null;
+}
+
+/** Filters for the waitlist history list. */
+export interface WaitlistHistoryQuery {
+  from?: Date;
+  to?: Date;
+  status?: WaitlistStatus;
+  queueId?: UUID;
+  /** Case-insensitive match on the diner's name. */
+  search?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+/** One past visit, flattened for the history table. */
+export interface WaitlistHistoryEntry {
+  id: UUID;
+  queueId: UUID;
+  /** Denormalised so the table does not need a second lookup per row. */
+  queueName: string;
+  displayName: string;
+  partySize: number;
+  status: WaitlistStatus;
+  joinedAt: ISODateString;
+  notifiedAt: ISODateString | null;
+  seatedAt: ISODateString | null;
+  /** Minutes from joining to being seated; null unless the diner was seated. */
+  waitMinutes: number | null;
+}
+
+/** GET /restaurants/:code/waitlist/history (staff). */
+export interface ListWaitlistHistoryResponse {
+  /** Newest first. */
+  entries: WaitlistHistoryEntry[];
+  /** Pass back as `cursor` for the next page; null when exhausted. */
   nextCursor: string | null;
 }
 

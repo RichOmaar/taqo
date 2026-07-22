@@ -12,6 +12,8 @@ import type {
   GetRestaurantResponse,
   JoinMembershipResponse,
   ListReviewsResponse,
+  ListWaitlistHistoryResponse,
+  WaitlistHistoryQuery,
   MembershipCardResponse,
   MembershipProgramResponse,
   MembershipStatsResponse,
@@ -112,7 +114,7 @@ export interface ReviewListQuery extends MetricsRangeQuery {
   cursor?: string;
 }
 
-type Query = ReviewListQuery & { bucket?: string };
+type Query = ReviewListQuery & WaitlistHistoryQuery & { bucket?: string };
 
 /** Builds a query string, omitting absent values so defaults stay server-side. */
 function query(params?: Query): string {
@@ -124,6 +126,9 @@ function query(params?: Query): string {
   if (params.rating !== undefined) search.set('rating', String(params.rating));
   if (params.limit !== undefined) search.set('limit', String(params.limit));
   if (params.cursor) search.set('cursor', params.cursor);
+  if (params.status) search.set('status', params.status);
+  if (params.queueId) search.set('queueId', params.queueId);
+  if (params.search) search.set('search', params.search);
   const encoded = search.toString();
   return encoded ? `?${encoded}` : '';
 }
@@ -224,6 +229,14 @@ export function createApiClient(options: ApiClientOptions) {
         });
       },
       /** Reviews, newest first. Pass `nextCursor` back to page. */
+      waitlistHistory(
+        code: string,
+        options?: WaitlistHistoryQuery,
+      ): Promise<ListWaitlistHistoryResponse> {
+        return http.request(`/restaurants/${seg(code)}/waitlist/history${query(options)}`, {
+          auth: true,
+        });
+      },
       reviews(code: string, options?: ReviewListQuery): Promise<ListReviewsResponse> {
         return http.request(`/restaurants/${seg(code)}/reviews${query(options)}`, { auth: true });
       },
