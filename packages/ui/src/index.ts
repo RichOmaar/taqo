@@ -13,6 +13,7 @@ export * from './components/EmptyState';
 export * from './components/NavItem';
 export * from './components/ReviewCard';
 export * from './components/Slider';
+export * from './components/SortableList';
 export * from './components/StatCard';
 export * from './components/Toggle';
 export * from './components/Sidebar';

@@ -19,6 +19,13 @@ import type {
   RedemptionResponse,
   ReviewSummaryResponse,
   RewardResponse,
+  ListSurveysResponse,
+  SubmitSurveyResponse,
+  Survey,
+  SurveyAnswer,
+  SurveyPurpose,
+  SurveyResponsePayload,
+  SurveyStatsResponse,
   TierMetric,
   TierPeriod,
   JoinWaitlistRequest,
@@ -76,6 +83,24 @@ export interface RewardInput {
   minTierPosition: number | null;
   limitPerMember: number | null;
   isActive: boolean;
+}
+
+/** A survey as the owner creates it. */
+export interface SurveyInput {
+  purpose: SurveyPurpose;
+  title: string;
+  description: string | null;
+}
+
+/** A question as the builder sends it; `id` is absent for a new one. */
+export interface QuestionInput {
+  id?: string;
+  type: Survey['questions'][number]['type'];
+  label: string;
+  helpText: string | null;
+  required: boolean;
+  position: number;
+  config: Survey['questions'][number]['config'];
 }
 
 /** Filters for the review list. */
@@ -306,6 +331,62 @@ export function createApiClient(options: ApiClientOptions) {
           method: 'POST',
           body: { code },
           auth: true,
+        });
+      },
+    },
+
+    /** Configurable forms: the intake form and the post-visit survey. */
+    surveys: {
+      list(code: string): Promise<ListSurveysResponse> {
+        return http.request(`/restaurants/${seg(code)}/surveys`, { auth: true });
+      },
+      create(code: string, body: SurveyInput): Promise<SurveyResponsePayload> {
+        return http.request(`/restaurants/${seg(code)}/surveys`, {
+          method: 'POST',
+          body,
+          auth: true,
+        });
+      },
+      replaceQuestions(
+        code: string,
+        purpose: SurveyPurpose,
+        questions: QuestionInput[],
+      ): Promise<SurveyResponsePayload> {
+        return http.request(`/restaurants/${seg(code)}/surveys/${seg(purpose)}/questions`, {
+          method: 'PUT',
+          body: { questions },
+          auth: true,
+        });
+      },
+      publish(code: string, purpose: SurveyPurpose): Promise<SurveyResponsePayload> {
+        return http.request(`/restaurants/${seg(code)}/surveys/${seg(purpose)}/publish`, {
+          method: 'POST',
+          auth: true,
+        });
+      },
+      close(code: string, purpose: SurveyPurpose): Promise<SurveyResponsePayload> {
+        return http.request(`/restaurants/${seg(code)}/surveys/${seg(purpose)}/close`, {
+          method: 'POST',
+          auth: true,
+        });
+      },
+      stats(code: string, purpose: SurveyPurpose): Promise<SurveyStatsResponse> {
+        return http.request(`/restaurants/${seg(code)}/surveys/${seg(purpose)}/stats`, {
+          auth: true,
+        });
+      },
+      /** The live definition, if any. Open: a diner may have no account yet. */
+      active(code: string, purpose: SurveyPurpose): Promise<{ survey: Survey | null }> {
+        return http.request(`/restaurants/${seg(code)}/surveys/${seg(purpose)}/active`);
+      },
+      submit(
+        surveyId: UUID,
+        subjectRef: string | null,
+        answers: SurveyAnswer[],
+      ): Promise<SubmitSurveyResponse> {
+        return http.request(`/surveys/${seg(surveyId)}/responses`, {
+          method: 'POST',
+          body: { subjectRef, answers },
         });
       },
     },

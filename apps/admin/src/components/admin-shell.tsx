@@ -20,7 +20,7 @@ const NAV = [
   { href: '/', label: 'Panel', enabled: true },
   { href: '/lista-de-espera', label: 'Lista de espera', enabled: false },
   { href: '/resenas', label: 'Reseñas', enabled: false },
-  { href: '/encuestas', label: 'Encuestas', enabled: false },
+  { href: '/encuestas', label: 'Encuestas', enabled: true },
   { href: '/membresias', label: 'Membresías', enabled: true },
   { href: '/configuracion', label: 'Configuración', enabled: true },
   { href: '/plan', label: 'Plan', enabled: false },
