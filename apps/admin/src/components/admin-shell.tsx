@@ -23,7 +23,7 @@ const NAV = [
   { href: '/encuestas', label: 'Encuestas', enabled: true },
   { href: '/membresias', label: 'Membresías', enabled: true },
   { href: '/configuracion', label: 'Configuración', enabled: true },
-  { href: '/plan', label: 'Plan', enabled: false },
+  { href: '/plan', label: 'Plan', enabled: true },
 ] as const;
 
 function isActive(pathname: string, href: string): boolean {
