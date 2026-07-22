@@ -18,7 +18,7 @@ import { RequireSession } from './require-session';
  */
 const NAV = [
   { href: '/', label: 'Panel', enabled: true },
-  { href: '/lista-de-espera', label: 'Lista de espera', enabled: false },
+  { href: '/lista-de-espera', label: 'Lista de espera', enabled: true },
   { href: '/resenas', label: 'Reseñas', enabled: true },
   { href: '/encuestas', label: 'Encuestas', enabled: true },
   { href: '/membresias', label: 'Membresías', enabled: true },
