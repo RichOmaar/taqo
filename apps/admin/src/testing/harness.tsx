@@ -25,6 +25,8 @@ export interface RouteRequest {
   method: string;
   path: string;
   body: unknown;
+  /** Raw query string, without the `?`. Filters and cursors live here. */
+  query: string;
 }
 
 /** Requests the harness answered, in order. Assert against this. */
@@ -45,7 +47,10 @@ export interface Harness {
  */
 export function renderAdmin(ui: ReactElement, initialRoutes: Routes = {}): Harness {
   let routes: Routes = {
-    'GET /me': { user: { id: 'u1', name: 'Dueña', email: 'owner@demo.nexa' }, restaurant: RESTAURANT },
+    'GET /me': {
+      user: { id: 'u1', name: 'Dueña', email: 'owner@demo.nexa' },
+      restaurant: RESTAURANT,
+    },
     ...initialRoutes,
   };
   const calls: RecordedCall[] = [];
@@ -55,8 +60,9 @@ export function renderAdmin(ui: ReactElement, initialRoutes: Routes = {}): Harne
     const method = (init?.method ?? 'GET').toUpperCase();
     const path = url.pathname;
     const body = init?.body ? JSON.parse(String(init.body)) : undefined;
+    const search = url.search.replace(/^\?/, '');
 
-    calls.push({ method, path, body });
+    calls.push({ method, path, body, query: search });
 
     const key = `${method} ${path}`;
     const answer = routes[key];
@@ -67,12 +73,10 @@ export function renderAdmin(ui: ReactElement, initialRoutes: Routes = {}): Harne
       return jsonResponse({ error: { code: 'no_stub', message: `No stub for ${key}` } }, 404);
     }
 
-    const resolved = typeof answer === 'function' ? answer({ method, path, body }) : answer;
+    const resolved =
+      typeof answer === 'function' ? answer({ method, path, body, query: search }) : answer;
     if (resolved instanceof Error) {
-      return jsonResponse(
-        { error: { code: 'test_error', message: resolved.message } },
-        400,
-      );
+      return jsonResponse({ error: { code: 'test_error', message: resolved.message } }, 400);
     }
 
     return jsonResponse(resolved, 200);
