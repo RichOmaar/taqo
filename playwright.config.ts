@@ -24,7 +24,13 @@ export default defineConfig({
     {
       command: 'pnpm --filter @nexa/api start',
       port: API_PORT,
-      env: { DATABASE_URL: TEST_DB_URL, API_PORT: String(API_PORT) },
+      env: {
+        DATABASE_URL: TEST_DB_URL,
+        API_PORT: String(API_PORT),
+        // The apps run on e2e-specific ports, which BetterAuth rejects as
+        // untrusted origins unless they are declared here.
+        TRUSTED_ORIGINS: `http://localhost:${CLIENT_PORT},http://localhost:${RECEPTION_PORT}`,
+      },
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,
     },

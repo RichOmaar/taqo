@@ -19,11 +19,14 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true },
   // Rate limiting is a production concern; disabling it in dev avoids noisy 403s.
   rateLimit: { enabled: env.NODE_ENV === 'production' },
-  trustedOrigins: ['http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'],
+  trustedOrigins: env.TRUSTED_ORIGINS,
   user: {
     additionalFields: {
       // Not settable at sign-up (input: false); staff roles are assigned by seed/admin.
       role: { type: 'string', required: false, defaultValue: 'diner', input: false },
+      // Restaurant a staff user is scoped to; null for diners. Carried on the
+      // session so authorization does not need a database round trip.
+      restaurantId: { type: 'string', required: false, input: false },
     },
   },
   plugins: [bearer()],

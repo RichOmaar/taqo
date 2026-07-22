@@ -1,32 +1,50 @@
-import type { EntryAddedPayload, EntryRemovedPayload, EntryUpdatedPayload } from '@nexa/types';
-import { WS_EVENTS, entryRoom, queueRoom } from '@nexa/types';
+import type {
+  EntryAddedPayload,
+  EntryRemovedPayload,
+  EntryUpdatedPayload,
+  SubscribeEntryPayload,
+  SubscribeQueuePayload,
+} from '@nexa/types';
+import { WS_CLIENT_EVENTS, WS_EVENTS, entryRoom, queueRoom } from '@nexa/types';
 import type { Server as IOServer, Socket } from 'socket.io';
 
 import { auth } from '../auth';
 import type { WaitlistEventPublisher } from '../contexts/waitlist/application/ports';
 
-interface QueueSubscribePayload {
-  restaurantId: string;
-  queueId: string;
+const STAFF_ROLES = new Set<string>(['admin', 'hostess']);
+
+/** Staff identity carried by a socket handshake. */
+export interface SocketStaff {
+  role: string;
+  restaurantId: string | null;
 }
 
-interface EntrySubscribePayload {
-  entryId: string;
+/**
+ * Whether a socket may join a restaurant's queue room.
+ *
+ * Pure so the authorization rule is testable without a socket or a session:
+ * being staff is not enough, it must be staff *of that restaurant*.
+ */
+export function canSubscribeToQueue(staff: SocketStaff | null, restaurantId: string): boolean {
+  if (!staff) return false;
+  if (!STAFF_ROLES.has(staff.role)) return false;
+  if (!staff.restaurantId) return false;
+  return staff.restaurantId === restaurantId;
 }
 
-const STAFF_ROLES = new Set(['admin', 'hostess']);
-
-async function isStaff(socket: Socket): Promise<boolean> {
+async function resolveStaff(socket: Socket): Promise<SocketStaff | null> {
   try {
     const token = (socket.handshake.auth as { token?: string } | undefined)?.token;
-    if (!token) return false;
+    if (!token) return null;
     const session = await auth.api.getSession({
       headers: new Headers({ authorization: `Bearer ${token}` }),
     });
-    const role = (session?.user as { role?: string | null } | undefined)?.role ?? 'diner';
-    return Boolean(session?.user) && STAFF_ROLES.has(role);
+    const user = session?.user as
+      { role?: string | null; restaurantId?: string | null } | undefined;
+    if (!user) return null;
+    return { role: user.role ?? 'diner', restaurantId: user.restaurantId ?? null };
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -37,16 +55,17 @@ async function isStaff(socket: Socket): Promise<boolean> {
  */
 export function setupWaitlistGateway(io: IOServer): void {
   io.on('connection', (socket: Socket) => {
-    socket.on('subscribe', (payload: QueueSubscribePayload) => {
+    socket.on(WS_CLIENT_EVENTS.SUBSCRIBE_QUEUE, (payload: SubscribeQueuePayload) => {
       void (async () => {
         if (!payload?.restaurantId || !payload?.queueId) return;
-        if (await isStaff(socket)) {
+        const staff = await resolveStaff(socket);
+        if (canSubscribeToQueue(staff, payload.restaurantId)) {
           await socket.join(queueRoom(payload.restaurantId, payload.queueId));
         }
       })();
     });
 
-    socket.on('subscribe-entry', (payload: EntrySubscribePayload) => {
+    socket.on(WS_CLIENT_EVENTS.SUBSCRIBE_ENTRY, (payload: SubscribeEntryPayload) => {
       if (payload?.entryId) void socket.join(entryRoom(payload.entryId));
     });
   });

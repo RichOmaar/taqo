@@ -29,7 +29,8 @@ una experiencia de usuario excelente y tiempo real fluido.
 4. **TypeScript de punta a punta.** Sin `any` salvo justificación explícita.
 5. **Tiempo real de primera clase.** La cola se actualiza vía WebSockets; la UI nunca
    debe depender de recargar la página para reflejar cambios.
-6. **Separación de responsabilidades Strapi ↔ backend** (ver más abajo).
+6. **Todo el estado y el contenido viven en el backend DDD.** Strapi está aplazado
+   y `apps/cms` no existe todavía (ver «Strapi: aplazado»).
 7. **Simplicidad primero.** Estamos en MVP. No introduzcas microservicios, colas de
    mensajes, ni complejidad de infraestructura sin una razón concreta.
 
@@ -40,7 +41,7 @@ una experiencia de usuario excelente y tiempo real fluido.
 - **Backend:** Node.js + Express (TypeScript), con WebSockets integrados en el
   mismo proceso
 - **ORM / datos:** Prisma sobre PostgreSQL
-- **CMS:** Strapi (formularios configurables + contenidos de usuario)
+- **CMS:** ninguno por ahora — Strapi aplazado (ver «Strapi: aplazado»)
 - **Auth:** BetterAuth (modo guest y registrado)
 - **Notificaciones:** web push (gratis) + SMS/WhatsApp vía Twilio (de pago)
 
@@ -53,8 +54,8 @@ nexa/
 │   ├── client/          # Webapp cliente (móvil) — Next.js
 │   ├── reception/       # Webapp hostess (tablet/desktop) — Next.js
 │   ├── admin/           # Panel dueño (desktop) — Next.js
-│   ├── api/             # Backend Node/Express + WebSockets (DDD)
-│   └── cms/             # Strapi (formularios + contenidos de usuario)
+│   └── api/             # Backend Node/Express + WebSockets (DDD)
+│                       # (no hay apps/cms: Strapi está aplazado)
 ├── packages/
 │   ├── types/           # Tipos y contratos compartidos (DTOs, eventos WS)
 │   ├── config/          # Config compartida (tsconfig, eslint, prettier)
@@ -92,6 +93,13 @@ nexa/
   del restaurante. Integración con Twilio.
 - **`identity`** — autenticación y usuarios. BetterAuth. Modo guest (con nombre tipo
   gamertag) y registrado con correo. Staff (hostess/admin).
+- **`surveys`** — formularios configurables, genéricos por diseño. Un `Survey` tiene
+  un `purpose` (`intake` al anotarse, `feedback` post-visita), preguntas tipadas y una
+  definición **versionada**: cambiar lo que una pregunta significa sube la versión, para
+  que las respuestas viejas se sigan leyendo con la definición bajo la que se dieron.
+- **`memberships`** — programa de lealtad por restaurante: niveles, puntos y premios.
+  El saldo se **deriva de un ledger append-only**, nunca se guarda como contador
+  mutable, de modo que cada punto es auditable y disputable.
 
 ### Capas dentro de cada bounded context
 
@@ -104,7 +112,7 @@ apps/api/src/contexts/<context>/
 ├── application/      # Casos de uso / servicios de aplicación. Orquestan el dominio.
 │                     # Definen puertos (interfaces) que la infraestructura implementa.
 ├── infrastructure/   # Implementaciones concretas: repos con Prisma, clientes Twilio,
-│                     # adaptadores a Strapi, etc.
+│                     # y, el día que se incorpore, adaptadores a Strapi.
 └── interfaces/       # Entrada/salida: controladores HTTP (Express), handlers de
                       # WebSocket, mapeo DTO ↔ dominio.
 ```
@@ -160,21 +168,38 @@ Reglas al construir UI:
    `packages/types`). Crea un package nuevo solo cuando el patrón se repite; no
    sobre-abstraigas en el MVP.
 
-## Strapi ↔ backend: frontera de responsabilidades
+## Strapi: aplazado (leer antes de asumir que existe)
 
-Para no duplicar responsabilidades, respetar esta división:
+**Hoy no hay `apps/cms` y nada consume Strapi.** Todo — estado operativo y
+contenido configurable por igual — vive en el backend DDD (`apps/api`). Si algo en
+la documentación describe un CMS en funcionamiento, esa parte está desactualizada;
+manda el código.
 
-- **Strapi (`apps/cms`) es dueño del CONTENIDO editable:**
-  - Definiciones de los formularios de registro configurables por restaurante.
-  - Contenidos de usuario: catálogo de restaurantes (descripciones, imágenes,
-    categorías), textos y páginas editables.
-- **El backend DDD (`apps/api`) es dueño del ESTADO operativo y transaccional:**
-  - Quién está en la cola, en qué estado, posición, ETA.
-  - Métricas, notificaciones, autenticación.
+Lo que en el plan original iba a Strapi está implementado como bounded contexts:
 
-El backend consume Strapi como fuente de definiciones/contenidos cuando lo necesita.
-Los frontends pueden leer contenido publicado de Strapi directamente cuando aplique
-(ej. mostrar el catálogo), pero **toda operación sobre la cola pasa por el backend**.
+| Responsabilidad                   | Dónde vive hoy                           |
+| --------------------------------- | ---------------------------------------- |
+| Formularios de alta configurables | contexto `surveys` (`purpose: intake`)   |
+| Encuesta post-visita              | contexto `surveys` (`purpose: feedback`) |
+| Catálogo de restaurantes, textos  | contexto `restaurant` (`apps/api`)       |
+
+**Por qué.** Las encuestas no son sólo contenido: sus respuestas se validan contra
+una definición versionada y alimentan métricas. Esa regla vive en el dominio, no en
+un CMS. Montar Strapi para el MVP habría partido la fuente de verdad en dos sin
+resolver ningún problema que tuviéramos.
+
+**Cuándo incorporarlo.** Cuando aparezca contenido genuinamente editorial —
+landings por restaurante, textos con flujo de aprobación, media library — es decir,
+cuando alguien que no es desarrollador necesite publicar sin desplegar.
+
+**Cómo, llegado el caso.** Los frontends hablan con el backend a través de
+`packages/api-client`, y cada contexto define sus puertos en `domain`/`application`.
+Migrar significa escribir un adaptador a Strapi en `infrastructure` y dejar el resto
+intacto: es un cambio de implementación, no de arquitectura. Ese desacople es la
+razón de que aplazarlo sea barato.
+
+Regla que se mantiene pase lo que pase: **toda operación sobre la cola pasa por el
+backend.**
 
 ## Modelo de datos (referencia)
 
@@ -187,7 +212,8 @@ compleja en el MVP).
 ## Reglas de negocio clave (no romper)
 
 - **Alta flexible:** el comensal entra por QR, código o catálogo; en modo guest
-  (nombre tipo gamertag o propio) o registrado. El formulario es configurable (Strapi).
+  (nombre tipo gamertag o propio) o registrado. El formulario es configurable desde
+  el panel del dueño (contexto `surveys`, `purpose: intake`).
 - **Múltiples colas** por restaurante desde el MVP (ej. General, VIP, Visitante).
 - **ETA:** arranca con un estimado **sintético** (valor base por restaurante) y se
   ajusta de forma **dinámica** con datos reales de rotación. La hostess puede fijar un
@@ -237,7 +263,8 @@ compleja en el MVP).
 - Duplicar lógica entre las tres apps (extráela a `packages/`).
 - Acceder a la base de datos desde los frontends (siempre vía backend).
 - Introducir dependencias pesadas o infraestructura nueva sin justificarlo.
-- Confundir responsabilidades entre Strapi (contenido) y backend (estado operativo).
+- Dar por hecho que Strapi existe: hoy no hay `apps/cms`. Antes de "integrarlo",
+  lee «Strapi: aplazado».
 
 ## Comandos (referencia; ajustar al implementar)
 
@@ -246,7 +273,6 @@ pnpm install                 # instalar todo el monorepo
 pnpm dev                     # levantar apps en desarrollo (ajustar según scripts)
 pnpm --filter client dev     # levantar solo la webapp cliente
 pnpm --filter api dev        # levantar solo el backend
-pnpm --filter cms develop    # levantar Strapi
 pnpm lint                    # lint en todo el monorepo
 pnpm test                    # tests
 ```

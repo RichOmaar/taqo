@@ -5,7 +5,7 @@ import { Button, Card, Input } from '@nexa/ui';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { listRestaurants } from '../../lib/api';
+import { api } from '../../lib/nexa';
 
 export default function CatalogPage() {
   const router = useRouter();
@@ -15,7 +15,8 @@ export default function CatalogPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    listRestaurants()
+    api.restaurants
+      .list()
       .then((data) => setRestaurants(data.restaurants))
       .catch(() => setError('No pudimos cargar el catálogo.'));
   }, []);

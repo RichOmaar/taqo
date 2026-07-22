@@ -4,6 +4,9 @@ import express, { type Express } from 'express';
 
 import { auth } from './auth';
 import type { Container } from './composition';
+import { identityRouter } from './contexts/identity/interfaces/identity-router';
+import { membershipRouter } from './contexts/memberships/interfaces/membership-router';
+import { surveyRouter } from './contexts/surveys/interfaces/survey-router';
 import { pushRouter } from './contexts/notifications/interfaces/push-router';
 import { restaurantRouter } from './contexts/restaurant/interfaces/restaurant-router';
 import { waitlistRouter } from './contexts/waitlist/interfaces/waitlist-router';
@@ -22,11 +25,18 @@ export function createServer(container: Container): Express {
   app.use(express.json());
 
   app.use('/health', healthRouter);
+  app.use(identityRouter(container.getCurrentStaff));
   app.use(
     restaurantRouter(
       container.restaurants,
       container.listRestaurants,
       container.getMetrics,
+      container.getMetricsSeries,
+      container.getPeakHours,
+      container.listReviews,
+      container.getReviewSummary,
+      container.listWaitlistHistory,
+      container.removeQueue,
       container.restaurantConfig,
     ),
   );
@@ -37,6 +47,29 @@ export function createServer(container: Container): Express {
       container.getEntry,
       container.entryActions,
       container.submitReview,
+    ),
+  );
+  app.use(
+    membershipRouter(
+      container.restaurants,
+      container.membershipPrograms,
+      container.memberships,
+      container.membershipLedger,
+      container.membershipRewards,
+      container.manageProgram,
+      container.enrollMember,
+      container.redeemReward,
+      container.validateRedemption,
+      container.membershipStats,
+    ),
+  );
+  app.use(
+    surveyRouter(
+      container.restaurants,
+      container.surveys,
+      container.surveyResponses,
+      container.manageSurvey,
+      container.submitSurveyResponse,
     ),
   );
   app.use(pushRouter(container.pushSubscriptions, container.vapidPublicKey));

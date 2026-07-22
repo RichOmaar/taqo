@@ -1,5 +1,6 @@
-import type { JsonObject, UUID } from './common';
-import type { Queue, Restaurant, ServiceReview, WaitlistEntry } from './entities';
+import type { ISODateString, JsonObject, UUID } from './common';
+import type { Queue, Restaurant, ServiceReview, StaffUser, WaitlistEntry } from './entities';
+import type { WaitlistStatus } from './enums';
 
 // REST request/response contracts shared between the backend and the frontends.
 
@@ -23,23 +24,180 @@ export interface ListRestaurantsResponse {
   restaurants: RestaurantSummary[];
 }
 
-/** Owner dashboard KPIs. */
+/**
+ * GET /me (staff) — the signed-in staff user and the restaurant they manage.
+ * Lets a frontend resolve its restaurant from the session instead of
+ * hardcoding a code.
+ */
+export interface GetCurrentStaffResponse {
+  user: StaffUser;
+  restaurant: Restaurant;
+}
+
+/**
+ * Owner dashboard KPIs.
+ *
+ * Each ratio ships with the count it was computed from. Without them a rate of
+ * 0 is ambiguous — no no-shows out of two hundred covers reads identically to
+ * no data at all — and the dashboard cannot tell a real figure from an empty
+ * one.
+ */
 export interface RestaurantMetrics {
   /** Average wait (join → seated), in minutes; null with no data. */
   averageWaitMinutes: number | null;
-  /** Diners who joined today. */
-  peopleToday: number;
+  /** Seated entries the average wait was computed from. */
+  seatedCount: number;
+  /** Diners who joined within the requested range. */
+  peopleJoined: number;
   /** no_show / resolved entries (0–1). */
   noShowRate: number;
   /** seated / resolved entries (0–1). */
   seatedConversion: number;
+  /** Resolved entries (seated + no-show + cancelled) behind both ratios. */
+  resolvedCount: number;
   /** Average service rating (1–5); null with no reviews. */
   averageRating: number | null;
+  /** Reviews the average rating was computed from. */
+  reviewCount: number;
 }
 
-/** GET /restaurants/:code/metrics (staff). */
+/** The window a metric was computed over. `to` is exclusive. */
+export interface MetricsRange {
+  from: ISODateString;
+  to: ISODateString;
+}
+
+/** GET /restaurants/:code/metrics?from=&to= (staff). */
 export interface GetMetricsResponse {
   metrics: RestaurantMetrics;
+  /** Echoes the resolved window, since the default is server-side. */
+  range: MetricsRange;
+  /**
+   * The same metrics over the equally long window immediately before, for
+   * period-over-period comparison. The UI computes the deltas: it knows which
+   * direction is good news for each metric, which the API does not.
+   */
+  previous: RestaurantMetrics;
+  previousRange: MetricsRange;
+}
+
+/** Bucket size for a metrics time series. */
+export const METRICS_BUCKETS = ['hour', 'day'] as const;
+export type MetricsBucket = (typeof METRICS_BUCKETS)[number];
+
+/** One bucket of the volume series. */
+export interface MetricsSeriesPoint {
+  /** Start of the bucket, as an instant. */
+  at: ISODateString;
+  /** Diners who joined during the bucket. */
+  joined: number;
+  /** Of those, how many were seated. */
+  seated: number;
+}
+
+/** GET /restaurants/:code/metrics/timeseries?from=&to=&bucket= (staff). */
+export interface GetMetricsSeriesResponse {
+  /** Every bucket in the range, including empty ones, oldest first. */
+  points: MetricsSeriesPoint[];
+  bucket: MetricsBucket;
+  range: MetricsRange;
+  /** Zone the buckets are aligned to, so the UI labels them consistently. */
+  timezone: string;
+}
+
+/** One cell of the peak-hours heatmap. */
+export interface PeakHourCell {
+  /** 0 = Monday … 6 = Sunday, in the restaurant's zone. */
+  dayOfWeek: number;
+  /** 0–23, local hour. */
+  hour: number;
+  joined: number;
+}
+
+/** GET /restaurants/:code/metrics/peak-hours?from=&to= (staff). */
+export interface GetPeakHoursResponse {
+  /** The full 7 × 24 grid, Monday 00:00 first, so the UI never has holes. */
+  cells: PeakHourCell[];
+  /** Busiest cell in the grid, for scaling the colour ramp. */
+  busiest: number;
+  range: MetricsRange;
+  timezone: string;
+}
+
+/**
+ * A review as the owner reads it.
+ *
+ * Carries the diner's display name, which lives on the entry rather than the
+ * review, so the dashboard does not have to fetch entries separately.
+ */
+export interface RestaurantReview {
+  id: UUID;
+  entryId: UUID;
+  displayName: string;
+  /** 1–5. */
+  rating: number;
+  feedback: string | null;
+  createdAt: ISODateString;
+}
+
+/** GET /restaurants/:code/reviews?from=&to=&rating=&limit=&cursor= (staff). */
+export interface ListReviewsResponse {
+  /** Newest first. */
+  reviews: RestaurantReview[];
+  /** Pass back as `cursor` for the next page; null when the list is exhausted. */
+  nextCursor: string | null;
+}
+
+/** Filters for the waitlist history list. */
+export interface WaitlistHistoryQuery {
+  from?: Date;
+  to?: Date;
+  status?: WaitlistStatus;
+  queueId?: UUID;
+  /** Case-insensitive match on the diner's name. */
+  search?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+/** One past visit, flattened for the history table. */
+export interface WaitlistHistoryEntry {
+  id: UUID;
+  queueId: UUID;
+  /** Denormalised so the table does not need a second lookup per row. */
+  queueName: string;
+  displayName: string;
+  partySize: number;
+  status: WaitlistStatus;
+  joinedAt: ISODateString;
+  notifiedAt: ISODateString | null;
+  seatedAt: ISODateString | null;
+  /** Minutes from joining to being seated; null unless the diner was seated. */
+  waitMinutes: number | null;
+}
+
+/** GET /restaurants/:code/waitlist/history (staff). */
+export interface ListWaitlistHistoryResponse {
+  /** Newest first. */
+  entries: WaitlistHistoryEntry[];
+  /** Pass back as `cursor` for the next page; null when exhausted. */
+  nextCursor: string | null;
+}
+
+/** How many reviews gave each rating. */
+export interface RatingCount {
+  rating: number;
+  count: number;
+}
+
+/** GET /restaurants/:code/reviews/summary?from=&to= (staff). */
+export interface ReviewSummaryResponse {
+  /** Null when there are no reviews in the window. */
+  average: number | null;
+  total: number;
+  /** Always all five ratings, so the bars have no holes. */
+  distribution: RatingCount[];
+  range: MetricsRange;
 }
 
 /** PATCH /restaurants/:code — update editable restaurant config. */
@@ -52,14 +210,28 @@ export interface UpdateRestaurantConfigRequest {
 /** POST /restaurants/:code/queues — add a queue. */
 export interface AddQueueRequest {
   name: string;
+  description?: string | null;
   priority?: number;
 }
 
 /** PATCH /queues/:id — update a queue. */
 export interface UpdateQueueRequest {
   name?: string;
+  description?: string | null;
   priority?: number;
   isActive?: boolean;
+}
+
+/**
+ * DELETE /queues/:id (staff).
+ *
+ * `deactivated` means the queue had history worth keeping, so it was hidden
+ * rather than removed. Either way it is gone from the diner's options.
+ */
+export interface RemoveQueueResponse {
+  restaurant: Restaurant;
+  queues: Queue[];
+  outcome: 'deleted' | 'deactivated';
 }
 
 export interface QueueResponse {

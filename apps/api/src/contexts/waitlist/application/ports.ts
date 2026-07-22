@@ -16,3 +16,15 @@ export interface WaitlistEventPublisher {
 export interface DinerNotifier {
   tableReady(entry: WaitlistEntry): void;
 }
+
+/**
+ * Outbound port for crediting a loyalty visit (implemented by the memberships
+ * context).
+ *
+ * Declared here so waitlist never imports memberships: seating a diner is the
+ * core loop and must not depend on a programme existing, or on it succeeding.
+ * The default binding is a no-op.
+ */
+export interface VisitRecorder {
+  dinerSeated(entry: WaitlistEntry): void;
+}

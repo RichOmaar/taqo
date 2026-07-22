@@ -2,6 +2,7 @@ import type { Queue } from '@nexa/types';
 
 import { NotFoundError } from '../../../shared/errors';
 import type {
+  NewQueue,
   QueueUpdate,
   RestaurantConfigUpdate,
   RestaurantRepository,
@@ -18,9 +19,9 @@ export class RestaurantConfig {
     return this.load(code);
   }
 
-  async addQueue(code: string, name: string, priority: number): Promise<RestaurantWithQueues> {
+  async addQueue(code: string, data: NewQueue): Promise<RestaurantWithQueues> {
     const id = await this.requireId(code);
-    await this.restaurants.addQueue(id, { name, priority });
+    await this.restaurants.addQueue(id, data);
     return this.load(code);
   }
 

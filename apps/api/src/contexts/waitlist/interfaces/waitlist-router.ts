@@ -13,6 +13,7 @@ import { z } from 'zod';
 
 import { auth } from '../../../auth';
 import { requireStaff } from '../../../http/middleware/require-staff';
+import { requireRestaurantScope } from '../../../http/middleware/restaurant-scope';
 import { ValidationError } from '../../../shared/errors';
 import type { EntryActions } from '../application/entry-actions';
 import type { GetEntry } from '../application/get-entry';
@@ -57,6 +58,13 @@ export function waitlistRouter(
   submitReview: SubmitReview,
 ): Router {
   const router = Router();
+
+  // Entry actions are addressed by entry id, so the restaurant comes from the
+  // entry itself: a hostess must not act on another restaurant's queue.
+  const scopeByEntry = requireRestaurantScope(async (req) => {
+    const entry = await getEntry.execute(String(req.params.id));
+    return entry.restaurantId;
+  });
 
   router.get('/entries/:id', async (req, res, next) => {
     try {
@@ -128,21 +136,25 @@ export function waitlistRouter(
   router.post(
     '/entries/:id/notify',
     requireStaff,
+    scopeByEntry,
     actionRoute((id) => actions.notify(id)),
   );
   router.post(
     '/entries/:id/seat',
     requireStaff,
+    scopeByEntry,
     actionRoute((id) => actions.seat(id)),
   );
   router.post(
     '/entries/:id/no-show',
     requireStaff,
+    scopeByEntry,
     actionRoute((id) => actions.markNoShow(id)),
   );
   router.post(
     '/entries/:id/cancel',
     requireStaff,
+    scopeByEntry,
     actionRoute((id) => actions.cancel(id)),
   );
 

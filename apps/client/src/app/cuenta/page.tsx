@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { signIn, signUp } from '../../lib/auth';
+import { signIn, signUp } from '../../lib/nexa';
 
 export default function AccountPage() {
   const router = useRouter();

@@ -1,87 +1,69 @@
 'use client';
 
-import type {
-  EntryAddedPayload,
-  EntryRemovedPayload,
-  EntryUpdatedPayload,
-  Queue,
-  WaitlistEntry,
-} from '@nexa/types';
-import { WS_EVENTS } from '@nexa/types';
+import { isApiRequestError } from '@nexa/api-client';
+import { useApi, useSession, useWaitlistSocket } from '@nexa/api-client/react';
+import type { Queue, WaitlistEntry } from '@nexa/types';
 import { BottomSheet, Button, Input, Stepper, WaitCard, cn } from '@nexa/ui';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { type Socket, io } from 'socket.io-client';
 
-import {
-  API_URL,
-  getRestaurant,
-  joinWaitlist,
-  listQueueEntries,
-  noShowEntry,
-  notifyEntry,
-  seatEntry,
-} from '../lib/api';
-import { getToken, signOut } from '../lib/auth';
-
-const RESTAURANT_CODE = 'DEMO';
+import { RequireSession } from '../components/require-session';
 
 export default function BoardPage() {
+  return (
+    <RequireSession>
+      <Board />
+    </RequireSession>
+  );
+}
+
+function Board() {
   const router = useRouter();
-  const [restaurantName, setRestaurantName] = useState('');
+  const api = useApi();
+  const { restaurant, signOut } = useSession();
   const [queues, setQueues] = useState<Queue[]>([]);
   const [activeQueueId, setActiveQueueId] = useState('');
   const [entries, setEntries] = useState<WaitlistEntry[]>([]);
-  const [connected, setConnected] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
-  useEffect(() => {
-    if (!getToken()) router.replace('/login');
-  }, [router]);
+  const { socket, connected } = useWaitlistSocket({
+    onEntryAdded: ({ entry }) =>
+      setEntries((prev) => (prev.some((e) => e.id === entry.id) ? prev : [...prev, entry])),
+    onEntryUpdated: ({ entry }) =>
+      setEntries((prev) => prev.map((e) => (e.id === entry.id ? entry : e))),
+    onEntryRemoved: ({ entryId }) => setEntries((prev) => prev.filter((e) => e.id !== entryId)),
+  });
 
+  // Load the restaurant's queues and their current occupants.
   useEffect(() => {
-    let socket: Socket | undefined;
+    if (!restaurant) return;
     let cancelled = false;
 
-    async function start() {
-      if (!getToken()) return;
-      const data = await getRestaurant(RESTAURANT_CODE);
+    async function load(code: string, restaurantId: string) {
+      const data = await api.restaurants.get(code);
       if (cancelled) return;
-      setRestaurantName(data.restaurant.name);
       setQueues(data.queues);
-      setActiveQueueId(data.queues[0]?.id ?? '');
+      setActiveQueueId((current) => current || (data.queues[0]?.id ?? ''));
 
       const snapshots = await Promise.all(
-        data.queues.map((q) => listQueueEntries(data.restaurant.id, q.id)),
+        data.queues.map((queue) => api.restaurants.listQueueEntries(restaurantId, queue.id)),
       );
       if (cancelled) return;
-      setEntries(snapshots.flatMap((s) => s.entries));
-
-      socket = io(API_URL, { transports: ['websocket'], auth: { token: getToken() ?? '' } });
-      socket.on('connect', () => {
-        setConnected(true);
-        data.queues.forEach((q) =>
-          socket?.emit('subscribe', { restaurantId: data.restaurant.id, queueId: q.id }),
-        );
-      });
-      socket.on('disconnect', () => setConnected(false));
-      socket.on(WS_EVENTS.ENTRY_ADDED, (p: EntryAddedPayload) => {
-        setEntries((prev) => (prev.some((e) => e.id === p.entry.id) ? prev : [...prev, p.entry]));
-      });
-      socket.on(WS_EVENTS.ENTRY_UPDATED, (p: EntryUpdatedPayload) => {
-        setEntries((prev) => prev.map((e) => (e.id === p.entry.id ? p.entry : e)));
-      });
-      socket.on(WS_EVENTS.ENTRY_REMOVED, (p: EntryRemovedPayload) => {
-        setEntries((prev) => prev.filter((e) => e.id !== p.entryId));
-      });
+      setEntries(snapshots.flatMap((snapshot) => snapshot.entries));
     }
 
-    void start().catch(() => setConnected(false));
+    void load(restaurant.code, restaurant.id);
     return () => {
       cancelled = true;
-      socket?.close();
     };
-  }, []);
+  }, [api, restaurant]);
+
+  // Subscribing is separate from loading: the socket replays these on
+  // reconnect, so the board keeps updating after a dropped connection.
+  useEffect(() => {
+    if (!socket || !restaurant) return;
+    for (const queue of queues) socket.subscribeToQueue(restaurant.id, queue.id);
+  }, [socket, restaurant, queues]);
 
   const runAction = (fn: (id: string) => Promise<unknown>, id: string) => {
     fn(id).catch(() => undefined);
@@ -91,6 +73,8 @@ export default function BoardPage() {
     signOut();
     router.replace('/login');
   }
+
+  const restaurantName = restaurant?.name ?? '';
 
   const countFor = (queueId: string) => entries.filter((e) => e.queueId === queueId).length;
   const visible = entries
@@ -114,6 +98,7 @@ export default function BoardPage() {
             <span className={cn('h-2 w-2 rounded-full', connected ? 'bg-secondary' : 'bg-muted')} />
             {connected ? 'En vivo' : 'Conectando…'}
           </span>
+          <RedemptionValidator />
           <Button size="sm" onClick={() => setShowAdd(true)}>
             + Agregar
           </Button>
@@ -155,14 +140,22 @@ export default function BoardPage() {
               etaLabel={entry.etaMinutes != null ? `~${entry.etaMinutes} min` : undefined}
             >
               {entry.status === 'waiting' && (
-                <Button size="sm" onClick={() => runAction(notifyEntry, entry.id)}>
+                <Button size="sm" onClick={() => runAction(api.entries.notify, entry.id)}>
                   Avisar
                 </Button>
               )}
-              <Button size="sm" variant="secondary" onClick={() => runAction(seatEntry, entry.id)}>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => runAction(api.entries.seat, entry.id)}
+              >
                 Sentar
               </Button>
-              <Button size="sm" variant="ghost" onClick={() => runAction(noShowEntry, entry.id)}>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => runAction(api.entries.markNoShow, entry.id)}
+              >
                 No-show
               </Button>
             </WaitCard>
@@ -181,6 +174,100 @@ export default function BoardPage() {
   );
 }
 
+/**
+ * Redeeming a reward at the counter.
+ *
+ * The hostess is reading a code off a diner's phone, so the field accepts it
+ * however they type it and the outcome is stated plainly: a code that was
+ * already used has to say so, or a reward gets given away twice.
+ */
+function RedemptionValidator() {
+  const api = useApi();
+  const [open, setOpen] = useState(false);
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  async function submit() {
+    if (!code.trim()) return;
+    setBusy(true);
+    setResult(null);
+    try {
+      await api.membership.validateCode(code);
+      setResult({ ok: true, message: '¡Código válido! Entrega el premio.' });
+      setCode('');
+    } catch (cause) {
+      setResult({
+        ok: false,
+        message: isApiRequestError(cause) ? cause.message : 'No pudimos validar el código.',
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <>
+      <Button size="sm" variant="secondary" onClick={() => setOpen(true)}>
+        Canjear premio
+      </Button>
+
+      <BottomSheet
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setResult(null);
+        }}
+      >
+        <div className="flex flex-col gap-4">
+          <h2 className="font-display text-xl font-bold text-foreground">Canjear un premio</h2>
+          <p className="font-body text-sm text-muted">
+            Escribe el código que el comensal tiene en su teléfono.
+          </p>
+
+          <Input
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            placeholder="NX-ABC234"
+            autoFocus
+            className="text-center font-display text-lg tracking-widest"
+          />
+
+          {result && (
+            <p
+              className={cn(
+                'font-body text-sm font-semibold',
+                result.ok ? 'text-secondary-dark' : 'text-error',
+              )}
+            >
+              {result.message}
+            </p>
+          )}
+
+          <div className="flex gap-2">
+            <Button
+              className="flex-1"
+              onClick={() => void submit()}
+              disabled={busy || !code.trim()}
+            >
+              {busy ? 'Validando…' : 'Validar'}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setOpen(false);
+                setResult(null);
+              }}
+            >
+              Cerrar
+            </Button>
+          </div>
+        </div>
+      </BottomSheet>
+    </>
+  );
+}
+
 function ManualAddForm({
   queues,
   defaultQueueId,
@@ -190,6 +277,8 @@ function ManualAddForm({
   defaultQueueId: string;
   onClose: () => void;
 }) {
+  const api = useApi();
+  const { restaurant } = useSession();
   const [name, setName] = useState('');
   const [partySize, setPartySize] = useState(2);
   const [queueId, setQueueId] = useState(defaultQueueId);
@@ -198,6 +287,7 @@ function ManualAddForm({
   const [error, setError] = useState<string | null>(null);
 
   async function submit() {
+    if (!restaurant) return;
     if (!name.trim()) {
       setError('Escribe un nombre.');
       return;
@@ -205,15 +295,15 @@ function ManualAddForm({
     setBusy(true);
     setError(null);
     try {
-      await joinWaitlist(RESTAURANT_CODE, {
+      await api.restaurants.joinWaitlist(restaurant.code, {
         queueId,
         displayName: name.trim(),
         partySize,
         phone: phone.trim() || null,
       });
       onClose();
-    } catch {
-      setError('No se pudo agregar.');
+    } catch (cause) {
+      setError(isApiRequestError(cause) ? cause.message : 'No se pudo agregar.');
     } finally {
       setBusy(false);
     }

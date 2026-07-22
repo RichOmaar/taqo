@@ -9,6 +9,7 @@ export function makeRestaurant(overrides: Partial<Restaurant> = {}): Restaurant 
     etaBaseMinutes: 10,
     expirationMinutes: 10,
     plan: 'free',
+    timezone: 'America/Mexico_City',
     createdAt: '2026-01-01T00:00:00.000Z',
     ...overrides,
   };
@@ -19,6 +20,7 @@ export function makeQueue(overrides: Partial<Queue> = {}): Queue {
     id: 'q1',
     restaurantId: 'r1',
     name: 'General',
+    description: null,
     priority: 0,
     isActive: true,
     ...overrides,

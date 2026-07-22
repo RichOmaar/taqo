@@ -2,7 +2,10 @@ import type { WaitlistEntry } from '@nexa/types';
 
 import { NotFoundError, ValidationError } from '../../../shared/errors';
 import type { WaitlistRepository } from '../domain/waitlist-repository';
-import type { DinerNotifier, WaitlistEventPublisher } from './ports';
+import type { DinerNotifier, VisitRecorder, WaitlistEventPublisher } from './ports';
+
+/** Loyalty is optional; without a programme wired in, seating records nothing. */
+const NO_VISIT_RECORDER: VisitRecorder = { dinerSeated: () => undefined };
 
 /**
  * Lifecycle actions on a waitlist entry performed by reception:
@@ -13,6 +16,7 @@ export class EntryActions {
     private readonly waitlist: WaitlistRepository,
     private readonly publisher: WaitlistEventPublisher,
     private readonly notifier: DinerNotifier,
+    private readonly visits: VisitRecorder = NO_VISIT_RECORDER,
   ) {}
 
   async notify(entryId: string): Promise<WaitlistEntry> {
@@ -23,8 +27,12 @@ export class EntryActions {
     return entry;
   }
 
-  seat(entryId: string): Promise<WaitlistEntry> {
-    return this.leave(entryId, 'seated', { seated: true });
+  async seat(entryId: string): Promise<WaitlistEntry> {
+    const entry = await this.leave(entryId, 'seated', { seated: true });
+    // Fire-and-forget: a loyalty programme failing must not fail the seating,
+    // which is the operation the hostess is actually waiting on.
+    this.visits.dinerSeated(entry);
+    return entry;
   }
 
   markNoShow(entryId: string): Promise<WaitlistEntry> {

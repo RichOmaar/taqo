@@ -6,7 +6,7 @@ Cada bounded context vive en su propia carpeta y sigue las capas DDD:
 <context>/
 ├── domain/          # Entidades, value objects, eventos, interfaces de repo. Sin framework.
 ├── application/     # Casos de uso / servicios de aplicación. Orquestan el dominio.
-├── infrastructure/  # Implementaciones concretas (Prisma, Twilio, Strapi, ...).
+├── infrastructure/  # Implementaciones concretas (Prisma, Twilio, ...).
 └── interfaces/      # Controladores HTTP, handlers de WebSocket, mapeo DTO ↔ dominio.
 ```
 

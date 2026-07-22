@@ -20,6 +20,8 @@ export interface Restaurant {
   /** Minutes after being notified before an entry can be marked no-show. */
   expirationMinutes: number;
   plan: RestaurantPlan;
+  /** IANA zone the restaurant's day is measured in, e.g. `America/Mexico_City`. */
+  timezone: string;
   createdAt: ISODateString;
 }
 
@@ -27,6 +29,8 @@ export interface Queue {
   id: UUID;
   restaurantId: UUID;
   name: string;
+  /** Shown to the diner when choosing a queue; null when the owner left it blank. */
+  description: string | null;
   /** Ordering among the restaurant's queues (lower = higher priority). */
   priority: number;
   isActive: boolean;
@@ -48,7 +52,7 @@ export interface WaitlistEntry {
   etaMinutes: number | null;
   /** True when the hostess pinned the ETA manually. */
   etaIsManual: boolean;
-  /** Answers to the restaurant's configurable form (defined in Strapi). */
+  /** Answers to the restaurant's configurable intake form (the `surveys` context). */
   formData: JsonObject;
   joinedAt: ISODateString;
   notifiedAt: ISODateString | null;
@@ -64,8 +68,10 @@ export interface User {
 
 export interface StaffUser {
   id: UUID;
+  /** Staff act on exactly one restaurant; the API enforces this scope. */
   restaurantId: UUID;
   email: string;
+  name: string | null;
   role: StaffRole;
 }
 

@@ -37,15 +37,22 @@ async function main(): Promise<void> {
     `Seeded restaurant "${restaurant.name}" (code ${restaurant.code}) with ${restaurant.queues.length} queues`,
   );
 
-  // Staff admin via BetterAuth. Role is not settable at sign-up, so set it after.
+  // Staff admin via BetterAuth. Neither role nor restaurant are settable at
+  // sign-up, so both are assigned after: staff may only act on their own
+  // restaurant, which requireStaff enforces.
   const existing = await prisma.user.findUnique({ where: { email: STAFF_EMAIL } });
   if (!existing) {
     await auth.api.signUpEmail({
       body: { email: STAFF_EMAIL, password: STAFF_PASSWORD, name: 'Dueño Demo' },
     });
   }
-  await prisma.user.update({ where: { email: STAFF_EMAIL }, data: { role: 'admin' } });
-  console.log(`Seeded staff admin ${STAFF_EMAIL} (password: ${STAFF_PASSWORD})`);
+  await prisma.user.update({
+    where: { email: STAFF_EMAIL },
+    data: { role: 'admin', restaurantId: restaurant.id },
+  });
+  console.log(
+    `Seeded staff admin ${STAFF_EMAIL} (password: ${STAFF_PASSWORD}) scoped to ${restaurant.code}`,
+  );
 }
 
 main()

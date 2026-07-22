@@ -22,6 +22,7 @@ function toRestaurant(row: PrismaRestaurant): Restaurant {
     etaBaseMinutes: row.etaBaseMinutes,
     expirationMinutes: row.expirationMinutes,
     plan: row.plan,
+    timezone: row.timezone,
     createdAt: row.createdAt.toISOString(),
   };
 }
@@ -31,6 +32,7 @@ function toQueue(row: PrismaQueue): Queue {
     id: row.id,
     restaurantId: row.restaurantId,
     name: row.name,
+    description: row.description,
     priority: row.priority,
     isActive: row.isActive,
   };
@@ -70,12 +72,22 @@ export class PrismaRestaurantRepository implements RestaurantRepository {
     };
   }
 
+  async findById(id: string): Promise<Restaurant | null> {
+    const row = await this.prisma.restaurant.findUnique({ where: { id } });
+    return row ? toRestaurant(row) : null;
+  }
+
   async findIdByCode(code: string): Promise<string | null> {
     const row = await this.prisma.restaurant.findUnique({
       where: { code },
       select: { id: true },
     });
     return row?.id ?? null;
+  }
+
+  async findQueueById(queueId: string): Promise<Queue | null> {
+    const row = await this.prisma.queue.findUnique({ where: { id: queueId } });
+    return row ? toQueue(row) : null;
   }
 
   async updateConfig(id: string, data: RestaurantConfigUpdate): Promise<void> {
@@ -91,7 +103,12 @@ export class PrismaRestaurantRepository implements RestaurantRepository {
 
   async addQueue(restaurantId: string, data: NewQueue): Promise<Queue> {
     const row = await this.prisma.queue.create({
-      data: { restaurantId, name: data.name, priority: data.priority },
+      data: {
+        restaurantId,
+        name: data.name,
+        description: data.description ?? null,
+        priority: data.priority,
+      },
     });
     return toQueue(row);
   }
@@ -101,8 +118,35 @@ export class PrismaRestaurantRepository implements RestaurantRepository {
     if (!existing) return null;
     const row = await this.prisma.queue.update({
       where: { id: queueId },
-      data: { name: data.name, priority: data.priority, isActive: data.isActive },
+      data: {
+        name: data.name,
+        description: data.description,
+        priority: data.priority,
+        isActive: data.isActive,
+      },
     });
     return toQueue(row);
+  }
+
+  countActiveQueues(restaurantId: string): Promise<number> {
+    return this.prisma.queue.count({ where: { restaurantId, isActive: true } });
+  }
+
+  countLiveEntries(queueId: string): Promise<number> {
+    return this.prisma.waitlistEntry.count({
+      where: { queueId, status: { in: ['waiting', 'notified'] } },
+    });
+  }
+
+  countEntries(queueId: string): Promise<number> {
+    return this.prisma.waitlistEntry.count({ where: { queueId } });
+  }
+
+  async deactivateQueue(queueId: string): Promise<void> {
+    await this.prisma.queue.update({ where: { id: queueId }, data: { isActive: false } });
+  }
+
+  async deleteQueue(queueId: string): Promise<void> {
+    await this.prisma.queue.delete({ where: { id: queueId } });
   }
 }
