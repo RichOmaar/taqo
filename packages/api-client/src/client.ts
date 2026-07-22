@@ -36,6 +36,7 @@ import type {
   ListRestaurantsResponse,
   PushSubscriptionRequest,
   QueueResponse,
+  RemoveQueueResponse,
   SubmitReviewRequest,
   SubmitReviewResponse,
   UpdateQueueRequest,
@@ -275,6 +276,9 @@ export function createApiClient(options: ApiClientOptions) {
     queues: {
       update(id: UUID, body: UpdateQueueRequest): Promise<QueueResponse> {
         return http.request(`/queues/${seg(id)}`, { method: 'PATCH', body, auth: true });
+      },
+      remove(id: UUID): Promise<RemoveQueueResponse> {
+        return http.request(`/queues/${seg(id)}`, { method: 'DELETE', auth: true });
       },
     },
 

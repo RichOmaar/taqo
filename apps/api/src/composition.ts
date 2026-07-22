@@ -4,6 +4,7 @@ import { GetPeakHours } from './contexts/restaurant/application/get-peak-hours';
 import { GetReviewSummary } from './contexts/restaurant/application/get-review-summary';
 import { ListReviews } from './contexts/restaurant/application/list-reviews';
 import { ListWaitlistHistory } from './contexts/restaurant/application/list-waitlist-history';
+import { RemoveQueue } from './contexts/restaurant/application/remove-queue';
 import { ListRestaurants } from './contexts/restaurant/application/list-restaurants';
 import { RestaurantConfig } from './contexts/restaurant/application/restaurant-config';
 import type { RestaurantRepository } from './contexts/restaurant/domain/restaurant-repository';
@@ -65,6 +66,7 @@ export interface Container {
   getPeakHours: GetPeakHours;
   listReviews: ListReviews;
   listWaitlistHistory: ListWaitlistHistory;
+  removeQueue: RemoveQueue;
   getReviewSummary: GetReviewSummary;
   restaurantConfig: RestaurantConfig;
   joinWaitlist: JoinWaitlist;
@@ -129,6 +131,7 @@ export function buildContainer(publisher: WaitlistEventPublisher): Container {
     getPeakHours: new GetPeakHours(restaurants, metricsRepository),
     listReviews: new ListReviews(restaurants, reviewReads),
     listWaitlistHistory: new ListWaitlistHistory(restaurants, historyReads),
+    removeQueue: new RemoveQueue(restaurants),
     getReviewSummary: new GetReviewSummary(restaurants, reviewReads),
     restaurantConfig: new RestaurantConfig(restaurants),
     joinWaitlist: new JoinWaitlist(restaurants, waitlist, publisher),

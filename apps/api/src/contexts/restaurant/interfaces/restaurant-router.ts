@@ -7,6 +7,7 @@ import type {
   GetRestaurantResponse,
   ListRestaurantsResponse,
   QueueResponse,
+  RemoveQueueResponse,
   ReviewSummaryResponse,
 } from '@nexa/types';
 import { METRICS_BUCKETS } from '@nexa/types';
@@ -22,6 +23,7 @@ import type { GetPeakHours } from '../application/get-peak-hours';
 import type { GetReviewSummary } from '../application/get-review-summary';
 import type { ListReviews } from '../application/list-reviews';
 import type { ListWaitlistHistory } from '../application/list-waitlist-history';
+import type { RemoveQueue } from '../application/remove-queue';
 import type { ListRestaurants } from '../application/list-restaurants';
 import type { RestaurantConfig } from '../application/restaurant-config';
 import type { RestaurantRepository } from '../domain/restaurant-repository';
@@ -63,10 +65,12 @@ const updateConfigSchema = z.object({
 
 const addQueueSchema = z.object({
   name: z.string().min(1).max(60),
+  description: z.string().max(200).nullish(),
   priority: z.number().int().min(0).max(100).optional(),
 });
 
 const updateQueueSchema = z.object({
+  description: z.string().max(200).nullish(),
   name: z.string().min(1).max(60).optional(),
   priority: z.number().int().min(0).max(100).optional(),
   isActive: z.boolean().optional(),
@@ -82,6 +86,7 @@ export function restaurantRouter(
   listReviews: ListReviews,
   reviewSummary: GetReviewSummary,
   waitlistHistory: ListWaitlistHistory,
+  removeQueue: RemoveQueue,
   config: RestaurantConfig,
 ): Router {
   const router = Router();
@@ -301,7 +306,11 @@ export function restaurantRouter(
         throw new ValidationError('Invalid queue', { issues: parsed.error.issues });
       const code = req.params.code;
       if (!code) throw new ValidationError('Missing restaurant code');
-      const updated = await config.addQueue(code, parsed.data.name, parsed.data.priority ?? 0);
+      const updated = await config.addQueue(code, {
+        name: parsed.data.name,
+        description: parsed.data.description ?? null,
+        priority: parsed.data.priority ?? 0,
+      });
       const response: GetRestaurantResponse = updated;
       res.status(201).json(response);
     } catch (error) {
@@ -318,6 +327,23 @@ export function restaurantRouter(
         throw new ValidationError('Invalid queue', { issues: parsed.error.issues });
       const queue = await config.updateQueue(id, parsed.data);
       const response: QueueResponse = { queue };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.delete('/queues/:id', requireStaff, scopeByQueue, async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (!id) throw new ValidationError('Missing queue id');
+
+      const result = await removeQueue.execute(id);
+      const response: RemoveQueueResponse = {
+        restaurant: result.restaurant.restaurant,
+        queues: result.restaurant.queues,
+        outcome: result.outcome,
+      };
       res.json(response);
     } catch (error) {
       next(error);

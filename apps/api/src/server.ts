@@ -36,6 +36,7 @@ export function createServer(container: Container): Express {
       container.listReviews,
       container.getReviewSummary,
       container.listWaitlistHistory,
+      container.removeQueue,
       container.restaurantConfig,
     ),
   );

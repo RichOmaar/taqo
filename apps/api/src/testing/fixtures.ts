@@ -20,6 +20,7 @@ export function makeQueue(overrides: Partial<Queue> = {}): Queue {
     id: 'q1',
     restaurantId: 'r1',
     name: 'General',
+    description: null,
     priority: 0,
     isActive: true,
     ...overrides,

@@ -210,14 +210,28 @@ export interface UpdateRestaurantConfigRequest {
 /** POST /restaurants/:code/queues — add a queue. */
 export interface AddQueueRequest {
   name: string;
+  description?: string | null;
   priority?: number;
 }
 
 /** PATCH /queues/:id — update a queue. */
 export interface UpdateQueueRequest {
   name?: string;
+  description?: string | null;
   priority?: number;
   isActive?: boolean;
+}
+
+/**
+ * DELETE /queues/:id (staff).
+ *
+ * `deactivated` means the queue had history worth keeping, so it was hidden
+ * rather than removed. Either way it is gone from the diner's options.
+ */
+export interface RemoveQueueResponse {
+  restaurant: Restaurant;
+  queues: Queue[];
+  outcome: 'deleted' | 'deactivated';
 }
 
 export interface QueueResponse {

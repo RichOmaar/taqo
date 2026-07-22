@@ -1,8 +1,4 @@
-import type {
-  GetMetricsSeriesResponse,
-  ListReviewsResponse,
-  RestaurantMetrics,
-} from '@nexa/types';
+import type { GetMetricsSeriesResponse, ListReviewsResponse, RestaurantMetrics } from '@nexa/types';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 

@@ -37,7 +37,7 @@ const RESTAURANT: GetRestaurantResponse = {
     timezone: 'America/Mexico_City',
     createdAt: '2026-01-01T00:00:00.000Z',
   },
-  queues: [{ id: 'queue-1', restaurantId: 'rest-1', name: 'General', priority: 0, isActive: true }],
+  queues: [{ id: 'queue-1', restaurantId: 'rest-1', name: 'General', description: null, priority: 0, isActive: true }],
 };
 
 function liveEntry(overrides: Record<string, unknown> = {}) {

@@ -29,6 +29,8 @@ export interface Queue {
   id: UUID;
   restaurantId: UUID;
   name: string;
+  /** Shown to the diner when choosing a queue; null when the owner left it blank. */
+  description: string | null;
   /** Ordering among the restaurant's queues (lower = higher priority). */
   priority: number;
   isActive: boolean;
