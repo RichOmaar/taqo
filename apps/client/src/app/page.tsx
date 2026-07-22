@@ -2,12 +2,15 @@
 
 import { isApiRequestError } from '@nexa/api-client';
 import type { Queue, WaitlistEntry } from '@nexa/types';
-import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
+import { Button, Card, Input, StatusBadge, Stepper, SurveyForm, cn } from '@nexa/ui';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+import { SurveyPanel } from '../components/SurveyPanel';
 import { api, createEntrySocket } from '../lib/nexa';
 import { subscribeToPush } from '../lib/push';
+import { missingRequired, toAnswers, type Answers } from '../lib/survey-answers';
+import { useActiveSurvey } from '../lib/use-active-survey';
 
 export default function JoinPage() {
   const [code] = useState(() => {
@@ -22,6 +25,11 @@ export default function JoinPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [entry, setEntry] = useState<WaitlistEntry | null>(null);
+
+  // Extra questions the owner asks at sign-up, if any.
+  const { survey: intake } = useActiveSurvey(code, 'intake');
+  const [intakeAnswers, setIntakeAnswers] = useState<Answers>({});
+  const [intakeProblems, setIntakeProblems] = useState<Record<string, string>>({});
 
   useEffect(() => {
     api.restaurants
@@ -74,6 +82,16 @@ export default function JoinPage() {
       setError('Escribe tu nombre y elige una cola.');
       return;
     }
+
+    // Check the intake answers before joining: it is far kinder to block here
+    // than to take the diner's place in the queue and then complain.
+    const missing = intake ? missingRequired(intake.questions, intakeAnswers) : {};
+    setIntakeProblems(missing);
+    if (Object.keys(missing).length > 0) {
+      setError('Faltan respuestas obligatorias.');
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
     try {
@@ -83,6 +101,15 @@ export default function JoinPage() {
         partySize,
       });
       setEntry(res.entry);
+
+      // Best-effort: the diner is already in the queue, so a failed survey post
+      // must not read as a failed join.
+      if (intake) {
+        const answers = toAnswers(intake.questions, intakeAnswers);
+        if (answers.length > 0) {
+          api.surveys.submit(intake.id, res.entry.id, answers).catch(() => undefined);
+        }
+      }
     } catch (cause) {
       setError(
         isApiRequestError(cause) ? cause.message : 'No pudimos unirte a la fila. Intenta de nuevo.',
@@ -95,7 +122,7 @@ export default function JoinPage() {
   if (entry) {
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-        <WaitingStatus entry={entry} restaurantName={restaurantName} />
+        <WaitingStatus entry={entry} restaurantName={restaurantName} code={code} />
       </main>
     );
   }
@@ -145,6 +172,26 @@ export default function JoinPage() {
           </div>
         )}
 
+        {intake && intake.questions.length > 0 && (
+          <div className="flex flex-col gap-5 border-t border-border pt-5">
+            <SurveyForm
+              questions={intake.questions}
+              answers={intakeAnswers}
+              problems={intakeProblems}
+              disabled={submitting}
+              onChange={(questionId, value) => {
+                setIntakeAnswers((current) => ({ ...current, [questionId]: value }));
+                setIntakeProblems((current) => {
+                  if (!current[questionId]) return current;
+                  const next = { ...current };
+                  delete next[questionId];
+                  return next;
+                });
+              }}
+            />
+          </div>
+        )}
+
         {error && <p className="font-body text-sm text-error">{error}</p>}
 
         <Button size="lg" className="mt-2 w-full" onClick={handleSubmit} disabled={submitting}>
@@ -167,9 +214,11 @@ export default function JoinPage() {
 function WaitingStatus({
   entry,
   restaurantName,
+  code,
 }: {
   entry: WaitlistEntry;
   restaurantName: string;
+  code: string;
 }) {
   if (entry.status === 'notified') {
     return (
@@ -195,7 +244,14 @@ function WaitingStatus({
         </div>
         <h1 className="font-display text-3xl font-bold text-foreground">¡Buen provecho!</h1>
         <p className="font-body text-muted">Gracias por visitar {restaurantName}.</p>
-        <ReviewForm entryId={entry.id} />
+        {/* The owner's own survey when there is one, the built-in stars when
+            there is not — never both, so nobody is asked twice. */}
+        <SurveyPanel
+          code={code}
+          purpose="feedback"
+          subjectRef={entry.id}
+          fallback={<ReviewForm entryId={entry.id} />}
+        />
         <MembershipPrompt />
       </>
     );
