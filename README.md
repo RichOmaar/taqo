@@ -19,7 +19,7 @@ espera (clínicas, barberías, retail) y a más servicios (reservas, CRM, menú,
 Monorepo con **pnpm workspaces** + **Turborepo**. Un sitio de marketing y tres frontends
 operativos (Next.js) sobre un **backend compartido** (Node + Express con WebSockets
 integrados), organizado con **Domain-Driven Design**, datos en **PostgreSQL** vía
-**Prisma**, y contenidos gestionados con **Strapi**.
+**Prisma**. Sin CMS por ahora: Strapi está aplazado (ver «Strapi: aplazado»).
 
 ```
 nexa/
@@ -28,10 +28,11 @@ nexa/
 │   ├── client/          # Webapp cliente (móvil) — Next.js
 │   ├── reception/       # Webapp hostess (tablet/desktop) — Next.js
 │   ├── admin/           # Panel dueño (desktop) — Next.js
-│   ├── api/             # Backend Node/Express + WebSockets (DDD)
-│   └── cms/             # Strapi (formularios + contenidos de usuario)
+│   └── api/             # Backend Node/Express + WebSockets (DDD)
+│                       # (no hay apps/cms: Strapi está aplazado)
 ├── packages/
 │   ├── types/           # Tipos y contratos compartidos (DTOs, eventos WS)
+│   ├── api-client/      # Cliente HTTP/WS tipado + sesión compartida
 │   ├── config/          # Config compartida (tsconfig, eslint, prettier)
 │   └── ui/              # Design system + componentes compartidos
 ├── package.json
@@ -43,35 +44,42 @@ nexa/
 
 ### Componentes
 
-| Workspace         | Qué es                                                                               | Tecnología     |
-| ----------------- | ------------------------------------------------------------------------------------ | -------------- |
-| `apps/landing`    | Sitio de marketing público. Propuesta de valor, precios, captación. SEO/rendimiento. | Next.js        |
-| `apps/client`     | App del comensal. Alta en la fila, posición, ETA, notificaciones. Móvil.             | Next.js        |
-| `apps/reception`  | App de la hostess. Gestión de la cola en tiempo real. Tablet/desktop.                | Next.js        |
-| `apps/admin`      | Panel del dueño. Configuración y métricas. Desktop.                                  | Next.js        |
-| `apps/api`        | Backend compartido. Lógica de negocio (DDD), API REST y WebSockets.                  | Node + Express |
-| `apps/cms`        | Formularios configurables y contenidos de usuario (catálogo, textos).                | Strapi         |
-| `packages/types`  | Contratos compartidos: DTOs de API y payloads de eventos WebSocket.                  | TypeScript     |
-| `packages/config` | Configuración compartida de tooling.                                                 | TypeScript     |
-| `packages/ui`     | Componentes de interfaz reutilizados por las apps.                                   | React          |
+| Workspace             | Qué es                                                                               | Tecnología     |
+| --------------------- | ------------------------------------------------------------------------------------ | -------------- |
+| `apps/landing`        | Sitio de marketing público. Propuesta de valor, precios, captación. SEO/rendimiento. | Next.js        |
+| `apps/client`         | App del comensal. Alta en la fila, posición, ETA, notificaciones. Móvil.             | Next.js        |
+| `apps/reception`      | App de la hostess. Gestión de la cola en tiempo real. Tablet/desktop.                | Next.js        |
+| `apps/admin`          | Panel del dueño. Configuración y métricas. Desktop.                                  | Next.js        |
+| `apps/api`            | Backend compartido. Lógica de negocio (DDD), API REST y WebSockets.                  | Node + Express |
+| `packages/types`      | Contratos compartidos: DTOs de API y payloads de eventos WebSocket.                  | TypeScript     |
+| `packages/api-client` | Cliente tipado de la API y el WebSocket, más la sesión compartida.                   | TypeScript     |
+| `packages/config`     | Configuración compartida de tooling.                                                 | TypeScript     |
+| `packages/ui`         | Componentes de interfaz reutilizados por las apps.                                   | React          |
 
 ### Backend (DDD)
 
 `apps/api` se divide en bounded contexts: **waitlist** (colas y entradas),
-**restaurant** (restaurantes y configuración), **notifications** (web push / SMS /
-WhatsApp) e **identity** (auth y usuarios). Cada context sigue capas
-`domain` → `application` → `infrastructure` → `interfaces`, con el dominio libre de
-dependencias de framework.
+**restaurant** (restaurantes, configuración y métricas), **notifications** (web push /
+SMS / WhatsApp), **identity** (auth y usuarios), **surveys** (formularios
+configurables, versionados) y **memberships** (lealtad: niveles, puntos, premios).
+Cada context sigue capas `domain` → `application` → `infrastructure` → `interfaces`,
+con el dominio libre de dependencias de framework.
 
-### Frontera Strapi ↔ backend
+### Strapi: aplazado
 
-- **Strapi** es dueño del **contenido editable**: definiciones de formularios de
-  registro y contenidos de usuario (catálogo de restaurantes, textos, imágenes).
-- **El backend** es dueño del **estado operativo**: la cola, estados, ETA, métricas,
-  notificaciones y autenticación.
+**No existe `apps/cms` y nada consume Strapi.** Todo — estado operativo y contenido
+configurable — vive en el backend DDD. Los formularios de alta y la encuesta
+post-visita, que el plan original ponía en el CMS, son el contexto **surveys**: sus
+respuestas se validan contra una definición versionada y alimentan métricas, así que
+son dominio, no contenido.
 
-Toda operación sobre la cola pasa por el backend. Los frontends leen contenido
-publicado de Strapi cuando aplica (ej. el catálogo).
+Se incorporará cuando aparezca contenido genuinamente editorial (landings por
+restaurante, textos con aprobación, media library). Como los frontends hablan con el
+backend vía `packages/api-client` y cada contexto define sus puertos, migrar será
+escribir un adaptador en `infrastructure` — un cambio de implementación, no de
+arquitectura.
+
+Toda operación sobre la cola pasa por el backend.
 
 ---
 
@@ -82,7 +90,7 @@ publicado de Strapi cuando aplica (ej. el catálogo).
 - **Backend:** Node.js + Express (TypeScript) + WebSockets
 - **Base de datos:** PostgreSQL
 - **ORM:** Prisma
-- **CMS:** Strapi
+- **CMS:** ninguno por ahora (Strapi aplazado)
 - **Auth:** BetterAuth
 - **Notificaciones:** Web push + Twilio (SMS/WhatsApp)
 
@@ -125,7 +133,6 @@ pnpm --filter client dev       # webapp cliente
 pnpm --filter reception dev    # webapp hostess
 pnpm --filter admin dev        # panel admin
 pnpm --filter api dev          # backend
-pnpm --filter cms develop      # Strapi
 ```
 
 > Los scripts exactos se irán definiendo a medida que se implemente cada workspace.
@@ -152,9 +159,6 @@ BETTER_AUTH_URL=http://localhost:4000
 # locales de client/reception/admin; los E2E y cada entorno desplegado corren en
 # otros puertos y deben declarar los suyos.
 TRUSTED_ORIGINS=http://localhost:3002,http://localhost:3003,http://localhost:3004
-
-# Strapi
-[POR DEFINIR]
 
 # Twilio (SMS / WhatsApp)
 [POR DEFINIR]

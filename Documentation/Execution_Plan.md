@@ -145,11 +145,15 @@ Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
 - [x] **NEXA-022** ✅ landing (hero, cómo funciona, beneficios, precios, visión, CTA/footer).
 - [x] **NEXA-024** ✅ CI (lint+typecheck+build en push/PR) · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.
 
-## Sprint 3 (sem 5–6) — Strapi, ETA dinámico, pagos, estabilización
+## Sprint 3 (sem 5–6) — ETA dinámico, pagos, estabilización
 
-Tareas NEXA-027 … NEXA-037: Strapi en `apps/cms` + integración, formularios configurables
-end-to-end, catálogo desde Strapi, ETA dinámico, SMS/WhatsApp (Twilio), integraciones
-externas, revisión de arquitectura, buffer de bugfixes, E2E de flujos críticos.
+Tareas NEXA-027 … NEXA-037: ETA dinámico, SMS/WhatsApp (Twilio), integraciones externas,
+revisión de arquitectura, buffer de bugfixes, E2E de flujos críticos.
+
+> **Strapi queda fuera de este sprint.** Los formularios configurables se entregaron en
+> el contexto DDD `surveys` (NEXA-052/057), no en un CMS. El catálogo se sirve desde
+> `apps/api`. Strapi se incorporará cuando exista contenido genuinamente editorial;
+> el razonamiento completo está en `CLAUDE.md` → «Strapi: aplazado».
 
 ## Cierre y cliente (sem 7–12)
 
@@ -175,9 +179,10 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   de CI E2E nightly (`.github/workflows/e2e.yml`).
 - **Pendiente de despliegue:** NEXA-025 (aprovisionar servidor) y NEXA-026 (CD) — requieren
   decisión de hosting + secrets.
-- **Sprint 3 (features nuevas):** Strapi/`apps/cms` + formularios configurables (027–029),
-  catálogo desde Strapi (030), ETA dinámico (031), SMS/WhatsApp Twilio (032), integraciones
-  externas (033), revisión de arquitectura (034), buffer (035), UX (036).
+- **Sprint 3 (features nuevas):** ETA dinámico (031), SMS/WhatsApp Twilio (032),
+  integraciones externas (033), revisión de arquitectura (034), buffer (035), UX (036).
+  Los formularios configurables (027–029) y el catálogo (030) **ya no dependen de Strapi**:
+  se resolvieron en el backend DDD.
 - **Huecos de MVP pendientes:** registro en la tabla `Notification` (el web push no lo loguea). Cancelar-lugar y re-numeración de posiciones: ✅ hechos.
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
   expiración (cron vs. lectura).
