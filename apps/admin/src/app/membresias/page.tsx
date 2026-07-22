@@ -52,9 +52,14 @@ function Memberships() {
   const [stats, setStats] = useState<MembershipStats | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  // Distinct from `program === null`: a failed load must not be reported as
+  // "you have no programme", which is a different — and false — statement.
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloads, setReloads] = useState(0);
 
   useEffect(() => {
     if (!code) return;
+    setLoadError(null);
     api.membership
       .get(code)
       .then((data) => {
@@ -63,10 +68,10 @@ function Memberships() {
         setLoaded(true);
       })
       .catch((cause: unknown) => {
-        setStatus(message(cause, 'No se pudo cargar el programa.'));
+        setLoadError(message(cause, 'No se pudo cargar el programa.'));
         setLoaded(true);
       });
-  }, [api, code]);
+  }, [api, code, reloads]);
 
   // Statistics only mean anything once members exist.
   useEffect(() => {
@@ -90,6 +95,19 @@ function Memberships() {
   }
 
   if (!loaded) return <p className="font-body text-muted">Cargando…</p>;
+
+  if (loadError) {
+    return (
+      <>
+        <TopBar title="Membresías" subtitle="Premia a quienes vuelven." />
+        <EmptyState
+          title="No pudimos cargar tu programa"
+          description={`${loadError} No sabemos si tienes uno, así que no te ofrecemos crearlo: podrías acabar con dos.`}
+          action={<Button onClick={() => setReloads((n) => n + 1)}>Reintentar</Button>}
+        />
+      </>
+    );
+  }
 
   if (!program) {
     return (
