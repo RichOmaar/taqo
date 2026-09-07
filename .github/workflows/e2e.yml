@@ -8,7 +8,8 @@ on:
     - cron: '0 6 * * *' # daily 06:00 UTC
 
 env:
-  DATABASE_URL: postgresql://nexa:nexa@localhost:5433/nexa
+  # Port comes from packages/ports (docker-compose publishes the same default).
+  DATABASE_URL: postgresql://nexa:nexa@localhost:9020/nexa
   BETTER_AUTH_SECRET: e2e-ci-secret-e2e-ci-secret-0123456789
 
 jobs:

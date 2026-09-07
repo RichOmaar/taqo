@@ -1,6 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  // The root .env sets the ports, and NEXT_PUBLIC_* values get inlined into the
+  // build output, so both have to bust the cache when they change.
+  "globalDependencies": [".env"],
+  "globalEnv": ["NEXA_*", "NEXT_PUBLIC_*", "PORT"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

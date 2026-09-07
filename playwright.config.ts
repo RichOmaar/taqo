@@ -1,9 +1,12 @@
+import { e2eTrustedOrigins, postgresUrl, resolvePort } from '@nexa/ports';
 import { defineConfig, devices } from '@playwright/test';
 
-const API_PORT = 4790;
-const CLIENT_PORT = 3102;
-const RECEPTION_PORT = 3103;
-const TEST_DB_URL = 'postgresql://nexa:nexa@localhost:5433/nexa_e2e';
+// The e2e stack runs on its own ports (see packages/ports), so a dev stack can
+// stay up while the suite runs. Override them in the root .env.
+const API_PORT = resolvePort('e2eApi');
+const CLIENT_PORT = resolvePort('e2eClient');
+const RECEPTION_PORT = resolvePort('e2eReception');
+const TEST_DB_URL = postgresUrl('nexa_e2e');
 const apiBase = `http://localhost:${API_PORT}`;
 
 export default defineConfig({
@@ -26,23 +29,26 @@ export default defineConfig({
       port: API_PORT,
       env: {
         DATABASE_URL: TEST_DB_URL,
-        API_PORT: String(API_PORT),
+        NEXA_API_PORT: String(API_PORT),
         // The apps run on e2e-specific ports, which BetterAuth rejects as
         // untrusted origins unless they are declared here.
-        TRUSTED_ORIGINS: `http://localhost:${CLIENT_PORT},http://localhost:${RECEPTION_PORT}`,
+        TRUSTED_ORIGINS: e2eTrustedOrigins().join(','),
       },
-      reuseExistingServer: !process.env.CI,
+      // Never reused: globalSetup drops and recreates the test database on every
+      // run, so a server left over from a previous run is holding connections to
+      // a database that no longer exists and every query it serves fails.
+      reuseExistingServer: false,
       timeout: 60_000,
     },
     {
-      command: `pnpm --filter @nexa/client exec next dev -p ${CLIENT_PORT}`,
+      command: `pnpm --filter @nexa/client exec next dev --turbopack -p ${CLIENT_PORT}`,
       port: CLIENT_PORT,
       env: { NEXT_PUBLIC_API_URL: apiBase },
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },
     {
-      command: `pnpm --filter @nexa/reception exec next dev -p ${RECEPTION_PORT}`,
+      command: `pnpm --filter @nexa/reception exec next dev --turbopack -p ${RECEPTION_PORT}`,
       port: RECEPTION_PORT,
       env: { NEXT_PUBLIC_API_URL: apiBase },
       reuseExistingServer: !process.env.CI,

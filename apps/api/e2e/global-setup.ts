@@ -2,11 +2,12 @@ import 'dotenv/config';
 
 import { type ChildProcess, execSync, spawn } from 'node:child_process';
 
+import { postgresUrl, resolvePort } from '@nexa/ports';
 import pg from 'pg';
 import type { GlobalSetupContext } from 'vitest/node';
 
 const TEST_DB = 'nexa_e2e';
-const PORT = 4790;
+const PORT = resolvePort('e2eApi');
 const BASE = `http://127.0.0.1:${PORT}`;
 
 function testDatabaseUrl(adminUrl: string): string {
@@ -42,7 +43,7 @@ async function waitForHealth(): Promise<void> {
 }
 
 export default async function ({ provide }: GlobalSetupContext) {
-  const adminUrl = process.env.DATABASE_URL ?? 'postgresql://nexa:nexa@localhost:5433/nexa';
+  const adminUrl = process.env.DATABASE_URL ?? postgresUrl('nexa');
   const dbUrl = testDatabaseUrl(adminUrl);
 
   await dropAndCreate(adminUrl);
@@ -62,7 +63,7 @@ export default async function ({ provide }: GlobalSetupContext) {
   execSync('pnpm exec tsx prisma/seed.ts', { env: childEnv, stdio: 'ignore' });
 
   const server: ChildProcess = spawn('pnpm', ['exec', 'tsx', 'src/index.ts'], {
-    env: { ...childEnv, API_PORT: String(PORT) },
+    env: { ...childEnv, NEXA_API_PORT: String(PORT) },
     stdio: 'ignore',
   });
 

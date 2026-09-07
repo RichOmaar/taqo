@@ -1,3 +1,4 @@
+import { localUrl } from '@nexa/ports';
 import type {
   EntryAddedPayload,
   EntryRemovedPayload,
@@ -10,7 +11,7 @@ import { io } from 'socket.io-client';
 import { describe, expect, inject, it } from 'vitest';
 
 const base = inject('baseUrl');
-const ORIGIN = 'http://localhost:3003';
+const ORIGIN = localUrl('reception');
 
 async function staffToken(): Promise<string> {
   const res = await fetch(`${base}/api/auth/sign-in/email`, {

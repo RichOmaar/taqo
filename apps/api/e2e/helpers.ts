@@ -1,10 +1,11 @@
+import { localUrl } from '@nexa/ports';
 import type { GetRestaurantResponse, JoinWaitlistResponse } from '@nexa/types';
 import { inject } from 'vitest';
 
 export const base = inject('baseUrl');
 
 /** A trusted dev origin; BetterAuth rejects sign-in from anywhere else. */
-const ORIGIN = 'http://localhost:3003';
+const ORIGIN = localUrl('reception');
 
 /** Signed in once and reused: a sign-in per test trips the auth rate limit. */
 let cachedToken: Promise<string> | null = null;

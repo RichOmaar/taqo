@@ -1,5 +1,7 @@
+import { defaultLocalUrl } from '@nexa/ports';
+
 /** Where the diner app lives, so the QR points at something real. */
-export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL ?? 'http://localhost:3002';
+export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL ?? defaultLocalUrl('client');
 
 /**
  * The link a diner lands on after scanning.

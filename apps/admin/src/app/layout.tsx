@@ -1,10 +1,11 @@
 import { SessionProvider } from '@nexa/api-client/react';
+import { defaultLocalUrl } from '@nexa/ports';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import './globals.css';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? defaultLocalUrl('api');
 
 export const metadata: Metadata = {
   title: 'Nexa — Panel del restaurante',

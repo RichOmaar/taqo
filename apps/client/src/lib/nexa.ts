@@ -1,6 +1,7 @@
 import { createApiClient, createWaitlistSocket } from '@nexa/api-client';
+import { defaultLocalUrl } from '@nexa/ports';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? defaultLocalUrl('api');
 
 const TOKEN_KEY = 'nexa_token';
 

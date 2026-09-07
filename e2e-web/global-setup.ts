@@ -1,10 +1,11 @@
 import { execSync } from 'node:child_process';
 
+import { postgresUrl } from '@nexa/ports';
 import pg from 'pg';
 
-const ADMIN_URL = 'postgresql://nexa:nexa@localhost:5433/nexa';
 const TEST_DB = 'nexa_e2e';
-const TEST_URL = `postgresql://nexa:nexa@localhost:5433/${TEST_DB}`;
+const ADMIN_URL = postgresUrl('nexa');
+const TEST_URL = postgresUrl(TEST_DB);
 
 /** Provision a fresh isolated database (schema + seed) before the web servers use it. */
 export default async function globalSetup() {
