@@ -59,6 +59,8 @@ nexa/
 ├── packages/
 │   ├── types/           # Tipos y contratos compartidos (DTOs, eventos WS)
 │   ├── config/          # Config compartida (tsconfig, eslint, prettier)
+│   ├── ports/           # Mapa de puertos: fuente única de verdad (bloque 9000-9999)
+│   ├── api-client/      # Cliente HTTP/WS tipado sobre packages/types
 │   └── ui/              # Design system + componentes compartidos (ver Mocks/)
 ├── package.json
 ├── pnpm-workspace.yaml
@@ -244,9 +246,18 @@ compleja en el MVP).
   testean de forma aislada con repos/publishers de prueba (sin DB). Script: `pnpm test`
   (via Turbo). **E2E de backend** (Vitest + Postgres real): `pnpm --filter @nexa/api test:e2e`.
   **E2E de frontend** (Playwright, multi-app en tiempo real): `pnpm test:e2e:web` (requiere
-  Postgres en :5433). Los E2E corren aparte del CI rápido de PR.
-- **Variables de entorno:** nunca commitear secretos. Usar `.env` local y documentar
-  las variables necesarias en el README.
+  Postgres vía `docker compose up -d postgres`). Los E2E corren aparte del CI rápido de PR.
+- **Variables de entorno:** nunca commitear secretos. La configuración local vive en un
+  **único `.env` en la raíz** del monorepo (`cp .env.example .env`); cada app admite un
+  `.env.local` propio solo para overrides puntuales. Documentar las variables en el README.
+- **Dev con Turbopack:** las apps de Next corren `next dev --turbopack`. No lo quites:
+  con Webpack, levantar las cuatro a la vez agota los descriptores de archivo al
+  registrar watchers (`EMFILE`), el dev server se queda sin watcher y sirve 404 sin
+  compilar. Subir `ulimit -n` no lo arregla. `next build` sigue en Webpack.
+- **Puertos:** Nexa reserva el bloque **9000–9999**. Nunca hardcodees un puerto: los
+  defaults viven en `packages/ports` y se sobrescriben con `NEXA_*_PORT` en el `.env`
+  raíz. De ahí los toman el API, las apps de Next, `docker-compose.yml`, Playwright y
+  ambas suites de E2E. Un test falla si algún valor del repo se desincroniza del mapa.
 
 ## Qué hacer / qué evitar al asistir en este repo
 
