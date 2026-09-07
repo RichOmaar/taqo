@@ -7,7 +7,7 @@ import { renderAdmin, type Routes } from '../../testing/harness';
 import SurveysPage from './page';
 
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/encuestas',
+  usePathname: () => '/surveys',
   useRouter: () => ({ replace: vi.fn(), push: vi.fn() }),
 }));
 

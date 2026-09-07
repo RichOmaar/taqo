@@ -212,7 +212,7 @@ comentarios `TODO`. Estaba planeado (NEXA-027–030) para tres responsabilidades
 | Responsabilidad planeada          | Realidad                                                          |
 | --------------------------------- | ----------------------------------------------------------------- |
 | Definiciones de formularios       | Pasa al contexto `surveys` de este plan                            |
-| Catálogo de restaurantes          | Ya lo sirve el backend (`GET /restaurants`); `/explorar` ✅ NEXA-015 |
+| Catálogo de restaurantes          | Ya lo sirve el backend (`GET /restaurants`); `/explore` ✅ NEXA-015 |
 | Textos y páginas editables        | `apps/landing` es Next.js estático con copy en el código           |
 
 Hoy ninguna de las tres justifica levantar un CMS. **Strapi se pospone, no se descarta:**

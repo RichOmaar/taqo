@@ -95,7 +95,7 @@ export default function MembershipPage() {
         <p className="font-body text-muted">
           Crea tu cuenta para guardar tus visitas y canjear premios. Toma menos de un minuto.
         </p>
-        <Link href="/cuenta" className="w-full">
+        <Link href="/account" className="w-full">
           <Button size="lg" className="w-full">
             Crear mi cuenta
           </Button>

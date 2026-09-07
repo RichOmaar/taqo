@@ -38,8 +38,8 @@ const FOOTER_COLUMNS = [
   {
     title: 'Contacto',
     links: [
-      { label: 'Soporte', href: '/soporte' },
-      { label: 'Prensa', href: '/prensa' },
+      { label: 'Soporte', href: '/support' },
+      { label: 'Prensa', href: '/press' },
     ],
   },
 ];
@@ -217,8 +217,8 @@ export default function PrensaPage() {
         tagline="Conectamos clientes y negocios a través de una hospitalidad cálida y tecnológica."
         columns={FOOTER_COLUMNS}
         legalLinks={[
-          { label: 'Aviso de privacidad', href: '/privacidad' },
-          { label: 'Términos', href: '/terminos' },
+          { label: 'Aviso de privacidad', href: '/privacy' },
+          { label: 'Términos', href: '/terms' },
         ]}
         copyright="© 2026 Nexa."
         slogan="La hospitalidad comienza aquí."

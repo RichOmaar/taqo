@@ -11,7 +11,7 @@ import { renderAdmin, type Routes } from '../../testing/harness';
 import WaitlistPage from './page';
 
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/lista-de-espera',
+  usePathname: () => '/waitlist',
   useRouter: () => ({ replace: vi.fn(), push: vi.fn() }),
 }));
 

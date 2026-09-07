@@ -32,10 +32,10 @@
 - [x] Smooth scrolling (CSS)
 
 ### Páginas Adicionales
-- [x] /privacidad — Aviso de privacidad (LFPDPPP)
-- [x] /terminos — Términos y condiciones
-- [x] /soporte — Centro de ayuda con FAQs
-- [x] /prensa — Sala de prensa con comunicados y kit de medios
+- [x] /privacy — Aviso de privacidad (LFPDPPP)
+- [x] /terms — Términos y condiciones
+- [x] /support — Centro de ayuda con FAQs
+- [x] /press — Sala de prensa con comunicados y kit de medios
 
 ### Mejoras UI/UX Implementadas
 - [x] Header sticky con transformación pill on scroll (estilo iOS Dynamic Island)

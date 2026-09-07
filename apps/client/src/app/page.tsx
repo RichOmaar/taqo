@@ -200,10 +200,10 @@ export default function JoinPage() {
       </Card>
 
       <div className="flex flex-col items-center gap-2">
-        <Link href="/explorar" className="font-body text-sm text-foreground">
+        <Link href="/explore" className="font-body text-sm text-foreground">
           Explorar otros restaurantes
         </Link>
-        <Link href="/cuenta" className="font-body text-sm text-primary-dark">
+        <Link href="/account" className="font-body text-sm text-primary-dark">
           Crea tu cuenta para guardar tu historial
         </Link>
       </div>
@@ -281,7 +281,7 @@ function WaitingStatus({
 function MembershipPrompt() {
   return (
     <Link
-      href="/membresia"
+      href="/membership"
       className="font-body text-sm font-semibold text-primary-dark underline-offset-4 hover:underline"
     >
       Acumula esta visita en tu membresía →

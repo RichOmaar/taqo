@@ -16,7 +16,7 @@ import { renderAdmin, type Routes } from '../../testing/harness';
 import MembershipsPage from './page';
 
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/membresias',
+  usePathname: () => '/memberships',
   useRouter: () => ({ replace: vi.fn(), push: vi.fn() }),
 }));
 

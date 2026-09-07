@@ -122,12 +122,12 @@ tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-e
 
 ### Fase 3 — Engordar
 
-- [x] **NEXA-007** ✅ Restaurant config: repos + `RestaurantConfig` (update config, add/rename queues) + endpoints, y UI `/configuracion` en admin. → `feat(api): add restaurant config use cases` · `feat(admin): add restaurant config UI`
+- [x] **NEXA-007** ✅ Restaurant config: repos + `RestaurantConfig` (update config, add/rename queues) + endpoints, y UI `/settings` en admin. → `feat(api): add restaurant config use cases` · `feat(admin): add restaurant config UI`
 - [x] **NEXA-008 (resto)** ✅ Acciones waitlist: `Notify` / `Seat` / `MarkNoShow` / `Cancel` con guardas de estado + endpoints + botones en el board. → `feat(api): add waitlist status transitions` · `feat(reception): wire queue actions and live updates`
 - [x] **NEXA-010 (resto)** ✅ WS: emisión de `entry_updated` / `entry_removed` y board reactivo. _(Falta: auth de subscripción por restaurante/cola → va con NEXA-009.)_
 - [x] **NEXA-009** ✅ Identity completo (BetterAuth email/password + bearer): user con `role`
       (diner/hostess/admin), acciones de recepción + config + subscripción WS protegidas por
-      staff, login en admin/reception, y modo comensal registrado en client (`/cuenta`).
+      staff, login en admin/reception, y modo comensal registrado en client (`/account`).
       Seed de staff admin `owner@demo.nexa`. → `feat(api): integrate betterauth` · `feat(api): protect staff actions and seed admin` · `feat(identity): add staff login and route guards` · `feat(client): add registered-diner mode`
 
 ---
@@ -137,7 +137,7 @@ tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-e
 Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
 
 - [x] **NEXA-013** ✅ client: flujo de alta (join) _(Fase 2)_ · [x] **NEXA-014** ✅ client:
-      estado en espera en vivo (posición/ETA/mesa lista) · [x] **NEXA-015** ✅ client: catálogo (/explorar + join por código) ·
+      estado en espera en vivo (posición/ETA/mesa lista) · [x] **NEXA-015** ✅ client: catálogo (/explore + join por código) ·
       [x] **NEXA-016** ✅ client: evaluación post-servicio (rating + comentario en estado sentado).
 - [x] **NEXA-017** ✅ reception: cola en vivo multi-cola (tabs) · [x] **NEXA-018** ✅ reception: alta manual (walk-in).
 - [x] **NEXA-019** ✅ admin: dashboard de métricas real · [x] **NEXA-020** ✅ admin: UI de configuración _(NEXA-007)_.
