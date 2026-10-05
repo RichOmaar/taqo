@@ -85,7 +85,7 @@
 **Convención:**
 - Commits en inglés (Conventional Commits)
 - Un commit por feature/fix lógico
-- Co-authored con Claude
+- **Sin** trailer `Co-Authored-By: Claude` — todo commit va a nombre de Omar (juanomcam@gmail.com)
 
 ---
 
@@ -106,7 +106,30 @@
 - Micro-interacciones en componentes (hover, active states)
 - Glass effect estilo iOS
 
-**Para continuar:**
+### Sesión 2026-10-04
+**Rama:** `landing-page`
+
+**Cambio de marca:** el producto ahora se llama **TableNow** (antes Nexa). Solo se renombró
+lo visible en `apps/landing`; los paquetes internos siguen como `@nexa/*`.
+
+**Trabajo completado:**
+- Home reescrito con el contenido de las presentaciones de TableNow (comercial y para socios):
+  problema → solución por rol → cómo funciona → equipo → métricas → lealtad → precios →
+  cómo arrancamos → contacto.
+- Se quitó el contenido inventado: "500 restaurantes", los avatares de pravatar, el POS en el
+  plan Pro y el soporte 24/7.
+- Header, footer y marca centralizados en `apps/landing/src/site.ts` y
+  `src/components/SiteChrome.tsx`; las páginas secundarias los usan.
+- Los CTA son enlaces reales (`buttonClasses` en `@nexa/ui`) hacia `#contacto`; el alta es asistida.
+
+**Pendiente para publicar (`[POR DEFINIR]`):**
+- Correo, WhatsApp y dominio reales (en `site.ts` está el placeholder `hola@tablenow.mx`).
+- `/prensa` tiene comunicados inventados (ronda pre-seed, alianza): reescribir o quitar.
+- `/privacidad` y `/terminos` son un borrador sin revisión legal y con razón social de relleno.
+- Confirmar que lealtad, encuestas y reseñas existen antes de anunciarlos.
+- Logo SVG real.
+
+**Para continuar (sesión 2026-07-13):**
 - Revisar y aprobar cambios de UI/UX (commit marcado como opcional)
 - Agregar assets reales (mockup teléfono, logo, fotos)
 - Considerar scroll-triggered animations

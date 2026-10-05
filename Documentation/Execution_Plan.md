@@ -135,7 +135,8 @@ Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
 - **NEXA-017** reception: cola en vivo · **NEXA-018** reception: alta manual + acciones.
 - **NEXA-019** admin: dashboard · **NEXA-020** admin: UI de configuración.
 - **NEXA-021** notifications: web push · **NEXA-023** expiración & no-show.
-- **NEXA-022** landing page (implementa los 6 mocks de landing).
+- **NEXA-022** landing page — ✅ HECHO en la rama `landing-page`. Rebrand a **TableNow** y
+  copy basado en las presentaciones comerciales. Pendiente: datos de contacto, prensa y legal reales.
 - **NEXA-024** CI · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.
 
 ## Sprint 3 (sem 5–6) — Strapi, ETA dinámico, pagos, estabilización
