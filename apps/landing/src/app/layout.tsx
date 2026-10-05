@@ -4,9 +4,17 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Nexa — Listas de espera para restaurantes',
+  title: 'TableNow — Listas de espera para restaurantes',
   description:
-    'Digitaliza la fila de tu restaurante: anota comensales por QR y gestiona la cola en tiempo real.',
+    'Deja de gestionar tu fila en una libreta. Tus clientes se anotan con un QR, ven su turno desde el teléfono y reciben aviso cuando su mesa está lista.',
+  openGraph: {
+    title: 'TableNow — La fila de tu restaurante, digital y en tiempo real',
+    description:
+      'Tus clientes se anotan con un QR y reciben aviso cuando su mesa está lista. Empieza gratis.',
+    locale: 'es_MX',
+    type: 'website',
+    siteName: 'TableNow',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -1,53 +1,17 @@
 import type { Metadata } from 'next';
 import { ArrowLeft } from 'lucide-react';
-import { Button, Footer, Header } from '@nexa/ui';
+
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome';
 
 export const metadata: Metadata = {
-  title: 'Aviso de Privacidad — Nexa',
-  description: 'Conoce cómo Nexa protege y maneja tu información personal.',
+  title: 'Aviso de Privacidad — TableNow',
+  description: 'Conoce cómo TableNow protege y maneja tu información personal.',
 };
-
-const NAV_LINKS = [
-  { label: 'Beneficios', href: '/#beneficios' },
-  { label: 'Cómo funciona', href: '/#como-funciona' },
-  { label: 'Precios', href: '/#precios' },
-];
-
-const FOOTER_COLUMNS = [
-  {
-    title: 'Producto',
-    links: [
-      { label: 'Beneficios', href: '/#beneficios' },
-      { label: 'Cómo funciona', href: '/#como-funciona' },
-    ],
-  },
-  {
-    title: 'Precios',
-    links: [
-      { label: 'Planes', href: '/#precios' },
-      { label: 'Empresas', href: '/#empresas' },
-    ],
-  },
-  {
-    title: 'Nosotros',
-    links: [
-      { label: 'Visión', href: '/#vision' },
-      { label: 'Inversionistas', href: '/#inversionistas' },
-    ],
-  },
-  {
-    title: 'Contacto',
-    links: [
-      { label: 'Soporte', href: '/#soporte' },
-      { label: 'Prensa', href: '/#prensa' },
-    ],
-  },
-];
 
 export default function PrivacidadPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header logo="Nexa" links={NAV_LINKS} cta={<Button size="sm">Empieza gratis</Button>} />
+      <SiteHeader />
 
       <main className="px-6 py-12 lg:px-12 lg:py-16">
         <article className="mx-auto max-w-3xl">
@@ -72,8 +36,8 @@ export default function PrivacidadPage() {
                 1. Responsable del tratamiento
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Nexa Technologies, S.A. de C.V. (en adelante "Nexa") con domicilio en Ciudad de
-                México, México, es responsable del tratamiento de sus datos personales conforme a
+                TableNow Technologies, S.A. de C.V. (en adelante "TableNow") con domicilio en Ciudad
+                de México, México, es responsable del tratamiento de sus datos personales conforme a
                 la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.
               </p>
             </section>
@@ -92,9 +56,7 @@ export default function PrivacidadPage() {
                 <li>
                   Datos de uso del servicio: historial de visitas, preferencias, tiempo de espera.
                 </li>
-                <li>
-                  Datos del dispositivo: tipo de navegador, sistema operativo, dirección IP.
-                </li>
+                <li>Datos del dispositivo: tipo de navegador, sistema operativo, dirección IP.</li>
               </ul>
             </section>
 
@@ -138,8 +100,8 @@ export default function PrivacidadPage() {
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
                 Usted tiene derecho a conocer qué datos personales tenemos de usted, para qué los
-                utilizamos y las condiciones del uso que les damos (Acceso). Asimismo, es su
-                derecho solicitar la corrección de su información personal en caso de que esté
+                utilizamos y las condiciones del uso que les damos (Acceso). Asimismo, es su derecho
+                solicitar la corrección de su información personal en caso de que esté
                 desactualizada, sea inexacta o incompleta (Rectificación); que la eliminemos de
                 nuestros registros o bases de datos cuando considere que la misma no está siendo
                 utilizada adecuadamente (Cancelación); así como oponerse al uso de sus datos
@@ -147,8 +109,8 @@ export default function PrivacidadPage() {
               </p>
               <p className="mt-3 leading-relaxed text-muted">
                 Para ejercer cualquiera de estos derechos, puede enviar una solicitud a:{' '}
-                <a href="mailto:privacidad@nexa.mx" className="text-primary hover:underline">
-                  privacidad@nexa.mx
+                <a href="mailto:privacidad@tablenow.mx" className="text-primary hover:underline">
+                  privacidad@tablenow.mx
                 </a>
               </p>
             </section>
@@ -171,8 +133,8 @@ export default function PrivacidadPage() {
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
                 Nos reservamos el derecho de efectuar modificaciones o actualizaciones al presente
-                aviso de privacidad. Cualquier cambio será notificado a través de nuestra
-                plataforma o por correo electrónico.
+                aviso de privacidad. Cualquier cambio será notificado a través de nuestra plataforma
+                o por correo electrónico.
               </p>
             </section>
 
@@ -181,8 +143,8 @@ export default function PrivacidadPage() {
               <p className="mt-3 leading-relaxed text-muted">
                 Si tiene alguna pregunta sobre este aviso de privacidad o sobre el tratamiento de
                 sus datos personales, puede contactarnos en:{' '}
-                <a href="mailto:privacidad@nexa.mx" className="text-primary hover:underline">
-                  privacidad@nexa.mx
+                <a href="mailto:privacidad@tablenow.mx" className="text-primary hover:underline">
+                  privacidad@tablenow.mx
                 </a>
               </p>
             </section>
@@ -190,17 +152,7 @@ export default function PrivacidadPage() {
         </article>
       </main>
 
-      <Footer
-        logo="Nexa"
-        tagline="Conectamos clientes y negocios a través de una hospitalidad cálida y tecnológica."
-        columns={FOOTER_COLUMNS}
-        legalLinks={[
-          { label: 'Aviso de privacidad', href: '/privacidad' },
-          { label: 'Términos', href: '/terminos' },
-        ]}
-        copyright="© 2026 Nexa."
-        slogan="La hospitalidad comienza aquí."
-      />
+      <SiteFooter />
     </div>
   );
 }

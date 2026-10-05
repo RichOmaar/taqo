@@ -1,56 +1,21 @@
 import type { Metadata } from 'next';
 import { ArrowLeft, Mail, MessageCircle, FileText, Clock } from 'lucide-react';
-import { Button, Card, Footer, Header } from '@nexa/ui';
+import { Button, Card } from '@nexa/ui';
+
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome';
 
 export const metadata: Metadata = {
-  title: 'Soporte — Nexa',
-  description: 'Centro de ayuda y soporte de Nexa. Estamos aquí para ayudarte.',
+  title: 'Soporte — TableNow',
+  description: 'Centro de ayuda y soporte de TableNow. Estamos aquí para ayudarte.',
 };
-
-const NAV_LINKS = [
-  { label: 'Beneficios', href: '/#beneficios' },
-  { label: 'Cómo funciona', href: '/#como-funciona' },
-  { label: 'Precios', href: '/#precios' },
-];
-
-const FOOTER_COLUMNS = [
-  {
-    title: 'Producto',
-    links: [
-      { label: 'Beneficios', href: '/#beneficios' },
-      { label: 'Cómo funciona', href: '/#como-funciona' },
-    ],
-  },
-  {
-    title: 'Precios',
-    links: [
-      { label: 'Planes', href: '/#precios' },
-      { label: 'Empresas', href: '/#empresas' },
-    ],
-  },
-  {
-    title: 'Nosotros',
-    links: [
-      { label: 'Visión', href: '/#vision' },
-      { label: 'Inversionistas', href: '/#inversionistas' },
-    ],
-  },
-  {
-    title: 'Contacto',
-    links: [
-      { label: 'Soporte', href: '/soporte' },
-      { label: 'Prensa', href: '/prensa' },
-    ],
-  },
-];
 
 const SUPPORT_OPTIONS = [
   {
     icon: <Mail className="h-6 w-6" />,
     title: 'Correo electrónico',
     description: 'Escríbenos y te responderemos en menos de 24 horas.',
-    action: 'soporte@nexa.mx',
-    href: 'mailto:soporte@nexa.mx',
+    action: 'soporte@tablenow.mx',
+    href: 'mailto:soporte@tablenow.mx',
   },
   {
     icon: <MessageCircle className="h-6 w-6" />,
@@ -82,7 +47,7 @@ const FAQS = [
   {
     question: '¿Necesito descargar una app?',
     answer:
-      'No, Nexa funciona directamente desde el navegador de tu celular. No necesitas instalar nada.',
+      'No, TableNow funciona directamente desde el navegador de tu celular. No necesitas instalar nada.',
   },
   {
     question: '¿Qué pasa si no llego a tiempo?',
@@ -90,7 +55,7 @@ const FAQS = [
       'Cada restaurante tiene su propia política de tiempo de espera. Generalmente tienes entre 5-10 minutos para presentarte después de ser notificado.',
   },
   {
-    question: '¿Cómo configuro Nexa en mi restaurante?',
+    question: '¿Cómo configuro TableNow en mi restaurante?',
     answer:
       'Regístrate en nuestra plataforma, configura tu restaurante y colas, y genera tu código QR. El proceso toma menos de 10 minutos.',
   },
@@ -99,7 +64,7 @@ const FAQS = [
 export default function SoportePage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header logo="Nexa" links={NAV_LINKS} cta={<Button size="sm">Empieza gratis</Button>} />
+      <SiteHeader />
 
       <main className="px-6 py-12 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-4xl">
@@ -117,7 +82,7 @@ export default function SoportePage() {
             </h1>
             <p className="mx-auto mt-4 max-w-xl font-body text-muted">
               Nuestro equipo está listo para resolver tus dudas y ayudarte a sacar el máximo
-              provecho de Nexa.
+              provecho de TableNow.
             </p>
           </div>
 
@@ -180,17 +145,7 @@ export default function SoportePage() {
         </div>
       </main>
 
-      <Footer
-        logo="Nexa"
-        tagline="Conectamos clientes y negocios a través de una hospitalidad cálida y tecnológica."
-        columns={FOOTER_COLUMNS}
-        legalLinks={[
-          { label: 'Aviso de privacidad', href: '/privacidad' },
-          { label: 'Términos', href: '/terminos' },
-        ]}
-        copyright="© 2026 Nexa."
-        slogan="La hospitalidad comienza aquí."
-      />
+      <SiteFooter />
     </div>
   );
 }

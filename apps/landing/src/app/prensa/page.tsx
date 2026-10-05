@@ -1,67 +1,32 @@
 import type { Metadata } from 'next';
 import { ArrowLeft, Download, Mail, ExternalLink } from 'lucide-react';
-import { Badge, Button, Card, Footer, Header } from '@nexa/ui';
+import { Badge, Button, Card } from '@nexa/ui';
+
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome';
 
 export const metadata: Metadata = {
-  title: 'Prensa — Nexa',
-  description: 'Recursos de prensa, noticias y kit de medios de Nexa.',
+  title: 'Prensa — TableNow',
+  description: 'Recursos de prensa, noticias y kit de medios de TableNow.',
 };
-
-const NAV_LINKS = [
-  { label: 'Beneficios', href: '/#beneficios' },
-  { label: 'Cómo funciona', href: '/#como-funciona' },
-  { label: 'Precios', href: '/#precios' },
-];
-
-const FOOTER_COLUMNS = [
-  {
-    title: 'Producto',
-    links: [
-      { label: 'Beneficios', href: '/#beneficios' },
-      { label: 'Cómo funciona', href: '/#como-funciona' },
-    ],
-  },
-  {
-    title: 'Precios',
-    links: [
-      { label: 'Planes', href: '/#precios' },
-      { label: 'Empresas', href: '/#empresas' },
-    ],
-  },
-  {
-    title: 'Nosotros',
-    links: [
-      { label: 'Visión', href: '/#vision' },
-      { label: 'Inversionistas', href: '/#inversionistas' },
-    ],
-  },
-  {
-    title: 'Contacto',
-    links: [
-      { label: 'Soporte', href: '/soporte' },
-      { label: 'Prensa', href: '/prensa' },
-    ],
-  },
-];
 
 const PRESS_RELEASES = [
   {
     date: '15 de junio de 2026',
-    title: 'Nexa lanza su plataforma de listas de espera digitales en México',
+    title: 'TableNow lanza su plataforma de listas de espera digitales en México',
     excerpt:
       'La startup mexicana presenta una solución innovadora para digitalizar la experiencia de espera en restaurantes.',
     tag: 'Lanzamiento',
   },
   {
     date: '1 de mayo de 2026',
-    title: 'Nexa cierra ronda pre-seed para expandir operaciones',
+    title: 'TableNow cierra ronda pre-seed para expandir operaciones',
     excerpt:
       'La compañía asegura financiamiento para acelerar el desarrollo de nuevas funcionalidades y expandir su equipo.',
     tag: 'Inversión',
   },
   {
     date: '20 de marzo de 2026',
-    title: 'Nexa anuncia alianza con asociación de restauranteros',
+    title: 'TableNow anuncia alianza con asociación de restauranteros',
     excerpt:
       'Más de 100 restaurantes se suman a la plataforma como parte del programa piloto en Ciudad de México.',
     tag: 'Alianza',
@@ -69,8 +34,8 @@ const PRESS_RELEASES = [
 ];
 
 const MEDIA_KIT_ITEMS = [
-  { name: 'Logo Nexa (PNG)', size: '2.4 MB' },
-  { name: 'Logo Nexa (SVG)', size: '124 KB' },
+  { name: 'Logo TableNow (PNG)', size: '2.4 MB' },
+  { name: 'Logo TableNow (SVG)', size: '124 KB' },
   { name: 'Guía de marca', size: '5.1 MB' },
   { name: 'Capturas de pantalla', size: '8.7 MB' },
   { name: 'Fotos del equipo', size: '12.3 MB' },
@@ -86,7 +51,7 @@ const STATS = [
 export default function PrensaPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header logo="Nexa" links={NAV_LINKS} cta={<Button size="sm">Empieza gratis</Button>} />
+      <SiteHeader />
 
       <main className="px-6 py-12 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-4xl">
@@ -117,24 +82,24 @@ export default function PrensaPage() {
             ))}
           </div>
 
-          {/* About Nexa */}
+          {/* About TableNow */}
           <section className="mt-16">
-            <h2 className="font-display text-2xl font-bold text-foreground">Acerca de Nexa</h2>
+            <h2 className="font-display text-2xl font-bold text-foreground">Acerca de TableNow</h2>
             <div className="mt-4 space-y-4 font-body leading-relaxed text-muted">
               <p>
-                Nexa es una plataforma tecnológica mexicana que digitaliza la experiencia de
+                TableNow es una plataforma tecnológica mexicana que digitaliza la experiencia de
                 espera en restaurantes. Fundada en 2026, nuestra misión es humanizar la espera y
-                optimizar la operación de los restaurantes a través de tecnología accesible y
-                fácil de usar.
+                optimizar la operación de los restaurantes a través de tecnología accesible y fácil
+                de usar.
               </p>
               <p>
-                Nuestra solución permite a los comensales registrarse en listas de espera
-                digitales mediante códigos QR, recibir notificaciones en tiempo real sobre su
-                turno, y a los restaurantes gestionar sus colas de manera eficiente con métricas
-                y análisis detallados.
+                Nuestra solución permite a los comensales registrarse en listas de espera digitales
+                mediante códigos QR, recibir notificaciones en tiempo real sobre su turno, y a los
+                restaurantes gestionar sus colas de manera eficiente con métricas y análisis
+                detallados.
               </p>
               <p>
-                Con sede en Ciudad de México, Nexa está transformando la industria restaurantera
+                Con sede en Ciudad de México, TableNow está transformando la industria restaurantera
                 con un enfoque en la hospitalidad y la tecnología accesible.
               </p>
             </div>
@@ -202,27 +167,17 @@ export default function PrensaPage() {
               Para entrevistas, información adicional o solicitudes de medios:
             </p>
             <a
-              href="mailto:prensa@nexa.mx"
+              href="mailto:prensa@tablenow.mx"
               className="mt-4 inline-flex items-center gap-2 font-display font-semibold text-primary hover:underline"
             >
               <Mail className="h-4 w-4" />
-              prensa@nexa.mx
+              prensa@tablenow.mx
             </a>
           </section>
         </div>
       </main>
 
-      <Footer
-        logo="Nexa"
-        tagline="Conectamos clientes y negocios a través de una hospitalidad cálida y tecnológica."
-        columns={FOOTER_COLUMNS}
-        legalLinks={[
-          { label: 'Aviso de privacidad', href: '/privacidad' },
-          { label: 'Términos', href: '/terminos' },
-        ]}
-        copyright="© 2026 Nexa."
-        slogan="La hospitalidad comienza aquí."
-      />
+      <SiteFooter />
     </div>
   );
 }

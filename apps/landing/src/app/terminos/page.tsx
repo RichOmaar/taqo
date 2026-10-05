@@ -1,53 +1,17 @@
 import type { Metadata } from 'next';
 import { ArrowLeft } from 'lucide-react';
-import { Button, Footer, Header } from '@nexa/ui';
+
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome';
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones — Nexa',
-  description: 'Términos y condiciones de uso de la plataforma Nexa.',
+  title: 'Términos y Condiciones — TableNow',
+  description: 'Términos y condiciones de uso de la plataforma TableNow.',
 };
-
-const NAV_LINKS = [
-  { label: 'Beneficios', href: '/#beneficios' },
-  { label: 'Cómo funciona', href: '/#como-funciona' },
-  { label: 'Precios', href: '/#precios' },
-];
-
-const FOOTER_COLUMNS = [
-  {
-    title: 'Producto',
-    links: [
-      { label: 'Beneficios', href: '/#beneficios' },
-      { label: 'Cómo funciona', href: '/#como-funciona' },
-    ],
-  },
-  {
-    title: 'Precios',
-    links: [
-      { label: 'Planes', href: '/#precios' },
-      { label: 'Empresas', href: '/#empresas' },
-    ],
-  },
-  {
-    title: 'Nosotros',
-    links: [
-      { label: 'Visión', href: '/#vision' },
-      { label: 'Inversionistas', href: '/#inversionistas' },
-    ],
-  },
-  {
-    title: 'Contacto',
-    links: [
-      { label: 'Soporte', href: '/#soporte' },
-      { label: 'Prensa', href: '/#prensa' },
-    ],
-  },
-];
 
 export default function TerminosPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Header logo="Nexa" links={NAV_LINKS} cta={<Button size="sm">Empieza gratis</Button>} />
+      <SiteHeader />
 
       <main className="px-6 py-12 lg:px-12 lg:py-16">
         <article className="mx-auto max-w-3xl">
@@ -72,9 +36,9 @@ export default function TerminosPage() {
                 1. Aceptación de los términos
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Al acceder y utilizar la plataforma Nexa, usted acepta estos términos y condiciones
-                en su totalidad. Si no está de acuerdo con alguna parte de estos términos, no
-                deberá utilizar nuestros servicios.
+                Al acceder y utilizar la plataforma TableNow, usted acepta estos términos y
+                condiciones en su totalidad. Si no está de acuerdo con alguna parte de estos
+                términos, no deberá utilizar nuestros servicios.
               </p>
             </section>
 
@@ -83,8 +47,8 @@ export default function TerminosPage() {
                 2. Descripción del servicio
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Nexa es una plataforma tecnológica que permite a los restaurantes gestionar listas
-                de espera digitales y a los comensales registrarse en dichas listas, recibir
+                TableNow es una plataforma tecnológica que permite a los restaurantes gestionar
+                listas de espera digitales y a los comensales registrarse en dichas listas, recibir
                 notificaciones sobre su turno y conocer el tiempo estimado de espera.
               </p>
             </section>
@@ -94,16 +58,14 @@ export default function TerminosPage() {
                 3. Registro y cuenta
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Para utilizar ciertos servicios de Nexa, puede ser necesario proporcionar
+                Para utilizar ciertos servicios de TableNow, puede ser necesario proporcionar
                 información personal. Usted se compromete a:
               </p>
               <ul className="mt-3 list-inside list-disc space-y-2 text-muted">
                 <li>Proporcionar información veraz, precisa y actualizada.</li>
                 <li>Mantener la confidencialidad de sus credenciales de acceso.</li>
                 <li>Notificar inmediatamente cualquier uso no autorizado de su cuenta.</li>
-                <li>
-                  Ser responsable de todas las actividades que ocurran bajo su cuenta.
-                </li>
+                <li>Ser responsable de todas las actividades que ocurran bajo su cuenta.</li>
               </ul>
             </section>
 
@@ -112,17 +74,17 @@ export default function TerminosPage() {
                 4. Uso aceptable
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Al utilizar Nexa, usted se compromete a no:
+                Al utilizar TableNow, usted se compromete a no:
               </p>
               <ul className="mt-3 list-inside list-disc space-y-2 text-muted">
                 <li>Usar el servicio para fines ilegales o no autorizados.</li>
                 <li>Interferir con el funcionamiento de la plataforma.</li>
                 <li>Intentar acceder a áreas restringidas del sistema.</li>
                 <li>Transmitir virus, malware o código malicioso.</li>
+                <li>Realizar reservaciones falsas o con información fraudulenta.</li>
                 <li>
-                  Realizar reservaciones falsas o con información fraudulenta.
+                  Acosar, amenazar o intimidar a otros usuarios o al personal de restaurantes.
                 </li>
-                <li>Acosar, amenazar o intimidar a otros usuarios o al personal de restaurantes.</li>
               </ul>
             </section>
 
@@ -131,7 +93,7 @@ export default function TerminosPage() {
                 5. Restaurantes asociados
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Los restaurantes que utilizan Nexa son negocios independientes. Nexa no es
+                Los restaurantes que utilizan TableNow son negocios independientes. TableNow no es
                 responsable de:
               </p>
               <ul className="mt-3 list-inside list-disc space-y-2 text-muted">
@@ -147,10 +109,10 @@ export default function TerminosPage() {
                 6. Propiedad intelectual
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Todos los contenidos de la plataforma Nexa, incluyendo pero no limitado a textos,
-                gráficos, logotipos, íconos, imágenes, software y código, son propiedad de Nexa o
-                de sus licenciantes y están protegidos por las leyes de propiedad intelectual
-                aplicables.
+                Todos los contenidos de la plataforma TableNow, incluyendo pero no limitado a
+                textos, gráficos, logotipos, íconos, imágenes, software y código, son propiedad de
+                TableNow o de sus licenciantes y están protegidos por las leyes de propiedad
+                intelectual aplicables.
               </p>
             </section>
 
@@ -159,10 +121,10 @@ export default function TerminosPage() {
                 7. Limitación de responsabilidad
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Nexa proporciona el servicio "tal cual" y "según disponibilidad". No garantizamos
-                que el servicio será ininterrumpido, seguro o libre de errores. En la máxima
-                medida permitida por la ley, Nexa no será responsable por daños indirectos,
-                incidentales, especiales o consecuentes.
+                TableNow proporciona el servicio "tal cual" y "según disponibilidad". No
+                garantizamos que el servicio será ininterrumpido, seguro o libre de errores. En la
+                máxima medida permitida por la ley, TableNow no será responsable por daños
+                indirectos, incidentales, especiales o consecuentes.
               </p>
             </section>
 
@@ -171,7 +133,7 @@ export default function TerminosPage() {
                 8. Modificaciones del servicio
               </h2>
               <p className="mt-3 leading-relaxed text-muted">
-                Nexa se reserva el derecho de modificar, suspender o descontinuar cualquier
+                TableNow se reserva el derecho de modificar, suspender o descontinuar cualquier
                 aspecto del servicio en cualquier momento, con o sin previo aviso. No seremos
                 responsables ante usted o terceros por cualquier modificación, suspensión o
                 discontinuación del servicio.
@@ -185,8 +147,8 @@ export default function TerminosPage() {
               <p className="mt-3 leading-relaxed text-muted">
                 Nos reservamos el derecho de actualizar estos términos y condiciones en cualquier
                 momento. Los cambios entrarán en vigor inmediatamente después de su publicación en
-                la plataforma. El uso continuado del servicio después de cualquier cambio
-                constituye su aceptación de los nuevos términos.
+                la plataforma. El uso continuado del servicio después de cualquier cambio constituye
+                su aceptación de los nuevos términos.
               </p>
             </section>
 
@@ -205,8 +167,8 @@ export default function TerminosPage() {
               <h2 className="font-display text-xl font-semibold text-foreground">11. Contacto</h2>
               <p className="mt-3 leading-relaxed text-muted">
                 Si tiene preguntas sobre estos términos y condiciones, puede contactarnos en:{' '}
-                <a href="mailto:legal@nexa.mx" className="text-primary hover:underline">
-                  legal@nexa.mx
+                <a href="mailto:legal@tablenow.mx" className="text-primary hover:underline">
+                  legal@tablenow.mx
                 </a>
               </p>
             </section>
@@ -214,17 +176,7 @@ export default function TerminosPage() {
         </article>
       </main>
 
-      <Footer
-        logo="Nexa"
-        tagline="Conectamos clientes y negocios a través de una hospitalidad cálida y tecnológica."
-        columns={FOOTER_COLUMNS}
-        legalLinks={[
-          { label: 'Aviso de privacidad', href: '/privacidad' },
-          { label: 'Términos', href: '/terminos' },
-        ]}
-        copyright="© 2026 Nexa."
-        slogan="La hospitalidad comienza aquí."
-      />
+      <SiteFooter />
     </div>
   );
 }
