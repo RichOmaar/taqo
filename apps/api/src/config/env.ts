@@ -4,6 +4,28 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   API_PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.string().url(),
+  BETTER_AUTH_SECRET: z.string().min(16),
+  BETTER_AUTH_URL: z.string().url().default('http://localhost:4000'),
+  /**
+   * Comma-separated origins allowed to authenticate. Defaults to the local dev
+   * ports of client/reception/admin; e2e and deployed environments run on
+   * different ports and must pass their own.
+   */
+  TRUSTED_ORIGINS: z
+    .string()
+    .default('http://localhost:3002,http://localhost:3003,http://localhost:3004')
+    .transform((value) =>
+      value
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean),
+    ),
+  /** How often to sweep expired (notified but not seated) entries, in ms. */
+  EXPIRATION_SWEEP_MS: z.coerce.number().int().positive().default(30000),
+  // Web push (VAPID). Optional: push is a no-op when unset.
+  VAPID_PUBLIC_KEY: z.string().optional(),
+  VAPID_PRIVATE_KEY: z.string().optional(),
+  VAPID_SUBJECT: z.string().default('mailto:dev@nexa.local'),
 });
 
 export type Env = z.infer<typeof envSchema>;

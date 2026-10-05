@@ -45,12 +45,12 @@ y `DESIGN.md` (design system).
 
 ## `apps/admin` — Dueño (desktop)
 
-| Mock                                        | Pantalla                           | Prompt Stitch |
-| ------------------------------------------- | ---------------------------------- | ------------- |
-| `panel_de_m_tricas_nexa_due_o`              | Dashboard de métricas              | 3.1           |
-| `configuraci_n_nexa_due_o`                  | Configuración del restaurante      | 3.2           |
-| `personalizaci_n_del_formulario_nexa_due_o` | Constructor de formulario (Strapi) | 3.3           |
-| `gesti_n_de_plan_nexa_due_o`                | Plan y facturación (freemium)      | 3.4           |
+| Mock                                        | Pantalla                                       | Prompt Stitch |
+| ------------------------------------------- | ---------------------------------------------- | ------------- |
+| `panel_de_m_tricas_nexa_due_o`              | Dashboard de métricas                          | 3.1           |
+| `configuraci_n_nexa_due_o`                  | Configuración del restaurante                  | 3.2           |
+| `personalizaci_n_del_formulario_nexa_due_o` | Constructor de formulario (contexto `surveys`) | 3.3           |
+| `gesti_n_de_plan_nexa_due_o`                | Plan y facturación (freemium)                  | 3.4           |
 
 ## Convención de nombres
 

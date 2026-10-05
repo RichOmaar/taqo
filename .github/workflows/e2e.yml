@@ -1,0 +1,57 @@
+name: E2E
+
+# Separate from the fast PR CI: runs the heavier end-to-end suites on a schedule
+# and on demand.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *' # daily 06:00 UTC
+
+env:
+  DATABASE_URL: postgresql://nexa:nexa@localhost:5433/nexa
+  BETTER_AUTH_SECRET: e2e-ci-secret-e2e-ci-secret-0123456789
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @nexa/api exec prisma generate
+
+      - name: Start Postgres
+        run: |
+          docker compose up -d postgres
+          for i in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' nexa-postgres)" = "healthy" ] && break
+            sleep 2
+          done
+
+      - name: Backend E2E (real Postgres)
+        run: pnpm --filter @nexa/api test:e2e
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Frontend E2E (Playwright)
+        run: pnpm test:e2e:web
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

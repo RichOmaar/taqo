@@ -45,13 +45,12 @@ export const FOOTER_COLUMNS = [
   {
     title: 'Ayuda',
     links: [
-      { label: 'Soporte', href: '/soporte' },
-      { label: 'Prensa', href: '/prensa' },
+      { label: 'Soporte', href: '/support' },
     ],
   },
 ];
 
 export const LEGAL_LINKS = [
-  { label: 'Aviso de privacidad', href: '/privacidad' },
-  { label: 'Términos', href: '/terminos' },
+  { label: 'Aviso de privacidad', href: '/privacy' },
+  { label: 'Términos', href: '/terms' },
 ];

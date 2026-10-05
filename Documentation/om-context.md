@@ -32,10 +32,10 @@
 - [x] Smooth scrolling (CSS)
 
 ### Páginas Adicionales
-- [x] /privacidad — Aviso de privacidad (LFPDPPP)
-- [x] /terminos — Términos y condiciones
-- [x] /soporte — Centro de ayuda con FAQs
-- [x] /prensa — Sala de prensa con comunicados y kit de medios
+- [x] /privacy — Aviso de privacidad (LFPDPPP)
+- [x] /terms — Términos y condiciones
+- [x] /support — Centro de ayuda con FAQs
+- [ ] ~~/press~~ — eliminada (2026-10-04): tenía comunicados inventados
 
 ### Mejoras UI/UX Implementadas
 - [x] Header sticky con transformación pill on scroll (estilo iOS Dynamic Island)
@@ -124,8 +124,7 @@ lo visible en `apps/landing`; los paquetes internos siguen como `@nexa/*`.
 
 **Pendiente para publicar (`[POR DEFINIR]`):**
 - Correo, WhatsApp y dominio reales (en `site.ts` está el placeholder `hola@tablenow.mx`).
-- `/prensa` tiene comunicados inventados (ronda pre-seed, alianza): reescribir o quitar.
-- `/privacidad` y `/terminos` son un borrador sin revisión legal y con razón social de relleno.
+- `/privacy` y `/terms` son un borrador sin revisión legal y con razón social de relleno.
 - Confirmar que lealtad, encuestas y reseñas existen antes de anunciarlos.
 - Logo SVG real.
 

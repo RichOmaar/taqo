@@ -1,8 +1,12 @@
-import type { WaitlistEntry } from '@nexa/types';
+import type { WaitlistEntry, WaitlistStatus } from '@nexa/types';
 import { Prisma } from '@prisma/client';
 import type { PrismaClient, WaitlistEntry as PrismaWaitlistEntry } from '@prisma/client';
 
-import type { NewWaitlistEntry, WaitlistRepository } from '../domain/waitlist-repository';
+import type {
+  NewWaitlistEntry,
+  TransitionOptions,
+  WaitlistRepository,
+} from '../domain/waitlist-repository';
 
 const ACTIVE_STATUSES = ['waiting', 'notified'] as const;
 
@@ -59,5 +63,59 @@ export class PrismaWaitlistRepository implements WaitlistRepository {
       orderBy: { position: 'asc' },
     });
     return rows.map(toEntry);
+  }
+
+  async findById(id: string): Promise<WaitlistEntry | null> {
+    const row = await this.prisma.waitlistEntry.findUnique({ where: { id } });
+    return row ? toEntry(row) : null;
+  }
+
+  async findNotified(): Promise<Array<{ entry: WaitlistEntry; expirationMinutes: number }>> {
+    const rows = await this.prisma.waitlistEntry.findMany({
+      where: { status: 'notified' },
+      include: { restaurant: { select: { expirationMinutes: true } } },
+    });
+    return rows.map((row) => ({
+      entry: toEntry(row),
+      expirationMinutes: row.restaurant.expirationMinutes,
+    }));
+  }
+
+  async resequence(queueId: string): Promise<WaitlistEntry[]> {
+    const rows = await this.prisma.waitlistEntry.findMany({
+      where: { queueId, status: { in: [...ACTIVE_STATUSES] } },
+      orderBy: [{ position: 'asc' }, { joinedAt: 'asc' }],
+    });
+    const changed: WaitlistEntry[] = [];
+    const updates = [];
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
+      if (!row) continue;
+      const position = i + 1;
+      if (row.position !== position) {
+        changed.push(toEntry({ ...row, position }));
+        updates.push(
+          this.prisma.waitlistEntry.update({ where: { id: row.id }, data: { position } }),
+        );
+      }
+    }
+    if (updates.length > 0) await this.prisma.$transaction(updates);
+    return changed;
+  }
+
+  async transition(
+    id: string,
+    status: WaitlistStatus,
+    options?: TransitionOptions,
+  ): Promise<WaitlistEntry> {
+    const row = await this.prisma.waitlistEntry.update({
+      where: { id },
+      data: {
+        status,
+        ...(options?.notified ? { notifiedAt: new Date() } : {}),
+        ...(options?.seated ? { seatedAt: new Date() } : {}),
+      },
+    });
+    return toEntry(row);
   }
 }

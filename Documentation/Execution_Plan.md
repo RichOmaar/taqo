@@ -18,9 +18,12 @@ a **steps ejecutables**, donde **cada step = un commit**.
   `docs:`, `refactor:`, `test:`, `ci:`).
 - **Todo el código en inglés** (variables, comentarios, commits). Copy de UI en es-MX.
   Documentación en español permitida.
-- **Ramas:** trabajo en ramas por tarea (`nexa-00x-slug`) y merge a `main` vía PR, salvo
-  cambios triviales. (Convención inicial; ajustable.)
-- **Definition of Done por step:** compila (`typecheck`), pasa lint y, si aplica, tests.
+- **Ramas:** `dev` (default) es la base de las tareas; cada tarea sale de `dev` en una
+  rama `nexa-00x-slug` y regresa por PR. Promoción `dev → qa → prod` (cada una un entorno).
+  Ver `Documentation/Branching.md`.
+- **Definition of Done por step:** compila (`typecheck`), pasa lint y **tests**.
+- **Tests unitarios obligatorios (Vitest):** todo caso de uso / lógica de dominio (backend)
+  y utilidad/componente con lógica (frontend) lleva tests. E2E (Playwright) queda pendiente.
 - Cada tarea NEXA-xxx se subdivide en steps aquí; los steps se afinan al empezar la tarea.
 
 ---
@@ -119,10 +122,13 @@ tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-e
 
 ### Fase 3 — Engordar
 
-- **NEXA-007** Restaurant: dominio + repos + casos de uso (create/edit, colas, ETA base, expiración) + UI de config en admin.
-- **NEXA-008 (resto)** Acciones waitlist: `Notify` / `Seat` / `MarkNoShow` / `Cancel`, posición y ETA sintético.
-- **NEXA-010 (resto)** WS: `entry_updated` / `entry_removed`, auth de subscripción por restaurante/cola.
-- **NEXA-009** Identity completo: BetterAuth (guest → registrado con correo) + staff (hostess/admin).
+- [x] **NEXA-007** ✅ Restaurant config: repos + `RestaurantConfig` (update config, add/rename queues) + endpoints, y UI `/settings` en admin. → `feat(api): add restaurant config use cases` · `feat(admin): add restaurant config UI`
+- [x] **NEXA-008 (resto)** ✅ Acciones waitlist: `Notify` / `Seat` / `MarkNoShow` / `Cancel` con guardas de estado + endpoints + botones en el board. → `feat(api): add waitlist status transitions` · `feat(reception): wire queue actions and live updates`
+- [x] **NEXA-010 (resto)** ✅ WS: emisión de `entry_updated` / `entry_removed` y board reactivo. _(Falta: auth de subscripción por restaurante/cola → va con NEXA-009.)_
+- [x] **NEXA-009** ✅ Identity completo (BetterAuth email/password + bearer): user con `role`
+      (diner/hostess/admin), acciones de recepción + config + subscripción WS protegidas por
+      staff, login en admin/reception, y modo comensal registrado en client (`/account`).
+      Seed de staff admin `owner@demo.nexa`. → `feat(api): integrate betterauth` · `feat(api): protect staff actions and seed admin` · `feat(identity): add staff login and route guards` · `feat(client): add registered-diner mode`
 
 ---
 
@@ -130,20 +136,25 @@ tiempo real._ Arranca con **guest-only** (stub de identity). Verificado end-to-e
 
 Tareas NEXA-013 … NEXA-026 (se subdividen en steps al iniciar cada una):
 
-- **NEXA-013** client: flujo de alta (join) · **NEXA-014** client: estado en espera ·
-  **NEXA-015** client: catálogo · **NEXA-016** client: evaluación post-servicio.
-- **NEXA-017** reception: cola en vivo · **NEXA-018** reception: alta manual + acciones.
-- **NEXA-019** admin: dashboard · **NEXA-020** admin: UI de configuración.
-- **NEXA-021** notifications: web push · **NEXA-023** expiración & no-show.
-- **NEXA-022** landing page — ✅ HECHO en la rama `landing-page`. Rebrand a **TableNow** y
-  copy basado en las presentaciones comerciales. Pendiente: datos de contacto, prensa y legal reales.
-- **NEXA-024** CI · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.
+- [x] **NEXA-013** ✅ client: flujo de alta (join) _(Fase 2)_ · [x] **NEXA-014** ✅ client:
+      estado en espera en vivo (posición/ETA/mesa lista) · [x] **NEXA-015** ✅ client: catálogo (/explore + join por código) ·
+      [x] **NEXA-016** ✅ client: evaluación post-servicio (rating + comentario en estado sentado).
+- [x] **NEXA-017** ✅ reception: cola en vivo multi-cola (tabs) · [x] **NEXA-018** ✅ reception: alta manual (walk-in).
+- [x] **NEXA-019** ✅ admin: dashboard de métricas real · [x] **NEXA-020** ✅ admin: UI de configuración _(NEXA-007)_.
+- [x] **NEXA-021** ✅ notifications: web push (mesa lista) · [x] **NEXA-023** ✅ expiración & no-show (barrido periódico notified→no_show).
+- [x] **NEXA-022** ✅ landing. Rehecha con la marca **TableNow** y el copy de las presentaciones
+      comerciales. Pendiente: legal real y hosting.
+- [x] **NEXA-024** ✅ CI (lint+typecheck+build en push/PR) · **NEXA-025** aprovisionar servidor · **NEXA-026** CD (deja el producto publicado). En CD se resuelve la **separación de despliegue** de `landing` respecto al resto.
 
-## Sprint 3 (sem 5–6) — Strapi, ETA dinámico, pagos, estabilización
+## Sprint 3 (sem 5–6) — ETA dinámico, pagos, estabilización
 
-Tareas NEXA-027 … NEXA-037: Strapi en `apps/cms` + integración, formularios configurables
-end-to-end, catálogo desde Strapi, ETA dinámico, SMS/WhatsApp (Twilio), integraciones
-externas, revisión de arquitectura, buffer de bugfixes, E2E de flujos críticos.
+Tareas NEXA-027 … NEXA-037: ETA dinámico, SMS/WhatsApp (Twilio), integraciones externas,
+revisión de arquitectura, buffer de bugfixes, E2E de flujos críticos.
+
+> **Strapi queda fuera de este sprint.** Los formularios configurables se entregaron en
+> el contexto DDD `surveys` (NEXA-052/057), no en un CMS. El catálogo se sirve desde
+> `apps/api`. Strapi se incorporará cuando exista contenido genuinamente editorial;
+> el razonamiento completo está en `CLAUDE.md` → «Strapi: aplazado».
 
 ## Cierre y cliente (sem 7–12)
 
@@ -158,12 +169,24 @@ venta, prospección, onboarding del primer restaurante y testing controlado en o
   reglas de `CLAUDE.md` actualizadas.
 - **Hecho:** Fase 0 completa — NEXA-002 (config: tsconfig/eslint/prettier) y NEXA-003
   (types: DTOs, enums, eventos WS y contratos REST).
-- **Hecho:** Fases 0, 1 y **2** completas. La rebanada vertical funciona end-to-end:
-  el comensal se une (client → API) y aparece en el board de recepción en vivo (WS).
-- **Siguiente:** Fase 3 — engordar: NEXA-007 (restaurant config + UI admin), NEXA-008
-  resto (Notify/Seat/NoShow/Cancel + `entry_updated`/`entry_removed`), NEXA-009 (identity/BetterAuth).
+- **Hecho:** Fases 0, 1, 2 y **3** completas → **Sprint 1 cerrado** (alcance extendido).
+  Operación básica end-to-end con auth: comensal (guest o registrado) se une, la hostess
+  avisa/sienta/no-show en vivo, el dueño configura, todo protegido por login de staff.
+- **Credenciales dev:** staff admin `owner@demo.nexa` / `ownerpass123` (seed).
+- **Hecho:** **Sprint 2 (producto) completo** — client (013–016), reception (017/018),
+  admin dashboard (019), landing (022), web push (021), expiración (023) y **CI** (024).
+- **Hecho:** **Testing** — unitarios Vitest obligatorios en todo el monorepo + **E2E de
+  backend** (Vitest + Postgres real) + **E2E de frontend** (Playwright, tiempo real) + job
+  de CI E2E nightly (`.github/workflows/e2e.yml`).
+- **Pendiente de despliegue:** NEXA-025 (aprovisionar servidor) y NEXA-026 (CD) — requieren
+  decisión de hosting + secrets.
+- **Sprint 3 (features nuevas):** ETA dinámico (031), SMS/WhatsApp Twilio (032),
+  integraciones externas (033), revisión de arquitectura (034), buffer (035), UX (036).
+  Los formularios configurables (027–029) y el catálogo (030) **ya no dependen de Strapi**:
+  se resolvieron en el backend DDD.
+- **Huecos de MVP pendientes:** registro en la tabla `Notification` (el web push no lo loguea). Cancelar-lugar y re-numeración de posiciones: ✅ hechos.
 - **Decisiones abiertas (`[POR DEFINIR]`):** proveedor SMS/WhatsApp, hosting, estrategia de
-  web push, versión exacta de pnpm a fijar en CI, estrategia de expiración (cron vs. lectura).
+  expiración (cron vs. lectura).
 
 ```
 

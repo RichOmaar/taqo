@@ -1,7 +1,10 @@
+import { SessionProvider } from '@nexa/api-client/react';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import './globals.css';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export const metadata: Metadata = {
   title: 'Nexa — Recepción',
@@ -19,7 +22,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <SessionProvider baseUrl={API_URL}>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

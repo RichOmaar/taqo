@@ -1,14 +1,22 @@
 'use client';
 
+import { isApiRequestError } from '@nexa/api-client';
 import type { Queue, WaitlistEntry } from '@nexa/types';
-import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
+import { Button, Card, Input, StatusBadge, Stepper, SurveyForm, cn } from '@nexa/ui';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import { getRestaurant, joinWaitlist } from '../lib/api';
-
-const RESTAURANT_CODE = 'DEMO';
+import { SurveyPanel } from '../components/SurveyPanel';
+import { api, createEntrySocket } from '../lib/nexa';
+import { subscribeToPush } from '../lib/push';
+import { missingRequired, toAnswers, type Answers } from '../lib/survey-answers';
+import { useActiveSurvey } from '../lib/use-active-survey';
 
 export default function JoinPage() {
+  const [code] = useState(() => {
+    if (typeof window === 'undefined') return 'DEMO';
+    return new URLSearchParams(window.location.search).get('code')?.toUpperCase() ?? 'DEMO';
+  });
   const [restaurantName, setRestaurantName] = useState('');
   const [queues, setQueues] = useState<Queue[]>([]);
   const [queueId, setQueueId] = useState('');
@@ -18,32 +26,94 @@ export default function JoinPage() {
   const [error, setError] = useState<string | null>(null);
   const [entry, setEntry] = useState<WaitlistEntry | null>(null);
 
+  // Extra questions the owner asks at sign-up, if any.
+  const { survey: intake } = useActiveSurvey(code, 'intake');
+  const [intakeAnswers, setIntakeAnswers] = useState<Answers>({});
+  const [intakeProblems, setIntakeProblems] = useState<Record<string, string>>({});
+
   useEffect(() => {
-    getRestaurant(RESTAURANT_CODE)
+    api.restaurants
+      .get(code)
       .then((data) => {
         setRestaurantName(data.restaurant.name);
         setQueues(data.queues);
         setQueueId(data.queues[0]?.id ?? '');
       })
       .catch(() => setError('No pudimos cargar el restaurante.'));
-  }, []);
+  }, [code]);
+
+  // Live status: subscribe to this entry's room once we have joined.
+  const entryId = entry?.id;
+  useEffect(() => {
+    if (!entryId) return;
+    const socket = createEntrySocket();
+
+    const stop = socket.listen({
+      onEntryUpdated: ({ entry: updated }) => {
+        if (updated.id === entryId) setEntry(updated);
+      },
+      onEntryRemoved: (payload) => {
+        // Removed from the queue room, but the entry still exists (cancelled,
+        // no-show); refetch so the screen reflects the final status.
+        if (payload.entryId !== entryId) return;
+        api.entries
+          .get(entryId)
+          .then((res) => setEntry(res.entry))
+          .catch(() => undefined);
+      },
+    });
+
+    socket.subscribeToEntry(entryId);
+
+    return () => {
+      stop();
+      socket.disconnect();
+    };
+  }, [entryId]);
+
+  // Best-effort web push so the diner is notified even without the tab focused.
+  useEffect(() => {
+    if (!entryId) return;
+    subscribeToPush(entryId).catch(() => undefined);
+  }, [entryId]);
 
   async function handleSubmit() {
     if (!queueId || !displayName.trim()) {
       setError('Escribe tu nombre y elige una cola.');
       return;
     }
+
+    // Check the intake answers before joining: it is far kinder to block here
+    // than to take the diner's place in the queue and then complain.
+    const missing = intake ? missingRequired(intake.questions, intakeAnswers) : {};
+    setIntakeProblems(missing);
+    if (Object.keys(missing).length > 0) {
+      setError('Faltan respuestas obligatorias.');
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
     try {
-      const res = await joinWaitlist(RESTAURANT_CODE, {
+      const res = await api.restaurants.joinWaitlist(code, {
         queueId,
         displayName: displayName.trim(),
         partySize,
       });
       setEntry(res.entry);
-    } catch {
-      setError('No pudimos unirte a la fila. Intenta de nuevo.');
+
+      // Best-effort: the diner is already in the queue, so a failed survey post
+      // must not read as a failed join.
+      if (intake) {
+        const answers = toAnswers(intake.questions, intakeAnswers);
+        if (answers.length > 0) {
+          api.surveys.submit(intake.id, res.entry.id, answers).catch(() => undefined);
+        }
+      }
+    } catch (cause) {
+      setError(
+        isApiRequestError(cause) ? cause.message : 'No pudimos unirte a la fila. Intenta de nuevo.',
+      );
     } finally {
       setSubmitting(false);
     }
@@ -52,26 +122,7 @@ export default function JoinPage() {
   if (entry) {
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/15 font-display text-3xl font-bold text-secondary-dark">
-          {entry.position}
-        </div>
-        <div>
-          <h1 className="font-display text-3xl font-bold text-foreground">¡Estás en la fila!</h1>
-          <p className="mt-1 font-body text-muted">Tu lugar en {restaurantName}</p>
-        </div>
-        <Card className="w-full">
-          <div className="flex items-center justify-between">
-            <span className="font-body text-sm text-muted">Tiempo estimado</span>
-            <span className="font-display text-2xl font-bold text-primary-dark">
-              ~{entry.etaMinutes} min
-            </span>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="font-body text-sm text-muted">Estado</span>
-            <StatusBadge status={entry.status} />
-          </div>
-        </Card>
-        <p className="font-body text-sm text-muted">Te avisaremos cuando tu mesa esté lista.</p>
+        <WaitingStatus entry={entry} restaurantName={restaurantName} code={code} />
       </main>
     );
   }
@@ -121,12 +172,220 @@ export default function JoinPage() {
           </div>
         )}
 
+        {intake && intake.questions.length > 0 && (
+          <div className="flex flex-col gap-5 border-t border-border pt-5">
+            <SurveyForm
+              questions={intake.questions}
+              answers={intakeAnswers}
+              problems={intakeProblems}
+              disabled={submitting}
+              onChange={(questionId, value) => {
+                setIntakeAnswers((current) => ({ ...current, [questionId]: value }));
+                setIntakeProblems((current) => {
+                  if (!current[questionId]) return current;
+                  const next = { ...current };
+                  delete next[questionId];
+                  return next;
+                });
+              }}
+            />
+          </div>
+        )}
+
         {error && <p className="font-body text-sm text-error">{error}</p>}
 
         <Button size="lg" className="mt-2 w-full" onClick={handleSubmit} disabled={submitting}>
           {submitting ? 'Uniéndote…' : 'Unirme a la fila'}
         </Button>
       </Card>
+
+      <div className="flex flex-col items-center gap-2">
+        <Link href="/explore" className="font-body text-sm text-foreground">
+          Explorar otros restaurantes
+        </Link>
+        <Link href="/account" className="font-body text-sm text-primary-dark">
+          Crea tu cuenta para guardar tu historial
+        </Link>
+      </div>
     </main>
+  );
+}
+
+function WaitingStatus({
+  entry,
+  restaurantName,
+  code,
+}: {
+  entry: WaitlistEntry;
+  restaurantName: string;
+  code: string;
+}) {
+  if (entry.status === 'notified') {
+    return (
+      <>
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/15 text-5xl">
+          🎉
+        </div>
+        <div>
+          <h1 className="font-display text-3xl font-bold text-foreground">¡Tu mesa está lista!</h1>
+          <p className="mt-1 font-body text-muted">Acércate a la recepción de {restaurantName}.</p>
+        </div>
+        <StatusBadge status={entry.status} />
+        <CancelButton entryId={entry.id} />
+      </>
+    );
+  }
+
+  if (entry.status === 'seated') {
+    return (
+      <>
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary/15 text-5xl">
+          🍽️
+        </div>
+        <h1 className="font-display text-3xl font-bold text-foreground">¡Buen provecho!</h1>
+        <p className="font-body text-muted">Gracias por visitar {restaurantName}.</p>
+        {/* The owner's own survey when there is one, the built-in stars when
+            there is not — never both, so nobody is asked twice. */}
+        <SurveyPanel
+          code={code}
+          purpose="feedback"
+          subjectRef={entry.id}
+          fallback={<ReviewForm entryId={entry.id} />}
+        />
+        <MembershipPrompt />
+      </>
+    );
+  }
+
+  if (entry.status === 'no_show' || entry.status === 'cancelled') {
+    return (
+      <>
+        <h1 className="font-display text-2xl font-bold text-foreground">
+          {entry.status === 'cancelled' ? 'Tu lugar se canceló' : 'Tu lugar expiró'}
+        </h1>
+        <p className="font-body text-muted">Puedes volver a anotarte cuando quieras.</p>
+      </>
+    );
+  }
+
+  return <WaitingCard entry={entry} restaurantName={restaurantName} />;
+}
+
+/**
+ * Offered once the diner has been seated.
+ *
+ * This is the moment a loyalty programme is worth anything to them: they have
+ * just eaten here, so "this visit counts" is a concrete offer rather than an
+ * abstract one. Shown quietly beneath the review, not as a gate.
+ */
+function MembershipPrompt() {
+  return (
+    <Link
+      href="/membership"
+      className="font-body text-sm font-semibold text-primary-dark underline-offset-4 hover:underline"
+    >
+      Acumula esta visita en tu membresía →
+    </Link>
+  );
+}
+
+function ReviewForm({ entryId }: { entryId: string }) {
+  const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState('');
+  const [done, setDone] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  async function submit() {
+    if (rating === 0) return;
+    setBusy(true);
+    try {
+      await api.entries.submitReview(entryId, { rating, feedback: feedback.trim() || null });
+      setDone(true);
+    } catch {
+      // ignore; keep the form so the diner can retry
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (done) {
+    return <p className="font-body text-sm text-secondary-dark">¡Gracias por tu opinión! 💚</p>;
+  }
+
+  return (
+    <Card className="flex w-full flex-col gap-4">
+      <p className="font-display text-lg font-semibold text-foreground">
+        ¿Cómo estuvo tu experiencia?
+      </p>
+      <div className="flex justify-center gap-2">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            aria-label={`${n} estrellas`}
+            onClick={() => setRating(n)}
+            className={cn(
+              'text-3xl transition-opacity',
+              n <= rating ? 'opacity-100' : 'opacity-30',
+            )}
+          >
+            ⭐
+          </button>
+        ))}
+      </div>
+      <Input
+        value={feedback}
+        onChange={(e) => setFeedback(e.target.value)}
+        placeholder="Cuéntanos más (opcional)"
+      />
+      <Button onClick={() => void submit()} disabled={rating === 0 || busy}>
+        {busy ? 'Enviando…' : 'Enviar'}
+      </Button>
+    </Card>
+  );
+}
+
+function WaitingCard({ entry, restaurantName }: { entry: WaitlistEntry; restaurantName: string }) {
+  return (
+    <>
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/15 font-display text-3xl font-bold text-secondary-dark">
+        {entry.position}
+      </div>
+      <div>
+        <h1 className="font-display text-3xl font-bold text-foreground">¡Estás en la fila!</h1>
+        <p className="mt-1 font-body text-muted">Tu lugar en {restaurantName}</p>
+      </div>
+      <Card className="w-full">
+        <div className="flex items-center justify-between">
+          <span className="font-body text-sm text-muted">Tiempo estimado</span>
+          <span className="font-display text-2xl font-bold text-primary-dark">
+            {entry.etaMinutes != null ? `~${entry.etaMinutes} min` : '—'}
+          </span>
+        </div>
+        <div className="mt-3 flex items-center justify-between">
+          <span className="font-body text-sm text-muted">Estado</span>
+          <StatusBadge status={entry.status} />
+        </div>
+      </Card>
+      <p className="font-body text-sm text-muted">Te avisaremos cuando tu mesa esté lista.</p>
+      <CancelButton entryId={entry.id} />
+    </>
+  );
+}
+
+function CancelButton({ entryId }: { entryId: string }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={() => {
+        setBusy(true);
+        api.entries.leave(entryId).catch(() => setBusy(false));
+      }}
+      className="font-body text-sm text-muted underline disabled:opacity-50"
+    >
+      Cancelar mi lugar
+    </button>
   );
 }

@@ -25,3 +25,15 @@ export class ValidationError extends AppError {
     super(400, 'validation_error', message, details);
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message = 'Authentication required') {
+    super(401, 'unauthorized', message);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = 'Insufficient permissions') {
+    super(403, 'forbidden', message);
+  }
+}

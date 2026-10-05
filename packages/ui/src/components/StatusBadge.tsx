@@ -2,12 +2,26 @@ import type { WaitlistStatus } from '@nexa/types';
 
 import { cn } from '../utils/cn';
 
-const config: Record<WaitlistStatus, { label: string; className: string }> = {
-  waiting: { label: 'Esperando', className: 'bg-secondary/15 text-secondary-dark' },
-  notified: { label: 'Avisado', className: 'bg-primary/15 text-primary-dark' },
-  seated: { label: 'Sentado', className: 'bg-secondary/25 text-secondary-dark' },
-  no_show: { label: 'No-show', className: 'bg-error/10 text-error' },
-  cancelled: { label: 'Cancelado', className: 'bg-black/5 text-muted' },
+/**
+ * Single source of the es-MX status wording.
+ *
+ * Exported because the labels are needed outside a badge too — filter menus,
+ * table cells, CSV exports — and a second copy would drift.
+ */
+export const WAITLIST_STATUS_LABELS: Record<WaitlistStatus, string> = {
+  waiting: 'Esperando',
+  notified: 'Avisado',
+  seated: 'Sentado',
+  no_show: 'No-show',
+  cancelled: 'Cancelado',
+};
+
+const config: Record<WaitlistStatus, { className: string }> = {
+  waiting: { className: 'bg-secondary/15 text-secondary-dark' },
+  notified: { className: 'bg-primary/15 text-primary-dark' },
+  seated: { className: 'bg-secondary/25 text-secondary-dark' },
+  no_show: { className: 'bg-error/10 text-error' },
+  cancelled: { className: 'bg-black/5 text-muted' },
 };
 
 export interface StatusBadgeProps {
@@ -17,7 +31,8 @@ export interface StatusBadgeProps {
 
 /** Pill badge for a waitlist entry status, with es-MX labels. */
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const { label, className: statusClass } = config[status];
+  const label = WAITLIST_STATUS_LABELS[status];
+  const { className: statusClass } = config[status];
   return (
     <span
       className={cn(
