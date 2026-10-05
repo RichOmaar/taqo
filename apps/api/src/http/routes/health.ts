@@ -5,7 +5,7 @@ export const healthRouter: Router = Router();
 healthRouter.get('/', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'tablenow-api',
+    service: 'nexa-api',
     timestamp: new Date().toISOString(),
   });
 });

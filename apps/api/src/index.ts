@@ -24,7 +24,7 @@ httpServer.on('request', app);
 httpServer.on('error', (error: NodeJS.ErrnoException) => {
   if (error.code === 'EADDRINUSE') {
     console.error(
-      `[tablenow-api] port ${env.API_PORT} is already in use. Set API_PORT in apps/api/.env to a free port.`,
+      `[nexa-api] port ${env.API_PORT} is already in use. Set API_PORT in apps/api/.env to a free port.`,
     );
     process.exit(1);
   }
@@ -32,5 +32,5 @@ httpServer.on('error', (error: NodeJS.ErrnoException) => {
 });
 
 httpServer.listen(env.API_PORT, () => {
-  console.log(`[tablenow-api] listening on http://localhost:${env.API_PORT} (${env.NODE_ENV})`);
+  console.log(`[nexa-api] listening on http://localhost:${env.API_PORT} (${env.NODE_ENV})`);
 });

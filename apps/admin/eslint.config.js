@@ -1,1 +1,1 @@
-export { default } from '@tablenow/config/eslint';
+export { default } from '@nexa/config/eslint';

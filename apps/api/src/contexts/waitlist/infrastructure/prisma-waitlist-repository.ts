@@ -1,4 +1,4 @@
-import type { WaitlistEntry } from '@tablenow/types';
+import type { WaitlistEntry } from '@nexa/types';
 import { Prisma } from '@prisma/client';
 import type { PrismaClient, WaitlistEntry as PrismaWaitlistEntry } from '@prisma/client';
 

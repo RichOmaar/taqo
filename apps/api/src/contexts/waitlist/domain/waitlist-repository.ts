@@ -1,4 +1,4 @@
-import type { JsonObject, WaitlistEntry } from '@tablenow/types';
+import type { JsonObject, WaitlistEntry } from '@nexa/types';
 
 /** Data required to create a new waitlist entry. */
 export interface NewWaitlistEntry {

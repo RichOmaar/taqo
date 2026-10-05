@@ -1,7 +1,7 @@
 'use client';
 
-import type { Queue, WaitlistEntry } from '@tablenow/types';
-import { Button, Card, Input, StatusBadge, Stepper, cn } from '@tablenow/ui';
+import type { Queue, WaitlistEntry } from '@nexa/types';
+import { Button, Card, Input, StatusBadge, Stepper, cn } from '@nexa/ui';
 import { useEffect, useState } from 'react';
 
 import { getRestaurant, joinWaitlist } from '../lib/api';

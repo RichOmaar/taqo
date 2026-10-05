@@ -1,4 +1,4 @@
-import { Footer, Header, buttonClasses } from '@tablenow/ui';
+import { Footer, Header, buttonClasses } from '@nexa/ui';
 
 import { BRAND, CTA_HREF, FOOTER_COLUMNS, LEGAL_LINKS, NAV_LINKS } from '../site';
 

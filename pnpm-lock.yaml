@@ -29,7 +29,7 @@ importers:
 
   .:
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:packages/config
       eslint:
@@ -47,10 +47,10 @@ importers:
 
   apps/admin:
     dependencies:
-      '@tablenow/types':
+      '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@tablenow/ui':
+      '@nexa/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -63,7 +63,7 @@ importers:
         specifier: ^19.0.0
         version: 19.2.7(react@19.2.7)
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
@@ -80,7 +80,7 @@ importers:
         version: 10.5.2(postcss@8.5.16)
       eslint:
         specifier: 'catalog:'
-        version: 9.39.4(jiti@1.21.7)
+        version: 9.39.4(jiti@2.7.0)
       postcss:
         specifier: ^8.4.49
         version: 8.5.16
@@ -93,12 +93,12 @@ importers:
 
   apps/api:
     dependencies:
+      '@nexa/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@prisma/client':
         specifier: ^6.1.0
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
-      '@tablenow/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       cors:
         specifier: ^2.8.5
         version: 2.8.6
@@ -115,7 +115,7 @@ importers:
         specifier: ^3.24.1
         version: 3.25.76
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/cors':
@@ -145,10 +145,10 @@ importers:
 
   apps/client:
     dependencies:
-      '@tablenow/types':
+      '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@tablenow/ui':
+      '@nexa/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -161,7 +161,7 @@ importers:
         specifier: ^19.0.0
         version: 19.2.7(react@19.2.7)
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
@@ -191,10 +191,10 @@ importers:
 
   apps/landing:
     dependencies:
-      '@tablenow/types':
+      '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@tablenow/ui':
+      '@nexa/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       lucide-react:
@@ -210,7 +210,7 @@ importers:
         specifier: ^19.0.0
         version: 19.2.7(react@19.2.7)
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
@@ -227,7 +227,7 @@ importers:
         version: 10.5.2(postcss@8.5.16)
       eslint:
         specifier: 'catalog:'
-        version: 9.39.4(jiti@2.7.0)
+        version: 9.39.4(jiti@1.21.7)
       postcss:
         specifier: ^8.4.49
         version: 8.5.16
@@ -240,10 +240,10 @@ importers:
 
   apps/reception:
     dependencies:
-      '@tablenow/types':
+      '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@tablenow/ui':
+      '@nexa/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -259,7 +259,7 @@ importers:
         specifier: ^4.8.1
         version: 4.8.3
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
@@ -310,7 +310,7 @@ importers:
 
   packages/types:
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../config
       eslint:
@@ -322,7 +322,7 @@ importers:
 
   packages/ui:
     dependencies:
-      '@tablenow/types':
+      '@nexa/types':
         specifier: workspace:*
         version: link:../types
       '@tailwindcss/forms':
@@ -332,7 +332,7 @@ importers:
         specifier: ^1.24.0
         version: 1.24.0(react@19.2.7)
     devDependencies:
-      '@tablenow/config':
+      '@nexa/config':
         specifier: workspace:*
         version: link:../config
       '@types/react':

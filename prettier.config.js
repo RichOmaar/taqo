@@ -1,1 +1,1 @@
-export { default } from '@tablenow/config/prettier';
+export { default } from '@nexa/config/prettier';

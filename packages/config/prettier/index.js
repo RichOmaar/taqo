@@ -1,5 +1,5 @@
 /**
- * Shared Prettier config for TableNow.
+ * Shared Prettier config for Nexa.
  * @type {import("prettier").Config}
  */
 export default {

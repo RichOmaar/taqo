@@ -1,5 +1,5 @@
 {
-  "name": "@tablenow/api",
+  "name": "@nexa/api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@tablenow/types": "workspace:*",
+    "@nexa/types": "workspace:*",
     "@prisma/client": "^6.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -27,7 +27,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@tablenow/config": "workspace:*",
+    "@nexa/config": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.10.2",

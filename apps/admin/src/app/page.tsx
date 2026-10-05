@@ -1,4 +1,4 @@
-import { Card } from '@tablenow/ui';
+import { Card } from '@nexa/ui';
 
 const stats = [
   { label: 'Espera promedio', value: '18 min' },

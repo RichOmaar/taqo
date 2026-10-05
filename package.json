@@ -1,5 +1,5 @@
 {
-  "name": "tablenow",
+  "name": "nexa",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -18,19 +18,13 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\""
   },
   "devDependencies": {
-    "@tablenow/config": "workspace:*",
+    "@nexa/config": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "turbo": "^2.3.3",
     "typescript": "catalog:"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@prisma/client",
-      "prisma",
-      "@prisma/engines",
-      "esbuild",
-      "sharp"
-    ]
+    "onlyBuiltDependencies": ["@prisma/client", "prisma", "@prisma/engines", "esbuild", "sharp"]
   }
 }

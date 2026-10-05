@@ -1,4 +1,4 @@
 {
-  "extends": "@tablenow/config/tsconfig.base.json",
+  "extends": "@nexa/config/tsconfig.base.json",
   "include": ["src"]
 }

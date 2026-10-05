@@ -1,4 +1,4 @@
-import type { JoinWaitlistResponse, ListQueueEntriesResponse } from '@tablenow/types';
+import type { JoinWaitlistResponse, ListQueueEntriesResponse } from '@nexa/types';
 import { Router } from 'express';
 import { z } from 'zod';
 

@@ -1,4 +1,4 @@
-// TableNow design tokens, transcribed from the design system
+// Nexa design tokens, transcribed from the design system
 // (Documentation/Mocks/nexa_design_system/DESIGN.md) and the shared Stitch
 // style block. Curated, semantic palette. Kept in sync with tailwind-preset.js.
 

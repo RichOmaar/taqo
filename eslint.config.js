@@ -1,7 +1,7 @@
-import base from '@tablenow/config/eslint';
+import base from '@nexa/config/eslint';
 
 /**
  * Root ESLint config. Each workspace can define its own eslint.config.js that
- * re-exports or extends @tablenow/config/eslint.
+ * re-exports or extends @nexa/config/eslint.
  */
 export default base;

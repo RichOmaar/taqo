@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'TableNow — Recepción',
+  title: 'Nexa — Recepción',
   description: 'Gestiona la lista de espera de tu restaurante en tiempo real.',
 };
 

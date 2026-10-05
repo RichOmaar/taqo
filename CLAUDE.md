@@ -1,11 +1,11 @@
-# CLAUDE.md — TableNow
+# CLAUDE.md — Nexa
 
 > Guía para Claude (y cualquier asistente de IA) al trabajar en este repositorio.
 > Léela completa antes de proponer o escribir código.
 
-## Qué es TableNow
+## Qué es Nexa
 
-TableNow es una plataforma que conecta clientes y negocios. El primer producto es una
+Nexa es una plataforma que conecta clientes y negocios. El primer producto es una
 **solución de listas de espera para restaurantes**: el comensal se anota digitalmente
 (QR, código o catálogo), recibe notificaciones sobre su turno, y el restaurante
 gestiona la fila en tiempo real con un panel de métricas.
@@ -47,7 +47,7 @@ una experiencia de usuario excelente y tiempo real fluido.
 ## Estructura del monorepo
 
 ```
-tablenow/
+nexa/
 ├── apps/
 │   ├── landing/         # Sitio de marketing (público, SEO/conversión) — Next.js
 │   ├── client/          # Webapp cliente (móvil) — Next.js

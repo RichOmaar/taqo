@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'TableNow — Panel del restaurante',
+  title: 'Nexa — Panel del restaurante',
   description: 'Configura tu restaurante y consulta tus métricas.',
 };
 

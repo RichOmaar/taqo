@@ -1,5 +1,5 @@
-// TableNow data model. Field names are camelCase in Prisma and mapped to snake_case
-// columns; enum values mirror the shared contracts in @tablenow/types.
+// Nexa data model. Field names are camelCase in Prisma and mapped to snake_case
+// columns; enum values mirror the shared contracts in @nexa/types.
 
 generator client {
   provider = "prisma-client-js"

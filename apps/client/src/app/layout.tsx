@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'TableNow — Únete a la fila',
+  title: 'Nexa — Únete a la fila',
   description: 'Anótate a la fila de tu restaurante y sigue tu lugar en tiempo real.',
 };
 
