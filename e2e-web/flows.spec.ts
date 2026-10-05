@@ -1,9 +1,10 @@
+import { localUrl } from '@nexa/ports';
 import { expect, test } from '@playwright/test';
 
 import { truncateEntries } from './helpers';
 
-const CLIENT = 'http://localhost:3102';
-const RECEPTION = 'http://localhost:3103';
+const CLIENT = localUrl('e2eClient');
+const RECEPTION = localUrl('e2eReception');
 
 test.beforeEach(async () => {
   await truncateEntries();

@@ -1,6 +1,7 @@
+import { postgresUrl } from '@nexa/ports';
 import pg from 'pg';
 
-const TEST_URL = 'postgresql://nexa:nexa@localhost:5433/nexa_e2e';
+const TEST_URL = postgresUrl('nexa_e2e');
 
 /** Reset the operational tables so each test starts from an empty queue. */
 export async function truncateEntries(): Promise<void> {

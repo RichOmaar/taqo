@@ -24,7 +24,7 @@ httpServer.on('request', app);
 httpServer.on('error', (error: NodeJS.ErrnoException) => {
   if (error.code === 'EADDRINUSE') {
     console.error(
-      `[nexa-api] port ${env.API_PORT} is already in use. Set API_PORT in apps/api/.env to a free port.`,
+      `[nexa-api] port ${env.API_PORT} is already in use. Set NEXA_API_PORT in the root .env to a free port.`,
     );
     process.exit(1);
   }

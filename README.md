@@ -125,44 +125,84 @@ pnpm --filter api prisma migrate dev   # [ajustar según scripts reales]
 ### Desarrollo
 
 ```bash
-# Levantar todo (ajustar según los scripts que se definan)
+# Levantar todo el stack (4 frontends + API)
 pnpm dev
 
 # O levantar workspaces individuales
-pnpm --filter client dev       # webapp cliente
-pnpm --filter reception dev    # webapp hostess
-pnpm --filter admin dev        # panel admin
-pnpm --filter api dev          # backend
+pnpm --filter @nexa/client dev       # webapp cliente
+pnpm --filter @nexa/reception dev    # webapp hostess
+pnpm --filter @nexa/admin dev        # panel admin
+pnpm --filter @nexa/api dev          # backend
 ```
 
-> Los scripts exactos se irán definiendo a medida que se implemente cada workspace.
-> El `package.json` de cada uno es la fuente de verdad de sus comandos.
+Los puertos salen del `.env` de la raíz (ver [Puertos](#puertos)). El
+`package.json` de cada workspace es la fuente de verdad de sus comandos.
+
+> **Las apps de Next corren con Turbopack en desarrollo** (`next dev --turbopack`).
+> No es solo por velocidad: con Webpack, levantar las cuatro a la vez hace que
+> Watchpack intente registrar miles de watchers de golpe sobre el monorepo y
+> reviente con `EMFILE: too many open files`. Cuando eso pasa el dev server
+> arranca pero se queda sin watcher, así que no compila las rutas y todo
+> responde 404. Turbopack no usa Watchpack para eso y el problema desaparece.
+> Subir `ulimit -n` **no** lo arregla: el pico de descriptores revienta igual.
+>
+> `pnpm build` sigue usando Webpack, que es el camino probado para producción.
 
 ---
 
 ## Variables de entorno
 
-Documentar aquí las variables necesarias (no commitear el `.env` real). Valores de
-ejemplo en `.env.example`:
+Toda la configuración local vive en **un solo `.env` en la raíz del monorepo**:
 
+```bash
+cp .env.example .env
 ```
-# Base de datos
-DATABASE_URL=postgresql://user:password@localhost:5432/nexa
 
-# Backend
-API_PORT=[POR DEFINIR]
+Ese archivo está en `.gitignore`: es tuyo, no afecta a nadie más ni a los
+despliegues. Lo leen `pnpm dev`, `docker compose` y ambas suites de E2E. Cada app
+admite además su propio `.env.local` si necesitas un override puntual (ver los
+`.env.example` de cada workspace), pero no hace falta para el flujo normal.
 
-# Auth (BetterAuth)
-BETTER_AUTH_SECRET=<secreto aleatorio de 32+ caracteres>
-BETTER_AUTH_URL=http://localhost:4000
-# Orígenes que pueden autenticarse, separados por coma. Por defecto los puertos
-# locales de client/reception/admin; los E2E y cada entorno desplegado corren en
-# otros puertos y deben declarar los suyos.
-TRUSTED_ORIGINS=http://localhost:3002,http://localhost:3003,http://localhost:3004
+Variables principales — la lista completa y comentada está en
+[`.env.example`](.env.example):
 
-# Twilio (SMS / WhatsApp)
-[POR DEFINIR]
-```
+| Variable                        | Para qué                                       |
+| ------------------------------- | ---------------------------------------------- |
+| `NEXA_*_PORT`                   | Puertos de cada servicio (ver abajo)           |
+| `DATABASE_URL`                  | Postgres (Prisma)                              |
+| `BETTER_AUTH_SECRET`            | Secreto de BetterAuth, 16+ caracteres          |
+| `VAPID_PUBLIC_KEY` / `_PRIVATE` | Web push. Opcional: sin ellas el push es no-op |
+
+`BETTER_AUTH_URL` y `TRUSTED_ORIGINS` se derivan solos de los puertos; solo hace
+falta declararlos en entornos desplegados.
+
+### Puertos
+
+Nexa reserva el bloque **9000–9999** para no chocar con otros proyectos de la
+máquina. Los servicios de desarrollo ocupan 9000–9099 y sus equivalentes de e2e
+9100–9199, así puedes tener el stack de dev arriba mientras corren los tests.
+
+| Puerto | Servicio           | Variable                  |
+| ------ | ------------------ | ------------------------- |
+| 9000   | `landing`          | `NEXA_LANDING_PORT`       |
+| 9001   | `client`           | `NEXA_CLIENT_PORT`        |
+| 9002   | `reception`        | `NEXA_RECEPTION_PORT`     |
+| 9003   | `admin`            | `NEXA_ADMIN_PORT`         |
+| 9010   | `api` (HTTP + WS)  | `NEXA_API_PORT`           |
+| 9020   | Postgres (Docker)  | `NEXA_POSTGRES_PORT`      |
+| 9101   | `client` en e2e    | `NEXA_E2E_CLIENT_PORT`    |
+| 9102   | `reception` en e2e | `NEXA_E2E_RECEPTION_PORT` |
+| 9110   | `api` en e2e       | `NEXA_E2E_API_PORT`       |
+
+Los valores por defecto viven en
+[`packages/ports`](packages/ports/src/defaults.ts) y son la fuente única de
+verdad: de ahí los toman el API, las apps de Next, `docker-compose.yml`,
+Playwright y ambas suites de E2E. Para mover un puerto, cambia **solo** su
+variable en el `.env` de la raíz; todo lo demás lo sigue (incluidas las URLs que
+las apps usan para hablar con el backend). Un test falla si algún valor del repo
+se desincroniza del mapa.
+
+> 9229 se deja libre a propósito: es el default de `node --inspect`.
 
 ---
 
@@ -214,7 +254,8 @@ las reglas de arquitectura, las convenciones DDD y qué hacer / evitar.
 - `pnpm test` — unitarios en todo el monorepo (obligatorios, ver `CLAUDE.md`).
 - `pnpm --filter @nexa/api test:e2e` — E2E de backend (crea una DB aislada `nexa_e2e`).
 - `pnpm test:e2e:web` — E2E de frontend con Playwright (recepción ↔ comensal en vivo).
-  Requiere Postgres en `:5433` (`docker compose up -d postgres`).
+  Requiere Postgres (`docker compose up -d postgres`), que se publica en el
+  puerto de `NEXA_POSTGRES_PORT` (9020 por defecto).
 
 ---
 

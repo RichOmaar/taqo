@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "dotenv -e ../../.env -- tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:e2e": "dotenv -e ../../.env -- vitest run --config vitest.e2e.config.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
@@ -20,6 +20,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@nexa/ports": "workspace:*",
     "@nexa/types": "workspace:*",
     "@prisma/client": "^6.1.0",
     "better-auth": "^1.6.23",
@@ -37,6 +38,7 @@
     "@types/node": "^22.10.2",
     "@types/pg": "^8.20.0",
     "@types/web-push": "^3.6.4",
+    "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "pg": "^8.22.0",
     "prisma": "^6.1.0",

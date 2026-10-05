@@ -24,6 +24,9 @@ catalogs:
     '@vitejs/plugin-react':
       specifier: ^4.3.4
       version: 4.7.0
+    dotenv-cli:
+      specifier: ^11.0.0
+      version: 11.0.0
     eslint:
       specifier: ^9.17.0
       version: 9.39.4
@@ -53,12 +56,18 @@ importers:
       '@nexa/config':
         specifier: workspace:*
         version: link:packages/config
+      '@nexa/ports':
+        specifier: workspace:*
+        version: link:packages/ports
       '@playwright/test':
         specifier: ^1.61.1
         version: 1.61.1
       '@types/pg':
         specifier: ^8.20.0
         version: 8.20.0
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.7.0)
@@ -80,6 +89,9 @@ importers:
       '@nexa/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@nexa/ports':
+        specifier: workspace:*
+        version: link:../../packages/ports
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -132,6 +144,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.5.2(postcss@8.5.16)
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@1.21.7)
@@ -153,6 +168,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@nexa/ports':
+        specifier: workspace:*
+        version: link:../../packages/ports
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -199,6 +217,9 @@ importers:
       '@types/web-push':
         specifier: ^3.6.4
         version: 3.6.4
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.7.0)
@@ -226,6 +247,9 @@ importers:
       '@nexa/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@nexa/ports':
+        specifier: workspace:*
+        version: link:../../packages/ports
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -272,6 +296,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.5.2(postcss@8.5.16)
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.7.0)
@@ -327,6 +354,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.5.2(postcss@8.5.16)
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.7.0)
@@ -345,6 +375,9 @@ importers:
       '@nexa/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@nexa/ports':
+        specifier: workspace:*
+        version: link:../../packages/ports
       '@nexa/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -376,6 +409,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.5.2(postcss@8.5.16)
+      dotenv-cli:
+        specifier: 'catalog:'
+        version: 11.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.7.0)
@@ -461,6 +497,24 @@ importers:
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.63.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+
+  packages/ports:
+    devDependencies:
+      '@nexa/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.1
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.4(jiti@2.7.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.7(@types/node@22.20.1)(jiti@2.7.0)(jsdom@25.0.1)(tsx@4.23.0)
 
   packages/types:
     devDependencies:
@@ -2097,8 +2151,20 @@ packages:
   dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
 
+  dotenv-cli@11.0.0:
+    resolution: {integrity: sha512-r5pA8idbk7GFWuHEU7trSTflWcdBpQEK+Aw17UrSHjS6CReuhrrPcyC3zcQBPQvhArRHnBo/h6eLH1fkCvNlww==}
+    hasBin: true
+
+  dotenv-expand@12.0.3:
+    resolution: {integrity: sha512-uc47g4b+4k/M/SeaW1y4OApx+mtLWl92l5LMPP0GNXctZqELk+YGgOPIIC5elYmUH4OuoK3JLhuRUYegeySiFA==}
+    engines: {node: '>=12'}
+
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
+
+  dotenv@17.4.2:
+    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -4890,7 +4956,20 @@ snapshots:
 
   dom-accessibility-api@0.6.3: {}
 
+  dotenv-cli@11.0.0:
+    dependencies:
+      cross-spawn: 7.0.6
+      dotenv: 17.4.2
+      dotenv-expand: 12.0.3
+      minimist: 1.2.8
+
+  dotenv-expand@12.0.3:
+    dependencies:
+      dotenv: 16.6.1
+
   dotenv@16.6.1: {}
+
+  dotenv@17.4.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
