@@ -22,6 +22,23 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: 'h-14 px-8 text-lg',
 };
 
+/** Button styles, exposed so links (`<a>`) can look like buttons. */
+export function buttonClasses({
+  variant = 'primary',
+  size = 'md',
+  className,
+}: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}) {
+  return cn(
+    'inline-flex items-center justify-center rounded-full font-display font-semibold',
+    'transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary',
+    'disabled:pointer-events-none disabled:opacity-50',
+    'active:scale-[0.98]',
+    variantClasses[variant],
+    sizeClasses[size],
+    className,
+  );
+}
+
 /** Pill-shaped primary action button. */
 export function Button({
   variant = 'primary',
@@ -30,19 +47,5 @@ export function Button({
   type = 'button',
   ...props
 }: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cn(
-        'inline-flex items-center justify-center rounded-full font-display font-semibold',
-        'transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary',
-        'disabled:pointer-events-none disabled:opacity-50',
-        'active:scale-[0.98]',
-        variantClasses[variant],
-        sizeClasses[size],
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <button type={type} className={buttonClasses({ variant, size, className })} {...props} />;
 }
