@@ -1,4 +1,4 @@
-# Plan de Ejecución — Nexa MVP
+# Plan de Ejecución — TableNow MVP
 
 Plan de trabajo para construir el MVP. Traduce el `Plan_Sprints_Nexa` (tareas NEXA-xxx)
 a **steps ejecutables**, donde **cada step = un commit**.
@@ -54,7 +54,7 @@ Fase 3  Engordar ─────────────────►  007 res
 
 #### NEXA-002 · Package de config compartida — ✅ HECHO
 
-- [x] **S1.** `packages/config` (`@nexa/config`) con `tsconfig.base.json` (strict).
+- [x] **S1.** `packages/config` (`@tablenow/config`) con `tsconfig.base.json` (strict).
       → `chore(config): add base tsconfig`
 - [x] **S2.** ESLint compartido (flat config, typescript-eslint + prettier compat).
       → `chore(config): add shared eslint config`
@@ -62,7 +62,7 @@ Fase 3  Engordar ─────────────────►  007 res
 
 #### NEXA-003 · Package de tipos/contratos — ✅ HECHO
 
-- [x] **S1.** `packages/types` (`@nexa/types`) init como internal package (exporta source,
+- [x] **S1.** `packages/types` (`@tablenow/types`) init como internal package (exporta source,
       sin build). → `chore(types): init shared types package`
 - [x] **S2.** DTOs de dominio (Restaurant, Queue, WaitlistEntry, User, StaffUser,
       Notification, ServiceReview) + enums de estado. → `feat(types): add domain DTOs and enums`
@@ -102,7 +102,7 @@ Fase 3  Engordar ─────────────────►  007 res
 
 **NEXA-011 · Scaffold de apps Next.js** — ✅ HECHO
 
-- [x] **S1.** `apps/landing` (Next.js 15 + TS + Tailwind + `@nexa/ui`, build + smoke verificados). → `feat(landing): scaffold next.js app`
+- [x] **S1.** `apps/landing` (Next.js 15 + TS + Tailwind + `@tablenow/ui`, build + smoke verificados). → `feat(landing): scaffold next.js app`
 - [x] **S2.** `apps/client` (mobile-first, join starter). → `feat(client): scaffold next.js app`
 - [x] **S3.** `apps/reception` (board starter). → `feat(reception): scaffold next.js app`
 - [x] **S4.** `apps/admin` (dashboard starter). → `feat(admin): scaffold next.js app`
