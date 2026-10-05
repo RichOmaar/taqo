@@ -1,61 +1,62 @@
 import {
-  Calendar,
-  Smile,
-  BarChart3,
-  Star,
-  MessageSquare,
-  Zap,
-  QrCode,
-  Bell,
-  LayoutDashboard,
-  CheckCircle,
-  ClipboardList,
-  CreditCard,
   ArrowRight,
+  Bell,
+  CheckCircle,
+  Clock,
+  Gift,
+  Layers,
+  ListChecks,
+  Mail,
+  MessageCircle,
+  QrCode,
+  RefreshCw,
+  Smartphone,
+  Star,
+  TimerOff,
 } from 'lucide-react';
-import {
-  Badge,
-  Button,
-  FeatureCard,
-  Footer,
-  Header,
-  PricingCard,
-  RoadmapCard,
-  SocialProof,
-  StepCard,
-} from '@nexa/ui';
+import { Badge, FeatureCard, PricingCard, StepCard, buttonClasses, cn } from '@nexa/ui';
 
-const NAV_LINKS = [
-  { label: 'Beneficios', href: '#beneficios' },
-  { label: 'Cómo funciona', href: '#como-funciona' },
-  { label: 'Precios', href: '#precios' },
+import { SiteFooter, SiteHeader } from '../components/SiteChrome';
+import { CONTACT, CTA_HREF } from '../site';
+
+const PROBLEMS = [
+  {
+    title: 'Llega alguien, ve la fila, se va',
+    description:
+      'No preguntó cuánto era la espera. No dejó su nombre. Para tu caja ese cliente no existió nunca — pero existió, y se fue a cenar a otro lado.',
+  },
+  {
+    title: 'Tu recepción está apagando fuegos',
+    description:
+      'Una libreta, nombres gritados en la puerta, el que llegó primero reclamando, y la anfitriona tratando de acordarse de quién era quién.',
+  },
+  {
+    title: 'Y al final de la noche no sabes qué pasó',
+    description:
+      'Cuánto esperó la gente de verdad, cuántos se fueron, cuántos se anotaron y nunca llegaron.',
+  },
 ];
 
-const FEATURES = [
+const ROLES = [
   {
-    icon: <Calendar className="h-6 w-6" />,
-    title: 'Menos no-shows',
-    description: 'Reduce el ausentismo con recordatorios automáticos.',
+    title: 'Tu cliente',
+    description:
+      'Escanea el QR de la entrada y se anota solo. Ve su lugar en la fila y cuánto falta, desde su teléfono. Se puede ir a caminar sin perder su turno.',
+    className: 'bg-secondary/10',
+    titleClassName: 'text-secondary-dark',
   },
   {
-    icon: <Smile className="h-6 w-6" />,
-    title: 'Clientes más felices',
-    description: 'Brinda libertad a tus comensales mientras esperan.',
+    title: 'Tu anfitriona',
+    description:
+      'Ve la fila completa en la tablet, actualizada al segundo. Avisa que la mesa está lista con un toque. Marca quién se sentó y quién no llegó.',
+    className: 'bg-primary/10',
+    titleClassName: 'text-primary-dark',
   },
   {
-    icon: <BarChart3 className="h-6 w-6" />,
-    title: 'Datos de tu operación',
-    description: 'Toma decisiones basadas en métricas reales de tu flujo.',
-  },
-  {
-    icon: <Star className="h-6 w-6" />,
-    title: 'Colas VIP y visitantes',
-    description: 'Gestiona diferentes tipos de clientes con facilidad.',
-  },
-  {
-    icon: <MessageSquare className="h-6 w-6" />,
-    title: 'Avisos por WhatsApp y SMS',
-    description: 'Comunicación directa y efectiva sin apps extras.',
+    title: 'Tú',
+    description: 'Abres el panel el lunes y ves exactamente qué pasó el fin de semana.',
+    className: 'border border-border bg-surface shadow-soft',
+    titleClassName: 'text-foreground',
   },
 ];
 
@@ -63,356 +64,526 @@ const STEPS = [
   {
     step: 1,
     icon: <QrCode className="h-8 w-8" />,
-    title: 'El comensal se anota',
+    title: 'Se anota',
     description:
-      'Escanea un QR, ingresa un código o simplemente se registra desde el catálogo digital de tu restaurante.',
+      'Escanea el QR de la entrada. Sin app y sin cuenta: le basta un nombre. Si quiere registrarse para guardar su historial, también puede.',
   },
   {
     step: 2,
-    icon: <Bell className="h-8 w-8" />,
-    title: 'Recibe avisos',
+    icon: <Smartphone className="h-8 w-8" />,
+    title: 'Espera informado',
     description:
-      'Conoce su posición exacta, el tiempo estimado de espera y recibe una notificación automática cuando su mesa esté lista.',
+      'Ve su posición y el tiempo estimado desde su teléfono. Puede irse a caminar sin perder su turno.',
   },
   {
     step: 3,
-    icon: <LayoutDashboard className="h-8 w-8" />,
-    title: 'Tú gestionas y mides',
+    icon: <Bell className="h-8 w-8" />,
+    title: 'Recibe el aviso',
     description:
-      'Controla la cola en tiempo real desde tu tablero Nexa Pro y analiza métricas de rendimiento para optimizar tus turnos.',
+      'Le avisamos cuando su mesa está lista. Y si ya no puede quedarse, cancela desde su teléfono y tu fila se libera sola.',
+  },
+];
+
+const QUEUE_STATUSES = [
+  { label: 'Esperando', active: true },
+  { label: 'Avisado', active: true },
+  { label: 'Sentado', active: true },
+  { label: 'No llegó', active: false },
+  { label: 'Canceló', active: false },
+];
+
+const TEAM_FEATURES = [
+  {
+    icon: <RefreshCw className="h-6 w-6" />,
+    title: 'Todo se mueve solo',
+    description:
+      'Cuando alguien se anota desde la puerta, aparece en la tablet sin recargar nada. Cuando tu anfitriona lo sienta, desaparece del teléfono del cliente.',
+  },
+  {
+    icon: <Layers className="h-6 w-6" />,
+    title: 'Varias filas a la vez',
+    description: 'General, VIP, visitantes. Cada una con su orden, en la misma pantalla.',
+  },
+  {
+    icon: <Clock className="h-6 w-6" />,
+    title: 'El tiempo se ajusta solo',
+    description:
+      'Con el ritmo real de tu restaurante. Y si tu anfitriona sabe algo que el sistema no, lo corrige a mano.',
+  },
+  {
+    icon: <TimerOff className="h-6 w-6" />,
+    title: 'El que no llega no te bloquea',
+    description:
+      'Tú defines cuántos minutos esperar después del aviso; pasado ese tiempo, la fila avanza sola.',
+  },
+];
+
+const METRICS = [
+  { title: 'Cuánto espera tu gente de verdad', detail: 'No lo que crees, lo que mide el sistema' },
+  { title: 'A qué horas te saturas', detail: 'Por día y por franja' },
+  { title: 'Cuántos se anotan y no llegan', detail: 'Y qué tan seguido' },
+  { title: 'Cuántos terminan sentados', detail: 'Tu conversión real de la fila' },
+  { title: 'Qué tan rápido rota tu mesa', detail: 'Medido, no estimado' },
+  {
+    title: 'Qué opinan los que ya se fueron',
+    detail: 'Reseñas ligadas a la noche en que vinieron',
+  },
+];
+
+const RETENTION_FEATURES = [
+  {
+    icon: <Gift className="h-6 w-6" />,
+    title: 'Programa de lealtad',
+    description:
+      'Niveles, puntos y premios con tus reglas. Cada punto queda registrado y es auditable — si un cliente reclama, tienes con qué responderle.',
+  },
+  {
+    icon: <ListChecks className="h-6 w-6" />,
+    title: 'Tus propias preguntas',
+    description:
+      'Armas el formulario de alta y la encuesta post-visita como quieras. Si mañana cambias una pregunta, las respuestas viejas se siguen leyendo bien.',
+  },
+  {
+    icon: <Star className="h-6 w-6" />,
+    title: 'Reseñas donde importan',
+    description:
+      'La calificación del cliente llega a tu panel, junto a los tiempos de esa noche. No a una plataforma que no controlas.',
   },
 ];
 
 const FREE_FEATURES = [
-  { text: 'Gestión de fila' },
-  { text: 'Colas dinámicas' },
-  { text: 'Notificaciones web' },
-  { text: 'Métricas básicas' },
+  { text: 'Gestión de fila en tiempo real' },
+  { text: 'Todas las colas que necesites' },
+  { text: 'Notificaciones web a tus clientes' },
+  { text: 'Métricas de espera, rotación y no-shows' },
+  { text: 'Formulario de alta configurable' },
 ];
 
 const PRO_FEATURES = [
-  { text: 'Notificaciones SMS y WhatsApp', isAddition: true },
+  { text: 'Avisos por WhatsApp', isAddition: true },
+  { text: 'Avisos por SMS', isAddition: true },
   { text: 'Métricas avanzadas', isAddition: true },
-  { text: 'Soporte prioritario 24/7', isAddition: true },
-  { text: 'Integración con POS', isAddition: true },
+  { text: 'Soporte prioritario', isAddition: true },
 ];
 
-const ROADMAP = [
+const ONBOARDING = [
   {
-    phase: 'Fase 1',
-    icon: <CheckCircle className="h-6 w-6" />,
-    title: 'Listas de Espera Digitales',
-    description: 'Gestión fluida de turnos en tiempo real para eliminar la ansiedad del comensal.',
-    status: 'completed' as const,
+    title: 'Damos de alta tu restaurante',
+    description: 'Tus colas, tus tiempos, tus reglas de espera. Una sesión contigo.',
   },
+  { title: 'Te entregamos tu QR', description: 'Lo pones en la entrada y en la recepción.' },
+  { title: 'Entrenamos a tu equipo', description: 'Es una pantalla; toma menos de media hora.' },
   {
-    phase: 'Fase 2',
-    icon: <ClipboardList className="h-6 w-6" />,
-    title: 'Reservas y CRM',
-    description: 'Conoce a tus clientes habituales y personaliza cada visita desde la reserva.',
-    status: 'in-progress' as const,
-  },
-  {
-    phase: 'Fase 3',
-    icon: <CreditCard className="h-6 w-6" />,
-    title: 'Pagos y Experiencia Total',
-    description: 'Cerrando el ciclo con pagos integrados y menú digital inteligente.',
-    status: 'upcoming' as const,
+    title: 'Lo probamos en un fin de semana real',
+    description: 'Nosotros disponibles por si algo se atora.',
   },
 ];
 
-const FOOTER_COLUMNS = [
-  {
-    title: 'Producto',
-    links: [
-      { label: 'Beneficios', href: '#beneficios' },
-      { label: 'Cómo funciona', href: '#como-funciona' },
-    ],
-  },
-  {
-    title: 'Precios',
-    links: [
-      { label: 'Planes', href: '#precios' },
-      { label: 'Empresas', href: '#empresas' },
-    ],
-  },
-  {
-    title: 'Nosotros',
-    links: [
-      { label: 'Visión', href: '#vision' },
-      { label: 'Inversionistas', href: '#inversionistas' },
-    ],
-  },
-  {
-    title: 'Contacto',
-    links: [
-      { label: 'Soporte', href: '/soporte' },
-      { label: 'Prensa', href: '/prensa' },
-    ],
-  },
-];
+function SectionHeading({
+  eyebrow,
+  title,
+  lede,
+  centered = false,
+}: {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  centered?: boolean;
+}) {
+  return (
+    <div className={cn('mb-12', centered && 'text-center')}>
+      <p className="font-body text-xs font-semibold uppercase tracking-[0.14em] text-secondary-dark">
+        {eyebrow}
+      </p>
+      <h2 className="mt-3 text-balance font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl">
+        {title}
+      </h2>
+      {lede && (
+        <p
+          className={cn(
+            'mt-4 max-w-2xl font-body text-lg leading-relaxed text-muted',
+            centered && 'mx-auto',
+          )}
+        >
+          {lede}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** CSS-only phone showing the diner's live queue status (placeholder until a real mockup exists). */
+function PhoneMockup() {
+  return (
+    <div className="relative">
+      <div className="relative h-[520px] w-[280px] rounded-[3rem] bg-foreground p-2 shadow-[0_24px_60px_rgba(46,42,40,0.18)]">
+        <div className="flex h-full w-full flex-col gap-4 rounded-[2.5rem] bg-background p-5 pt-8">
+          <div className="flex items-center justify-between">
+            <span className="font-display text-sm font-bold text-foreground">
+              Table<span className="text-secondary">Now</span>
+            </span>
+            <span className="flex items-center gap-1.5 rounded-full bg-secondary/10 px-2.5 py-1 font-body text-[10px] font-semibold text-secondary-dark">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-secondary" />
+              En vivo
+            </span>
+          </div>
+          <div>
+            <p className="font-display text-xl font-bold text-foreground">Hola, Mariana</p>
+            <p className="font-body text-xs text-muted">Fila general · 4 personas</p>
+          </div>
+          <div className="rounded-2xl bg-surface p-5 text-center shadow-soft">
+            <p className="font-body text-xs text-muted">Tu lugar en la fila</p>
+            <p className="font-display text-6xl font-bold leading-none text-primary">3</p>
+            <div className="mt-4 flex items-center justify-center gap-1.5 font-body text-sm text-foreground">
+              <Clock className="h-4 w-4 text-secondary" />
+              Aprox. <strong className="font-semibold">15 min</strong>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2.5 rounded-2xl bg-surface p-4 shadow-soft">
+            {['Te anotaste', 'Esperando tu mesa', 'Te avisamos aquí'].map((label, i) => (
+              <div key={label} className="flex items-center gap-3">
+                <span
+                  className={cn(
+                    'h-2.5 w-2.5 rounded-full',
+                    i < 2 ? 'bg-secondary' : 'border-2 border-border bg-surface',
+                  )}
+                />
+                <span className={cn('font-body text-xs', i < 2 ? 'text-foreground' : 'text-muted')}>
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-auto rounded-full border border-border py-2.5 text-center font-display text-xs font-semibold text-muted">
+            Ya no puedo quedarme
+          </div>
+        </div>
+      </div>
+      <div className="absolute -left-16 bottom-28 hidden w-56 items-center gap-3 rounded-2xl bg-surface p-3 shadow-[0_18px_44px_rgba(46,42,40,0.12)] sm:flex">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+          <Bell className="h-4 w-4" />
+        </span>
+        <div>
+          <p className="font-display text-sm font-bold text-foreground">¡Tu mesa está lista!</p>
+          <p className="font-body text-[11px] text-muted">Pasa a la recepción</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <Header logo="Nexa" links={NAV_LINKS} cta={<Button size="sm">Empieza gratis</Button>} />
+    <div className="min-h-screen overflow-x-hidden bg-background">
+      <SiteHeader />
 
-      {/* Hero Section */}
-      <section className="px-6 py-16 lg:px-12 lg:py-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-          <div className="flex flex-col gap-6">
-            <Badge>Solución moderna para restaurantes</Badge>
-            <h1 className="font-display text-4xl font-bold leading-tight text-foreground sm:text-5xl">
-              Digitaliza la fila
-              <br />
-              de tu restaurante
-            </h1>
-            <p className="max-w-lg font-body text-lg leading-relaxed text-muted">
-              Tus comensales se anotan con un QR, reciben avisos cuando su mesa está lista, y tú lo
-              gestionas todo en tiempo real.
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <Button size="lg">Empieza gratis</Button>
-              <Button variant="ghost" size="lg" className="group">
-                Ver cómo funciona
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+      <main>
+        {/* Hero */}
+        <section className="px-6 pb-20 pt-12 lg:px-12 lg:pb-28 lg:pt-20">
+          <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
+            <div className="flex flex-col gap-6">
+              <Badge className="self-start">Listas de espera para restaurantes</Badge>
+              <h1 className="text-balance font-display text-4xl font-bold leading-[1.06] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                Deja de gestionar tu fila en una libreta
+              </h1>
+              <p className="max-w-xl font-body text-lg leading-relaxed text-muted">
+                Tus clientes se anotan con un QR, ven su lugar en la fila desde su teléfono y
+                reciben aviso cuando su mesa está lista. Tú ves todo en tiempo real.
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <a href={CTA_HREF} className={buttonClasses({ size: 'lg' })}>
+                  Empieza gratis
+                </a>
+                <a
+                  href="#como-funciona"
+                  className={buttonClasses({ variant: 'ghost', size: 'lg', className: 'group' })}
+                >
+                  Ver cómo funciona
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </a>
+              </div>
+              <p className="flex items-center gap-2 font-body text-sm text-muted">
+                <CheckCircle className="h-4 w-4 text-secondary" />
+                Sin app · Sin cuenta · Sin instalar nada
+              </p>
             </div>
-            <p className="flex items-center gap-2 font-body text-sm text-muted">
-              <CheckCircle className="h-4 w-4 text-secondary" />
-              Sin instalar nada · Listo en minutos
-            </p>
+            <div className="flex justify-center lg:justify-end">
+              <PhoneMockup />
+            </div>
           </div>
-          <div className="flex justify-center lg:justify-end">
-            {/* Placeholder for phone mockup */}
-            <div className="relative h-[500px] w-[280px] rounded-[3rem] bg-gradient-to-b from-primary to-primary-dark p-2 shadow-soft">
-              <div className="flex h-full w-full flex-col gap-4 rounded-[2.5rem] bg-surface p-6">
-                <div className="h-4 w-20 rounded-full bg-primary/20" />
-                <div className="flex-1 space-y-4">
-                  <div className="rounded-xl bg-primary/10 p-4">
-                    <p className="font-display text-lg font-semibold text-foreground">
-                      Hola, David
+        </section>
+
+        {/* Problem */}
+        <section id="problema" className="bg-surface px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-4xl">
+            <SectionHeading
+              eyebrow="El problema"
+              title="Cada sábado se te van clientes que nunca contaste"
+            />
+            <div className="border-b border-border">
+              {PROBLEMS.map((problem, i) => (
+                <div
+                  key={problem.title}
+                  className="grid gap-2 border-t border-border py-7 sm:grid-cols-[3rem_1fr]"
+                >
+                  <span className="font-display text-sm font-bold text-primary">0{i + 1}</span>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-foreground">
+                      {problem.title}
+                    </h3>
+                    <p className="mt-2 max-w-2xl font-body leading-relaxed text-muted">
+                      {problem.description}
                     </p>
-                    <p className="font-body text-sm text-muted">Tu mesa estará lista pronto</p>
-                    <div className="mt-4 rounded-lg bg-surface p-3 shadow-soft">
-                      <p className="text-center font-body text-xs text-muted">Tiempo de espera</p>
-                      <p className="text-center font-display text-3xl font-bold text-primary">
-                        15 min
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between rounded-lg bg-background p-3">
-                    <span className="font-body text-sm text-muted">Posición en fila</span>
-                    <span className="font-display font-semibold text-foreground">#3</span>
-                  </div>
-                  <div className="flex justify-between rounded-lg bg-background p-3">
-                    <span className="font-body text-sm text-muted">Invitados</span>
-                    <span className="font-display font-semibold text-foreground">4 personas</span>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Benefits Section */}
-      <section id="beneficios" className="bg-surface px-6 py-16 lg:px-12 lg:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <Badge>Nuestra propuesta</Badge>
-            <h2 className="mt-4 font-display text-3xl font-bold text-foreground sm:text-4xl">
-              Por qué los restaurantes eligen Nexa
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl font-body text-muted">
-              Diseñamos herramientas que humanizan la espera y optimizan cada minuto de tu
-              operación.
+        {/* Solution by role */}
+        <section id="solucion" className="px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              eyebrow="La solución"
+              title="El mismo restaurante, sin la libreta"
+              lede="Funciona en el navegador, en la tablet que ya tienes. No se instala nada."
+            />
+            <div className="grid gap-6 md:grid-cols-3">
+              {ROLES.map((role) => (
+                <div
+                  key={role.title}
+                  className={cn(
+                    'rounded-2xl p-8 transition-transform duration-300 hover:-translate-y-1',
+                    role.className,
+                  )}
+                >
+                  <h3 className={cn('font-display text-2xl font-bold', role.titleClassName)}>
+                    {role.title}
+                  </h3>
+                  <p className="mt-3 font-body leading-relaxed text-foreground/80">
+                    {role.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* How it works (diner) */}
+        <section id="como-funciona" className="bg-secondary/5 px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              eyebrow="Para tu cliente"
+              title="Se anota en diez segundos, sin descargar nada"
+              lede="Cada dato obligatorio es un cliente que se da la vuelta. Por eso basta con un nombre."
+              centered
+            />
+            <div className="grid gap-8 md:grid-cols-3">
+              {STEPS.map((step) => (
+                <StepCard key={step.step} {...step} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* For the team */}
+        <section id="equipo" className="px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              eyebrow="Para tu equipo"
+              title="La fila en una pantalla, actualizada al segundo"
+            />
+            <div className="mb-8 flex flex-wrap gap-2">
+              {QUEUE_STATUSES.map((status) => (
+                <span
+                  key={status.label}
+                  className={cn(
+                    'rounded-full px-4 py-1.5 font-body text-sm font-medium',
+                    status.active
+                      ? 'bg-secondary/10 text-secondary-dark'
+                      : 'border border-border text-muted',
+                  )}
+                >
+                  {status.label}
+                </span>
+              ))}
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {TEAM_FEATURES.map((feature) => (
+                <FeatureCard
+                  key={feature.title}
+                  {...feature}
+                  className="border border-border shadow-soft"
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Metrics */}
+        <section id="metricas" className="bg-surface px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              eyebrow="Lo que vas a saber"
+              title="El lunes, en una pantalla"
+              lede="Pregúntate cuánto espera tu gente en promedio. Casi siempre es más de lo que crees."
+            />
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {METRICS.map((metric) => (
+                <div
+                  key={metric.title}
+                  className="flex gap-4 rounded-2xl border border-border bg-background p-6"
+                >
+                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
+                  <div>
+                    <p className="font-display text-lg font-semibold text-foreground">
+                      {metric.title}
+                    </p>
+                    <p className="mt-1 font-body text-sm text-muted">{metric.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Retention */}
+        <section id="lealtad" className="px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              eyebrow="Que vuelvan"
+              title="La fila es la entrada. Lo demás es que regresen."
+            />
+            <div className="grid gap-6 md:grid-cols-3">
+              {RETENTION_FEATURES.map((feature) => (
+                <FeatureCard
+                  key={feature.title}
+                  {...feature}
+                  className="border border-border shadow-soft"
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section id="precios" className="bg-primary/5 px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-4xl">
+            <SectionHeading
+              eyebrow="Precio"
+              title="Empieza gratis. En serio gratis."
+              lede="El plan gratis no es una versión recortada: con él operas tu fila completa."
+              centered
+            />
+            <div className="grid gap-8 md:grid-cols-2">
+              <PricingCard
+                label="Para empezar hoy"
+                name="Gratis"
+                price="$0"
+                priceSuffix=""
+                features={FREE_FEATURES}
+                recommended
+                cta={
+                  <a href={CTA_HREF} className={buttonClasses({ className: 'w-full' })}>
+                    Empieza gratis
+                  </a>
+                }
+              />
+              <PricingCard
+                label="Cuando quieras más alcance"
+                name="Pro"
+                price="Se cotiza"
+                priceSuffix="según tu operación"
+                featuresNote="Todo lo del plan gratis, más:"
+                features={PRO_FEATURES}
+                cta={
+                  <a
+                    href={CTA_HREF}
+                    className={buttonClasses({ variant: 'secondary', className: 'w-full' })}
+                  >
+                    Pide tu cotización
+                  </a>
+                }
+              />
+            </div>
+            <p className="mt-8 text-center font-body text-sm text-muted">
+              <CheckCircle className="mr-2 inline-block h-4 w-4 text-secondary" />
+              Sin tarjeta, sin plazo forzoso, sin instalar nada.
             </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((feature) => (
-              <FeatureCard
-                key={feature.title}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-              />
-            ))}
-            <FeatureCard
-              icon={<Zap className="h-6 w-6" />}
-              title="Empieza gratis"
-              description="Sin costos ocultos, moderniza tu restaurante hoy mismo."
-              highlighted
-              className="cursor-pointer"
-            />
-          </div>
-          <div className="mt-12 flex justify-center border-t border-border pt-8">
-            <SocialProof
-              avatars={[
-                'https://i.pravatar.cc/100?img=1',
-                'https://i.pravatar.cc/100?img=2',
-                'https://i.pravatar.cc/100?img=3',
-              ]}
-              text="Únete a más de 500 restaurantes que ya transformaron su servicio."
-              highlight="500 restaurantes"
-            />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* How it Works Section */}
-      <section id="como-funciona" className="bg-primary/5 px-6 py-16 lg:px-12 lg:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <h2 className="font-display text-3xl font-bold text-primary sm:text-4xl">
-              Así de fácil
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl font-body text-muted">
-              Modernizamos la experiencia de espera en tu restaurante para que tú te enfoques en lo
-              que mejor sabes hacer: cocinar.
+        {/* Onboarding */}
+        <section id="arranque" className="px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-4xl">
+            <SectionHeading
+              eyebrow="Cómo arrancamos"
+              title="Este fin de semana puedes estar operando"
+            />
+            <ol className="grid gap-4 sm:grid-cols-2">
+              {ONBOARDING.map((item, i) => (
+                <li
+                  key={item.title}
+                  className="flex gap-4 rounded-2xl border border-border bg-surface p-6 shadow-soft"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary font-display font-bold text-white">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-lg font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 font-body text-sm text-muted">{item.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-8 font-body text-lg text-muted">
+              Sin contrato, sin instalación y sin cambiar tu forma de trabajar.
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {STEPS.map((step) => (
-              <StepCard
-                key={step.step}
-                step={step.step}
-                icon={step.icon}
-                title={step.title}
-                description={step.description}
-              />
-            ))}
-          </div>
-          <div className="mt-12 flex justify-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-surface px-6 py-3 shadow-soft">
-              <span className="h-2 w-2 rounded-full bg-secondary" />
-              <span className="font-body text-sm text-foreground">
-                ¿Listo para transformar tu fila?
-              </span>
+        </section>
+
+        {/* Final CTA / contact */}
+        <section id="contacto" className="px-6 pb-20 lg:px-12 lg:pb-28">
+          <div className="mx-auto max-w-5xl rounded-[2rem] bg-foreground px-8 py-14 text-center sm:px-16">
+            <h2 className="mx-auto max-w-2xl text-balance font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+              Somos nuevos, y por eso te conviene entrar ahora
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl font-body text-lg leading-relaxed text-white/70">
+              Buscamos los primeros restaurantes que lo usen en serio. Hablas directo con quien
+              construyó el sistema, entras con condiciones de lanzamiento, y lo que pidas tiene peso
+              real en lo que construimos después.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
               <a
-                href="#precios"
-                className="font-display font-semibold text-primary hover:underline"
+                href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Quiero probar TableNow')}`}
+                className={buttonClasses({ size: 'lg' })}
               >
-                Empieza gratis hoy
+                <Mail className="mr-2 h-5 w-5" />
+                Escríbenos
               </a>
+              {CONTACT.whatsapp && (
+                <a
+                  href={`https://wa.me/${CONTACT.whatsapp}`}
+                  className={buttonClasses({
+                    variant: 'secondary',
+                    size: 'lg',
+                    className: 'border-white text-white hover:bg-white/10',
+                  })}
+                >
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  WhatsApp
+                </a>
+              )}
             </div>
+            <p className="mt-5 font-body text-sm text-white/50">{CONTACT.email}</p>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Pricing Section */}
-      <section id="precios" className="px-6 py-16 lg:px-12 lg:py-24">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-12 text-center">
-            <h2 className="font-display text-3xl font-bold text-primary sm:text-4xl">
-              Empieza gratis, crece cuando quieras
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl font-body text-muted">
-              Diseñado para acompañar el ritmo de tu restaurante, desde la primera mesa hasta la
-              expansión total.
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2">
-            <PricingCard
-              label="Plan Esencial"
-              name="Gratis"
-              price="$0"
-              features={FREE_FEATURES}
-              cta={
-                <Button variant="secondary" className="w-full">
-                  Empieza gratis
-                </Button>
-              }
-            />
-            <PricingCard
-              label="Plan Profesional"
-              name="Pro"
-              price="Consúltanos"
-              priceSuffix="/mes"
-              features={PRO_FEATURES}
-              featuresNote="Incluye todo lo de Gratis, más:"
-              recommended
-              cta={<Button className="w-full">Empieza gratis</Button>}
-            />
-          </div>
-          <p className="mt-8 text-center font-body text-sm text-muted">
-            <CheckCircle className="mr-2 inline-block h-4 w-4 text-secondary" />
-            Cancela o cambia de plan cuando quieras. Sin contratos forzosos.
-          </p>
-        </div>
-      </section>
-
-      {/* Vision Section */}
-      <section id="vision" className="bg-primary/5 px-6 py-16 lg:px-12 lg:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:items-center">
-            <div>
-              <span className="font-body text-sm font-medium uppercase tracking-wider text-primary">
-                Nuestra Visión
-              </span>
-              <h2 className="mt-2 font-display text-3xl font-bold text-foreground sm:text-4xl">
-                Más que una fila.
-              </h2>
-              <p className="mt-4 font-body leading-relaxed text-muted">
-                Nexa empieza por las listas de espera, pero está construyendo una plataforma
-                completa para restaurantes (reservas, CRM de comensales, menú digital, pagos).
-              </p>
-              <Button variant="secondary" className="mt-6">
-                Contacto para aliados e inversión
-              </Button>
-            </div>
-            <div className="flex justify-center">
-              {/* Placeholder for vision image */}
-              <div className="h-64 w-full max-w-md rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20" />
-            </div>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {ROADMAP.map((item) => (
-              <RoadmapCard
-                key={item.phase}
-                phase={item.phase}
-                icon={item.icon}
-                title={item.title}
-                description={item.description}
-                status={item.status}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="px-6 py-16 lg:px-12">
-        <div className="mx-auto max-w-4xl">
-          <div className="flex flex-col items-center gap-6 rounded-3xl bg-primary px-8 py-12 text-center shadow-soft">
-            <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
-              Empieza gratis hoy
-            </h2>
-            <Button
-              variant="secondary"
-              size="lg"
-              className="border-white bg-white text-primary hover:bg-white/90"
-            >
-              Crear mi restaurante
-            </Button>
-            <p className="font-body text-sm text-white/80">Sin tarjeta · Listo en minutos</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <Footer
-        logo="Nexa"
-        tagline="Conectamos clientes y negocios a través de una hospitalidad cálida y tecnológica."
-        columns={FOOTER_COLUMNS}
-        legalLinks={[
-          { label: 'Aviso de privacidad', href: '/privacidad' },
-          { label: 'Términos', href: '/terminos' },
-        ]}
-        copyright="© 2026 Nexa."
-        slogan="La hospitalidad comienza aquí."
-      />
+      <SiteFooter />
     </div>
   );
 }
