@@ -1,4 +1,4 @@
-import type { WaitlistEntry } from '@nexa/types';
+import type { WaitlistEntry } from '@tablenow/types';
 
 import type { WaitlistRepository } from '../domain/waitlist-repository';
 

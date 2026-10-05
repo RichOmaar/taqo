@@ -7,7 +7,7 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   // Pin the workspace root so Next ignores stray lockfiles above the repo.
   outputFileTracingRoot: join(currentDir, '../..'),
-  transpilePackages: ['@nexa/ui', '@nexa/types'],
+  transpilePackages: ['@tablenow/ui', '@tablenow/types'],
 };
 
 export default nextConfig;

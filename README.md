@@ -1,8 +1,8 @@
-# Nexa
+# TableNow
 
 > Conectamos clientes y negocios.
 
-Nexa es una plataforma de listas de espera para restaurantes. El comensal se anota
+TableNow es una plataforma de listas de espera para restaurantes. El comensal se anota
 digitalmente (escaneando un QR, con un código o desde el catálogo), recibe
 notificaciones sobre su turno, y el restaurante gestiona la fila en tiempo real con un
 panel de métricas.
@@ -22,7 +22,7 @@ integrados), organizado con **Domain-Driven Design**, datos en **PostgreSQL** v�
 **Prisma**, y contenidos gestionados con **Strapi**.
 
 ```
-nexa/
+tablenow/
 ├── apps/
 │   ├── landing/         # Sitio de marketing (público, SEO/conversión) — Next.js
 │   ├── client/          # Webapp cliente (móvil) — Next.js
@@ -101,7 +101,7 @@ publicado de Strapi cuando aplica (ej. el catálogo).
 ```bash
 # Clonar el repo
 git clone [POR DEFINIR: url del repo]
-cd nexa
+cd taqo
 
 # Instalar dependencias de todo el monorepo
 pnpm install

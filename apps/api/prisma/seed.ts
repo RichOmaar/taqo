@@ -23,7 +23,7 @@ async function main(): Promise<void> {
         ],
       },
       staff: {
-        create: [{ email: 'owner@demo.nexa', role: 'admin' }],
+        create: [{ email: 'owner@demo.tablenow', role: 'admin' }],
       },
     },
     include: { queues: true },

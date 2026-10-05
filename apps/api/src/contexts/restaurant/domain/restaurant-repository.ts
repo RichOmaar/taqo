@@ -1,4 +1,4 @@
-import type { Queue, Restaurant } from '@nexa/types';
+import type { Queue, Restaurant } from '@tablenow/types';
 
 export interface RestaurantWithQueues {
   restaurant: Restaurant;

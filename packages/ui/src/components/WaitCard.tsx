@@ -1,4 +1,4 @@
-import type { WaitlistStatus } from '@nexa/types';
+import type { WaitlistStatus } from '@tablenow/types';
 import type { ReactNode } from 'react';
 
 import { cn } from '../utils/cn';

@@ -1,4 +1,4 @@
-import type { JoinWaitlistRequest, WaitlistEntry } from '@nexa/types';
+import type { JoinWaitlistRequest, WaitlistEntry } from '@tablenow/types';
 
 import { NotFoundError, ValidationError } from '../../../shared/errors';
 import type { RestaurantRepository } from '../../restaurant/domain/restaurant-repository';

@@ -1,4 +1,4 @@
-import type { WaitlistStatus } from '@nexa/types';
+import type { WaitlistStatus } from '@tablenow/types';
 
 import { cn } from '../utils/cn';
 

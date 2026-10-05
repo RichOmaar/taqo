@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ArrowLeft, Download, Mail, ExternalLink } from 'lucide-react';
-import { Badge, Button, Card } from '@nexa/ui';
+import { Badge, Button, Card } from '@tablenow/ui';
 
 import { SiteFooter, SiteHeader } from '../../components/SiteChrome';
 

@@ -1,5 +1,5 @@
-import type { EntryAddedPayload } from '@nexa/types';
-import { WS_EVENTS, queueRoom } from '@nexa/types';
+import type { EntryAddedPayload } from '@tablenow/types';
+import { WS_EVENTS, queueRoom } from '@tablenow/types';
 import type { Server as IOServer, Socket } from 'socket.io';
 
 import type { WaitlistEventPublisher } from '../contexts/waitlist/application/ports';

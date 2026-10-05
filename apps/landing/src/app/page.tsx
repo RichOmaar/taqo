@@ -14,7 +14,7 @@ import {
   Star,
   TimerOff,
 } from 'lucide-react';
-import { Badge, FeatureCard, PricingCard, StepCard, buttonClasses, cn } from '@nexa/ui';
+import { Badge, FeatureCard, PricingCard, StepCard, buttonClasses, cn } from '@tablenow/ui';
 
 import { SiteFooter, SiteHeader } from '../components/SiteChrome';
 import { CONTACT, CTA_HREF } from '../site';

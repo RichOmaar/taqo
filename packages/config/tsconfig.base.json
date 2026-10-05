@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Nexa base",
+  "display": "TableNow base",
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],

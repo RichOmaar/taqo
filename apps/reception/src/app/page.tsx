@@ -1,8 +1,8 @@
 'use client';
 
-import type { EntryAddedPayload, Queue, WaitlistEntry } from '@nexa/types';
-import { WS_EVENTS } from '@nexa/types';
-import { Button, WaitCard, cn } from '@nexa/ui';
+import type { EntryAddedPayload, Queue, WaitlistEntry } from '@tablenow/types';
+import { WS_EVENTS } from '@tablenow/types';
+import { Button, WaitCard, cn } from '@tablenow/ui';
 import { useEffect, useState } from 'react';
 import { type Socket, io } from 'socket.io-client';
 

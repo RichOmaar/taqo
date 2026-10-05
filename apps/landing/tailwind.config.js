@@ -1,7 +1,7 @@
-import nexaPreset from '@nexa/ui/tailwind-preset';
+import tablenowPreset from '@tablenow/ui/tailwind-preset';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  presets: [nexaPreset],
+  presets: [tablenowPreset],
   content: ['./src/**/*.{ts,tsx}', '../../packages/ui/src/**/*.{ts,tsx}'],
 };

@@ -1,10 +1,10 @@
 import forms from '@tailwindcss/forms';
 
 /**
- * Shared Tailwind preset for Nexa. Mirrors the tokens in src/tokens.ts.
+ * Shared Tailwind preset for TableNow. Mirrors the tokens in src/tokens.ts.
  *
- * Apps: add this to `presets` and include @nexa/ui source in `content`, e.g.
- *   presets: [nexaPreset],
+ * Apps: add this to `presets` and include @tablenow/ui source in `content`, e.g.
+ *   presets: [tablenowPreset],
  *   content: ['./src/**\/*.{ts,tsx}', '../../packages/ui/src/**\/*.{ts,tsx}']
  *
  * @type {import('tailwindcss').Config}

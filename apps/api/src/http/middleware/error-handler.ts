@@ -1,4 +1,4 @@
-import type { ApiError } from '@nexa/types';
+import type { ApiError } from '@tablenow/types';
 import type { ErrorRequestHandler, RequestHandler } from 'express';
 
 import { AppError } from '../../shared/errors';
@@ -19,7 +19,7 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     return;
   }
 
-  console.error('[nexa-api] unhandled error', err);
+  console.error('[tablenow-api] unhandled error', err);
   const body: ApiError = {
     error: { code: 'internal_error', message: 'Internal server error' },
   };
